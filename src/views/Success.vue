@@ -65,7 +65,7 @@
                   <el-descriptions-item label="工号">{{ role.id }}</el-descriptions-item>
                   <el-descriptions-item label="姓名">{{ role.name }}</el-descriptions-item>
                   <el-descriptions-item label="身份证号">{{ role.idCard }}</el-descriptions-item>
-                  <el-descriptions-item label="生日">{{ birthdaytext(role.birthday) }}</el-descriptions-item>
+                  <el-descriptions-item label="生日">{{role.birthday }}</el-descriptions-item>
                   <el-descriptions-item label="考勤（本月）">{{ role.attendance }}</el-descriptions-item>
                   <el-descriptions-item label="职务">
                     <el-tag size="medium">{{ role.job }}</el-tag>
@@ -83,6 +83,7 @@
 
         <el-dialog title="添加用户" :visible.sync="dialogVisible">
           <el-form ref="ruleForm" :inline="true" :model="role" :rules="rules" label-width="80px" label-position="right">
+            <span v-model="role.id">{{role.id}}</span>
             <el-form-item label="姓名" prop="name">
               <el-input v-model="role.name" placeholder="请输入姓名" style="width:200px;" />
             </el-form-item>
@@ -124,7 +125,7 @@
             </el-form-item>
           </el-form>
           <div style="text-align:center;">
-            <el-button type="primary" @click="submit">提交</el-button>
+            <el-button type="primary" @click="update()">提交</el-button>
             <el-button type="primary" plain @click="resetForm('ruleForm')">重置</el-button>
             <el-button type="danger" @click="dialogVisible=false">取消</el-button>
           </div>
@@ -236,11 +237,7 @@ export default{
       // dateFormat:function(date){
       //   return moment(date).format("YYYY-MM-DD")
       // },
-      birthdaytext(birthday){
-        let newDate = /\d{4}-\d{1,2}-\d{1,2}/g.exec(birthday)
-        // newDate = newDate.substr(2, 10)
-        return newDate
-      },
+      
       loadStudents(){
         var _this = this
         this.$axios.get('/manager/all').then(resp => {
@@ -410,7 +407,21 @@ export default{
           }
         })
       this.dialogVisible = false
+    },
+    update(id){
+      var _this = this
+      this.$axios
+        //向后端发送数据
+        .post('/manager/edit?id='+this.role.id+'&name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
+        this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
+                       this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
+          if (resp && resp.data.code === 200) {
+            _this.rolesList = resp.data.data
+          }
+        })
+      this.dialogVisible = false
     }
+
   }
   }
 </script>
