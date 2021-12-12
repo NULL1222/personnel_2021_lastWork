@@ -3,7 +3,7 @@
      <!-- <h2>欢迎你 {{ username }}      登录成功！</h2>
      <router-link to='/'>
       <span>返回登录界面</span> -->
-    </router-link>
+    <!-- </router-link> -->
     <br><br>
      <el-button type="primary" @click="handleAddRole">添加</el-button>
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
@@ -113,7 +113,7 @@
             <el-form-item label="银行卡号" prop="card">
               <el-input v-model="role.card" placeholder="请输入银行卡号" style="width:230px;" />
             </el-form-item>
-            </el-form-item>
+            <!-- </el-form-item> -->
             <el-form-item label="联系地址" prop="address">
               <el-input
                 v-model="role.address"
