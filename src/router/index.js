@@ -52,7 +52,6 @@ export default new Router({
         //   name: 'input',
         //   component: ()=>import('../views/Data_Scanning/input.vue')
         // }
-
       ]
     },
     {
@@ -75,10 +74,10 @@ export default new Router({
       name: '修改密码',
       component: ChangePwd
     },
-    {
-      path: '/container',
-      name: 'container',
-      component: container
-    }
+    // {
+    //   path: '/container',
+    //   name: 'container',
+    //   component: container
+    // }
   ],
 })
