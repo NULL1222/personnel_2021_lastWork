@@ -1,9 +1,9 @@
 <template>
    <div> 
-    <el-container style="position: relative">
-        <el-aside width="auto"><common-aside></common-aside></el-aside>
+    <el-container class="container">
+        <el-aside width="auto"><common-aside :isCollapse="collapseStatus"></common-aside></el-aside>
         <el-container>
-          <el-header><common-header></common-header></el-header>
+          <el-header><common-header @emitCollapse="toggle"></common-header></el-header>
           <el-main>Main</el-main>
         </el-container>
       </el-container>
@@ -16,15 +16,22 @@ import CommonHeader from '../components/CommonHeader'
 
 export default { 
   name: "Main",
-  components: {CommonAside, CommonHeader }
+  data() {
+    return {
+      collapseStatus: false
+    }
+  },
+  components: {CommonAside, CommonHeader },
+  methods: {
+    toggle() {
+      //当子组件 emit 的时候 会触发这个方法
+      this.collapseStatus = !this.collapseStatus;
+    }
+  }
 }
 </script>
 
 <style>
-.el-containier {
-  /* height: 100vh; */
-  /* width: 100%; */
-}
 .el-header {
   background-color: rgb(121, 157, 204);
 }

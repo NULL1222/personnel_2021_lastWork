@@ -4,9 +4,11 @@
     @open="handleOpen" 
     @close="handleClose" 
     :collapse="isCollapse">
-    <!-- background-color= #a281a3> -->
     
-    <h3>铁路后台管理系统</h3>
+    <div class="menu-title">
+      <h3 v-show="!isCollapse">铁路后台管理系统</h3>
+      <h3 v-show="isCollapse">导航</h3>
+    </div>
       <el-menu-item :index="item.path" v-for="item in noChildren" 
       :key="item.path" @click="clickMenu(item)">
         <i :class="'el-icon-' + item.icon"></i>
@@ -26,28 +28,13 @@
         </el-menu-item>
         </el-menu-item-group>
         
-        </el-submenu>
       </el-submenu>
-        <!-- <el-menu-item index="3" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">导航三</span>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <i class="el-icon-setting"></i>
-        <span slot="title">导航四</span>
-      </el-menu-item> -->
       </el-menu>      
 </template>
 
-<style>
-    .el-menu-vertical-demo:not(.el-menu--collapse) {
-      width: 200px;
-      min-height: 400px;
-    }
-  </style>
-
 <script>
     export default {
+      props: ["isCollapse"],
       data() {
         return {
            //isCollapse: false,
@@ -67,21 +54,21 @@
               url: "Home/Home", 
             },
             {
-              path: "/",
+              path: "/finance",
               name: "home",
               label: "财政管理",
               icon: "coin",
               url: "Home/Home", 
             },
             {
-              path: "/",
+              path: "/trail",
               name: "home",
               label: "铁路管理",
               icon: "location",
               url: "Home/Home", 
             },
             {
-              path: "/",
+              path: "/visitor",
               name: "home",
               label: "旅客管理",
               icon: "s-custom",
@@ -118,7 +105,7 @@
           console.log(key, keyPath);
         },
         clickMenu(item) {
-          console.log("Clicked !!!")
+          // console.log("Clicked !!!")
           this.$router.push({name: item.name})
         }
       },
@@ -129,16 +116,26 @@
         hasChildren() {
           return this.menu.filter((item) => item.children)
         },
-         isCollapse() {
-           return this.$store.state.tab.isCollapse;
-         }
+        //  isCollapse() {
+        //    return this.$store.state.tab.isCollapse;
+        //  }
       }
 
     }
-  </script>
+</script>
 
-<style>
-  .el-menu{
-    /* background-color: rgba(121, 157, 204); */
+<style scoped>
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+  }
+  .el-menu {
+    transition: width 0.1s ease-in-out;
+  }
+  .menu-title {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>

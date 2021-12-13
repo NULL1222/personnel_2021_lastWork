@@ -1,13 +1,13 @@
 <template>
   <header>
     <div class="l-content">
-      <el-button plain icon="el-icon-menu" size="mini"></el-button>
-      <h3 style="color: white;">数据总览</h3>
+      <el-button plain icon="el-icon-menu" size="mini" @click="emitCollapse"></el-button>
+      <h3 class="l-content-text">数据总览</h3>
     </div>
-    <div class="r-content" style="margin-left: 1170px;">
+    <div class="r-content">
       <el-dropdown trigger="click" size="mini">
         <span class="el-dropdown-link">
-          <img :src="userImg" class="user"/>
+          <img :src="userImg" class="r-content-user"/>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人中心</el-dropdown-item>
@@ -24,12 +24,17 @@ export default {
     return {
       userImg: require("../assets/Me.png"),
     };
+  },
+  methods: {
+    emitCollapse() {
+      this.$emit('emitCollapse');
+    }
   }
 };
 
 </script>
 
-<style>
+<style scoped>
 header {
   display: flex;
   height: 100%;
@@ -37,23 +42,27 @@ header {
   justify-content: space-between;
 }
 .l-content {
-  /* isplay: flex; */
-  /* align-items: center; */
-  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
   width: 300px;
-  /* margin-left: 10px; */
+  padding: 10px;
 }
-.el-button {
-    /* width: 30px;
-    height: 30px; */
-    margin-left: 10px;
-    background-color: rgb(121, 157, 204);
-    /* border-width: 1px; */
-  }
-.user {
+.l-content-text {
+  color: white;
+  margin-left: 20px;
+}
+.r-content {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.r-content-user {
   border-radius: 50% ;
   width: 40px;
   height: 40px;
-  border-color: black;
+  margin-top: 7px;
+  margin-right: 10px;
 }
 </style>
