@@ -4,7 +4,7 @@ import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import Success from '../views/Success.vue'
 import ChangePwd from '../views/ChangePwd.vue'
-import container from '../components/container.vue'
+import container from '../views/container.vue'
 
 Vue.use(Router)
 
@@ -36,5 +36,5 @@ export default new Router({
       name: 'container',
       component: container
     }
-  ]
+  ],
 })
