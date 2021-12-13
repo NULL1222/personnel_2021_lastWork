@@ -9,7 +9,7 @@ import container from '../views/container.vue'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'hash',
+  mode: 'history',
   routes: [
     {
       path: '/container',
@@ -75,10 +75,10 @@ export default new Router({
       name: '修改密码',
       component: ChangePwd
     },
-    {
-      path: '/container',
-      name: 'container',
-      component: container
-    }
+    // {
+    //   path: '/container',
+    //   name: 'container',
+    //   component: container
+    // }
   ],
 })
