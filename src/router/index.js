@@ -52,7 +52,6 @@ export default new Router({
         //   name: 'input',
         //   component: ()=>import('../views/Data_Scanning/input.vue')
         // }
-
       ]
     },
     {
