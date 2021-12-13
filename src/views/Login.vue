@@ -14,7 +14,7 @@
        <router-link to='/Register'>
         <span style="text-align:center;font-size: 14px;">账号注册</span>
       </router-link> -->
-  
+
       <!-- <router-link to='/ChangePwd'>
         <span style="text-align:center;font-size: 14px; color:red;">修改密码</span>
       </router-link> 
@@ -65,11 +65,11 @@
           rules: {
             id: [
               { required: true, message: '请输入用户名', trigger: 'blur' },
-              // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+               { min: 8, max: 8, message: '长度在 3 到 5 个字符', trigger: 'blur' }
             ],
             password: [
               { required: true, message: '请输入密码', trigger: 'blur' },
-              // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+              //  { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
             ],
           },
         };
@@ -129,7 +129,7 @@
             if (res.data.code === 200) {
               Cookies.set('id', fd.get('id'));
               this.$router.push({
-                path: '/success'
+                path: '/container'
               })
             } else {
   

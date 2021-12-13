@@ -4,7 +4,7 @@
         <el-aside width="auto"><common-aside :isCollapse="collapseStatus"></common-aside></el-aside>
         <el-container>
           <el-header><common-header @emitCollapse="toggle"></common-header></el-header>
-          <el-main>Main</el-main>
+          <el-main><router-view /></el-main>
         </el-container>
       </el-container>
    </div>
