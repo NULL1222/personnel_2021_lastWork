@@ -404,34 +404,51 @@
                 this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {
+                    console.log(resp);
                     _this.rolesList = resp.data.data
+                    console.log(_this.rolesList);
                   }
+                  var i = 0
+                  for (i;i<(_this.rolesList.length);i++){ 
+                    if(_this.rolesList[i].idCard == this.role.idCard){
+                      break;
+                    }
+                  }
+                  console.log("i: ",i)
+                  console.log("rolesList[i]: ",_this.rolesList[i])
+                  this.$alert('此用户工号为：' + _this.rolesList[i].id + '</br>默认密码为：88888888', '信息', {
+                    confirmButtonText: '确定',
+                    dangerouslyUseHTMLString: true,
+                    center: true,
+                    callback: action => {
+                      this.$message({
+                        type: 'success',
+                        message: `添加成功`
+                      });
+                    }
+                  })
+                  this.dialogVisible = false
                 })
-              this.loadStaff()
-              var i = 0
-              for (i;i<(_this.rolesList.length);i++){ 
-                console.log("if外 rolesList: ",_this.rolesList[i].idCard)
-                console.log("if外 role: ",this.role.idCard)
-                if(_this.rolesList[i].idCard == this.role.idCard){
-                  console.log("if内 rolesList: ",_this.rolesList[i].idCard)
-                  console.log("if内 role: ",this.role.idCard)
-                  break;
-                }
-              }
-              console.log("i: ",i)
-              console.log("rolesList[i]: ",_this.rolesList[i])
-              this.$alert('此用户工号为：' + _this.rolesList[i].id + '</br>默认密码为：88888888', '信息', {
-                confirmButtonText: '确定',
-                dangerouslyUseHTMLString: true,
-                center: true,
-                callback: action => {
-                  this.$message({
-                    type: 'success',
-                    message: `添加成功`
-                  });
-                }
-              })
-              this.dialogVisible = false
+//              var i = 0
+//              for (i;i<(_this.rolesList.length);i++){ 
+//                if(_this.rolesList[i].idCard == this.role.idCard){
+//                  break;
+//                }
+//              }
+//              console.log("i: ",i)
+//              console.log("rolesList[i]: ",_this.rolesList[i])
+//              this.$alert('此用户工号为：' + _this.rolesList[i].id + '</br>默认密码为：88888888', '信息', {
+//                confirmButtonText: '确定',
+//                dangerouslyUseHTMLString: true,
+//                center: true,
+//                callback: action => {
+//                  this.$message({
+//                    type: 'success',
+//                    message: `添加成功`
+//                  });
+//                }
+//              })
+//              this.dialogVisible = false
             }else{
               console.log('error submit!!');
               return false;
