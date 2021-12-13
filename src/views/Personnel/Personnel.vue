@@ -1,9 +1,9 @@
 <template>
-    <div style="text-align:center">
-    <br><br>
-     <el-button type="primary" @click="handleAddRole">添加</el-button>
-        <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
-        <search-bar @onSearch="searchResult" ref="searchBar"></search-bar>
+    <div>
+      <br><br>
+      <el-button type="primary" @click="handleAddRole" style="float:left;margin-left:10px;">添加</el-button>
+        <el-button type="primary" style="float:left;margin-left:10px;" @click="refreshing">刷新</el-button>
+        <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
         <el-table :data="rolesList" style="width: 100%;margin-top:30px;" >
           <el-table-column label="工号" width="100%">
@@ -140,7 +140,7 @@
  </template>
  
 <script>
-  import SearchBar from '../SearchBar'
+  import SearchBar from '../SearchBar.vue'
   const defaultRole = {
     job: '人事管理',
     id: '',
