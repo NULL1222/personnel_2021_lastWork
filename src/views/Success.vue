@@ -1,17 +1,9 @@
 <template>
     <div style="text-align:center">
-     <!-- <h2>欢迎你 {{ username }}      登录成功！</h2>
-     <router-link to='/'>
-      <span>返回登录界面</span> -->
-    <!-- </router-link> -->
     <br><br>
      <el-button type="primary" @click="handleAddRole">添加</el-button>
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar"></search-bar>
-        <!-- <el-button type="primary" style="margin-left:10px;float:right" size="small" @click="searchClick">查询</el-button>
-        <el-input @keyup.enter.native="searchClick" v-model="keywords" size="small" placeholder="请输入工号或姓名" style="width:150px;margin-left:10px;float:right">
-        <i slot="prefix" class="el-input__icon el-icon-search" ></i>
-        </el-input>-->
 
         <el-table :data="rolesList" style="width: 100%;margin-top:30px;" >
           <el-table-column label="工号" width="100%">
