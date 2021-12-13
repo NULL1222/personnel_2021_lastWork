@@ -1,26 +1,4 @@
 <template>
-  <!-- <div class="background"> -->
-    <!-- <div class="backgroundDiv">
-      <img src="../assets/login_image/login_background.jpg" width= "100%" height="100%" class="login_image">
-    </div> -->
-    <!-- <div class="front" > 
-      用户名:<input type="text" v-model="id" placeholder="请输入用户名" />
-      <br><br>
-      密码:<input type="password" v-model="password" placeholder="请输入密码" />
-      <br><br>
-      <button @click="login()">登录</button>
-      <br><br>
-  
-       <router-link to='/Register'>
-        <span style="text-align:center;font-size: 14px;">账号注册</span>
-      </router-link> -->
-
-      <!-- <router-link to='/ChangePwd'>
-        <span style="text-align:center;font-size: 14px; color:red;">修改密码</span>
-      </router-link> 
-    </div>
-  </div> -->
-  
   <div class="container">
       <el-image class="image" :src="url" :fit="'fill'"></el-image>
       <div class="front" style="width: 460px; height: 330px;">
@@ -40,6 +18,7 @@
           <el-form-item>
             <!-- <el-button type="primary" @click="submitForm('LoginForm')" style="width: 200px; margin-right: 100px; " class="buttonlogin">登录</el-button> -->
             <el-button type="primary" @click="login()" style="width: 200px; margin-right: 100px; " class="buttonlogin">登录</el-button>
+            <el-button @click="resetForm('LoginForm')">重置</el-button>
           </el-form-item>
           <!-- <router-link to='/Register'>
             <span style="text-align:center;font-size: 14px;">账号注册</span>
@@ -137,6 +116,9 @@
           }).catch(res => {
             alert(res.data.msg)
           })
+        },
+        resetForm(formName) {
+        this.$refs[formName].resetFields();
         }
         // resetImg(){
         // this.imgUrl = "http://localhost:9000/manager/verifyCode?time="+new Date();
@@ -174,11 +156,7 @@
           //     console.log('error submit!!');
           //     return false;
           //   }
-          // });
-      
-        // resetForm(formName) {
-        //   this.$refs[formName].resetFields();
-        // }
+          // });       
       }
     }
   </script>
