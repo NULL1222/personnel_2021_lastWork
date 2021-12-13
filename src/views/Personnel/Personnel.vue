@@ -140,7 +140,7 @@
  </template>
  
 <script>
-  import SearchBar from './SearchBar'
+  import SearchBar from '../SearchBar'
   const defaultRole = {
     job: '人事管理',
     id: '',
