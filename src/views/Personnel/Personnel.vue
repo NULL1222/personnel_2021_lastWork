@@ -5,7 +5,7 @@
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
-        <el-table :data="rolesList" style="width: 100%;margin-top:30px;" >
+        <el-table :data="rolesList" style="width: 100%;margin-top:30px;float:center">
           <el-table-column label="工号" width="100%">
             <template slot-scope="scope">
               {{ scope.row.id }}
@@ -36,7 +36,25 @@
               {{ scope.row.attendance }}
             </template>
           </el-table-column>
-          <el-table-column label="职务" width="150%" column-key="state" :filters="deal" :filter-multiple="false">
+          <el-table-column label="职务" width="150%">
+            <!-- slot-scope="scope" -->
+            <template slot="header">
+                <el-dropdown trigger="click" @command="handleCommand">
+                  <span class="el-dropdown-link" style="color:#909399">
+                    职务<i class="el-icon-arrow-down el-icon--right el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                        <el-radio-group v-model="radio">
+                          <el-dropdown-item command="全部">全部</el-dropdown-item>
+                          <el-dropdown-item command="人事管理">人事管理</el-dropdown-item>
+                          <el-dropdown-item command="财务管理">财务管理</el-dropdown-item>
+                          <el-dropdown-item command="铁路管理">铁路管理</el-dropdown-item>
+                          <el-dropdown-item command="用户管理">用户管理</el-dropdown-item>
+                        </el-radio-group>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </template>
+
             <template slot-scope="scope">
               {{ scope.row.job }}
             </template>
@@ -74,9 +92,9 @@
           </el-table-column>
         </el-table>
 
-        <el-dialog :title="titleName" :visible.sync="dialogVisible">
+        <el-dialog :title="titleName" :visible.sync="dialogVisible" width="700px" destroy-on-close>
           <el-form ref="ruleForm" :inline="true" :model="role" :rules="rules" label-width="80px" label-position="right">
-            <el-span v-model="role.id" style="color:#FFF">{{role.id}}</el-span>
+            <el-span v-model="role.id" style="color:#FFF;font-size:1px">{{role.id}}</el-span>
             <el-form-item label="姓名" prop="name">
               <el-input v-model="role.name" :disabled="isShow" placeholder="请输入姓名" style="width:200px;" />
             </el-form-item>
@@ -128,11 +146,11 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage4"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          :current-page="currentPage1"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size= pages.pageSize
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400">
+          :total= totalPages>
         </el-pagination>
       </div>
     </div>
@@ -142,16 +160,7 @@
   import SearchBar from '../SearchBar.vue'
   const defaultRole = {
     job: '人事管理',
-    id: '',
-    name: '',
     sex: '男',
-    mail: '',
-    phone: '',
-    idCard: '',
-    card: '',
-    address: '',
-    attendance: '',
-    birthday: ''
   }
 
   import Cookies from 'js-cookie';
@@ -166,10 +175,7 @@
       },
       data() {
         return {
-          currentPage1: 5,
-          currentPage2: 5,
-          currentPage3: 5,
-          currentPage4: 4,
+          currentPage1: 1,
           drawer: false,
           direction: 'rtl',
           edit: false,
@@ -177,6 +183,11 @@
           keywords: '',
           titleName: '编辑',
           isShow: true,
+          pages: {
+            pageNum: 1,
+            pageSize: 10,
+          },
+          totalPages: 0,
           role: {
             job: '',
             id: '',
@@ -246,16 +257,30 @@
     },
     
       mounted: function() {
-        this.loadStaff()
+        this.initUser()
       },
 
       methods: {
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
+          this.pages.pageSize = val
+          this.initUser();
         },
         handleCurrentChange(val) {
           console.log(`当前页: ${val}`);
-        },      
+          this.pages.pageNum = val
+          this.initUser();
+        }, 
+        
+        initUser() {
+          var _this = this
+          this.$axios.post("/manager/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
+            if (resp && resp.data.code === 200) {
+              _this.rolesList = resp.data.data.data
+              _this.totalPages = resp.data.data.total
+            }
+          })
+        },
         loadStaff(){
           var _this = this
           this.$axios.get('/manager/all').then(resp => {
@@ -273,7 +298,6 @@
             .get('/manager/search?keywords=' + this.$refs.searchBar.keywords, {}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.rolesList = resp.data.data
-
               }
             })
         },
@@ -297,13 +321,13 @@
           }
 
           // recursive child routes
-          if (route.children) {
-            data.children = this.generateRoutes(route.children, data.path)
+            if (route.children) {
+              data.children = this.generateRoutes(route.children, data.path)
+            }
+            res.push(data)
           }
-          res.push(data)
-        }
-        return res
-      },
+          return res
+        },
       generateArr(routes) {
         let data = []
         routes.forEach(route => {
@@ -382,19 +406,6 @@
         })
           .catch(err => { console.error(err) })
           },
-//      submit() {
-//        var _this = this
-//        this.$axios
-//          //向后端发送数据
-//          .post('/manager/add?name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
-//          this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
-//                        this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
-//            if (resp && resp.data.code === 200) {
-//              _this.rolesList = resp.data.data
-//            }
-//          })
-//        this.dialogVisible = false
-//      },
       submit(formName){
         if(this.dialogType === 'new'){
           this.$refs[formName].validate((valid) => {
@@ -431,30 +442,10 @@
                   })
                   this.dialogVisible = false
                 })
-//              var i = 0
-//              for (i;i<(_this.rolesList.length);i++){ 
-//                if(_this.rolesList[i].idCard == this.role.idCard){
-//                  break;
-//                }
-//              }
-//              console.log("i: ",i)
-//              console.log("rolesList[i]: ",_this.rolesList[i])
-//              this.$alert('此用户工号为：' + _this.rolesList[i].id + '</br>默认密码为：88888888', '信息', {
-//                confirmButtonText: '确定',
-//                dangerouslyUseHTMLString: true,
-//                center: true,
-//                callback: action => {
-//                  this.$message({
-//                    type: 'success',
-//                    message: `添加成功`
-//                  });
-//                }
-//              })
-//              this.dialogVisible = false
-            }else{
-              console.log('error submit!!');
-              return false;
-            }
+              }else{
+                console.log('error submit!!');
+                return false;
+              }
           });
         }else{
           this.$refs[formName].validate((valid) => {
