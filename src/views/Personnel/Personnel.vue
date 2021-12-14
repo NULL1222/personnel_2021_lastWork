@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div style="text-align:left">
       <br><br>
-      <el-button type="primary" @click="handleAddRole" style="float:left;margin-left:10px;">添加</el-button>
-        <el-button type="primary" style="float:left;margin-left:10px;" @click="refreshing">刷新</el-button>
+      <el-button type="primary" @click="handleAddRole" style="margin-left:10px;">添加</el-button>
+        <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
         <el-table :data="rolesList" style="width: 100%;margin-top:30px;" >
@@ -36,7 +36,7 @@
               {{ scope.row.attendance }}
             </template>
           </el-table-column>
-          <el-table-column label="职务" width="150%">
+          <el-table-column label="职务" width="150%" column-key="state" :filters="deal" :filter-multiple="false">
             <template slot-scope="scope">
               {{ scope.row.job }}
             </template>
@@ -48,12 +48,13 @@
               <el-button type="danger" plain size="small" @click="handleDelete(scope.row.id)">删除</el-button>
     
               <el-drawer
-                title="我是标题"
+                title="详细信息"
                 :visible.sync="drawer"
                 :direction="direction"
                 :size="800"
+                style="float:center"
               >
-                <el-descriptions class="margin-top" title="无边框列表" :column="2" :size="size">
+                <el-descriptions class="margin-top" :column="2" :size="size" style="margin-left:80px">
                   <el-descriptions-item label="工号">{{ role.id }}</el-descriptions-item>
                   <el-descriptions-item label="姓名">{{ role.name }}</el-descriptions-item>
                   <el-descriptions-item label="身份证号">{{ role.idCard }}</el-descriptions-item>
@@ -73,16 +74,14 @@
           </el-table-column>
         </el-table>
 
-        <!-- <div v-if="dialogType === 'new'" style="color:#FFF">{{titleName = '添加用户'}}</div>
-        <div v-else>{{titleName = '编辑信息'}}</div> -->
         <el-dialog :title="titleName" :visible.sync="dialogVisible">
           <el-form ref="ruleForm" :inline="true" :model="role" :rules="rules" label-width="80px" label-position="right">
-            <el-span v-model="role.id" style="colour:white">{{role.id}}</el-span>
+            <el-span v-model="role.id" style="color:#FFF">{{role.id}}</el-span>
             <el-form-item label="姓名" prop="name">
-              <el-input v-model="role.name" placeholder="请输入姓名" style="width:200px;" />
+              <el-input v-model="role.name" :disabled="isShow" placeholder="请输入姓名" style="width:200px;" />
             </el-form-item>
             <el-form-item label="身份证号" prop="idCard">
-              <el-input v-model="role.idCard" maxlength="18" placeholder="请输入身份证号" style="width:270px;" />
+              <el-input v-model="role.idCard" :disabled="isShow" maxlength="18" placeholder="请输入身份证号" style="width:270px;" />
             </el-form-item>
             <el-form-item label="职务" prop="job">
               <template label-position="center">
@@ -94,8 +93,8 @@
             </el-form-item>
             <el-form-item label="性别" prop="sex" style="width:450px;">
               <template label-position="center">
-                <el-radio v-model="role.sex" class="sex" label="男">男</el-radio>
-                <el-radio v-model="role.sex" class="sex" label="女">女</el-radio>
+                <el-radio v-model="role.sex" :disabled="isShow" class="sex" label="男">男</el-radio>
+                <el-radio v-model="role.sex" :disabled="isShow" class="sex" label="女">女</el-radio>
               </template>
             </el-form-item>
             <el-form-item label="联系方式" prop="phone">
@@ -177,6 +176,7 @@
           index: -1,
           keywords: '',
           titleName: '编辑',
+          isShow: true,
           role: {
             job: '',
             id: '',
@@ -322,6 +322,7 @@
         if (this.$refs.tree) {
           this.$refs.tree.setCheckedNodes([])
         }
+        this.isShow = false
         this.dialogType = 'new'
         this.titleName = '添加用户'
         this.dialogVisible = true
@@ -353,6 +354,7 @@
               _this.role = resp.data.data
             }
           })
+        this.isShow = true
         this.titleName = '编辑信息'
         this.dialogVisible = true
         this.dialogType = 'edit'
