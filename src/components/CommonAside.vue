@@ -10,7 +10,7 @@
       <h3 v-show="isCollapse">导航</h3>
     </div>
       <el-menu-item :index="item.path" v-for="item in noChildren" 
-      :key="item.path" @click="clickMenu(item,-1)">
+      :key="item.path" @click="clickMenu(item)">
         <i :class="'el-icon-' + item.icon"></i>
         <span slot="title">{{ item.label }}</span>
       </el-menu-item>
@@ -22,7 +22,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item :index="subItem.path" v-for="(subItem, subIndex) in item.children" 
-          :key="subIndex" @click="clickMenu(item,subIndex)">
+          :key="subIndex" @click="clickMenu(subItem)">
           <i :class="'el-icon-' + subItem.icon"></i>
           <span slot="title">{{ subItem.label }}</span>
         </el-menu-item>
@@ -105,14 +105,13 @@
         handleClose(key, keyPath) {
           console.log(key, keyPath);
         },
-        clickMenu(item,index) {
-          if(item.name == null){
-            // console.log(index)
-            this.$router.push({name: item.children[index].name});
-          }else{
+        clickMenu(item) {
+          // if(item.name == null){
+          //   // console.log(index)
+          //   this.$router.push({name: item.children[index].name});
+          // }else{
             this.$router.push({name: item.name});
           }
-        }
       },
       computed: {
         noChildren() {
