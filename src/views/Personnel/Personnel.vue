@@ -276,8 +276,8 @@
           var _this = this
           this.$axios.post("/manager/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
             if (resp && resp.data.code === 200) {
-              _this.rolesList = resp.data.data.data
-              _this.totalPages = resp.data.data.total
+              _this.rolesList = resp.data.data
+              _this.totalPages = resp.data.total
             }
           })
         },
@@ -289,7 +289,16 @@
             }
           })
         },
-
+        handleCommand(command){
+          console.log(command)
+          console.log(this.command)
+          var _this = this
+          this.$axios.post('/manager/job?job=' + command,{}).then(resp => {
+            if(resp && resp.data.code === 200){
+              _this.rolesList = resp.data.data
+            }
+          })
+        },
         searchResult() {
           var _this = this
           //  alert(this.$refs.searchBar.keywords)    //测试输入框中的内容
