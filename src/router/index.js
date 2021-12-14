@@ -80,10 +80,5 @@ export default new Router({
       name: '修改密码',
       component: ChangePwd
     },
-    // {
-    //   path: '/container',
-    //   name: 'container',
-    //   component: container
-    // }
   ],
 })

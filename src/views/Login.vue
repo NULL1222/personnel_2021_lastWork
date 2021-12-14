@@ -1,24 +1,30 @@
 <template>
   <div class="container">
       <el-image class="image" :src="url" :fit="'fill'"></el-image>
-      <div class="front" style="width: 460px; height: 330px;">
+      <div class="front">
         <br><br>
         <h2>欢迎登录铁路公司管理系统</h2>
         <el-form :model="LoginForm" :rules="rules" ref="LoginForm" label-width="100px" class="demo-LoginForm">
           <el-form-item label="用户名" prop="id" style="width: 380px; margin-top: 30px;">
-            <el-input v-model="LoginForm.id"></el-input>
+            <el-input v-model="LoginForm.id"
+            ref="getFocus">
+            </el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="password" style="width: 380px;" >
-            <el-input v-model="LoginForm.password" autocomplete="off" ></el-input>
+          <el-form-item label="密码" style="width: 380px;" prop="password">
+            <el-input v-model="LoginForm.password"
+            :type="passw" 
+            @blur="onBlur"
+            clearable>
+             <i 
+             slot="suffix" 
+             :class="icon"
+             @click="showPass"></i> 
+            </el-input>
           </el-form-item>
-          <!-- <el-form-item label="验证码" prop="code" style="width: 380px;">
-            <el-input v-model="LoginForm.code" style="width: 170px; float: left;" class="verifyCode" ></el-input>
-            <el-image src="" class="verifyCodeImg" ></el-image>
-          </el-form-item> -->
-          <el-form-item>
+          <el-form-item class="buttons">
             <!-- <el-button type="primary" @click="submitForm('LoginForm')" style="width: 200px; margin-right: 100px; " class="buttonlogin">登录</el-button> -->
-            <el-button type="primary" @click="login()" style="width: 200px; margin-right: 100px; " class="buttonlogin">登录</el-button>
-            <el-button @click="resetForm('LoginForm')">重置</el-button>
+            <el-button type="primary" @click="login()" class="buttonlogin">登录</el-button>
+            <el-button @click="resetForm('LoginForm')" class="buttonreset">重置</el-button>
           </el-form-item>
           <!-- <router-link to='/Register'>
             <span style="text-align:center;font-size: 14px;">账号注册</span>
@@ -31,12 +37,13 @@
   
   <script>
     import Cookies from 'js-cookie';
-  
     export default {
       name: 'Login',
       data() {
         return {
           url: require('../assets/login_image/login_background.jpg'),
+          icon: "el-input__icon el-icon-view",
+          passw: "password",
           LoginForm: {
             id: '',
             password: '',
@@ -44,7 +51,7 @@
           rules: {
             id: [
               { required: true, message: '请输入用户名', trigger: 'blur' },
-               { min: 8, max: 8, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+               { min: 8, max: 8, message: '长度为 8 个字符', trigger: 'blur' }
             ],
             password: [
               { required: true, message: '请输入密码', trigger: 'blur' },
@@ -53,10 +60,12 @@
           },
         };
       },
-      created() {
-  
+
+      mounted() {
+        this.$refs.getFocus.focus()
       },
-      
+      created() {  
+      },
       methods: {
         // submitForm(formName){
         //     this.$refs[formName].validate((valid) => {
@@ -91,6 +100,23 @@
         //     });
         //   }
         // }
+        showPass() {
+          if (this.passw == "text") {
+          this.passw = "password";
+          //更换图标
+          this.icon = "el-input__icon el-icon-view";
+          } else {
+          this.passw = "text";
+          this.icon = "el-input__icon el-icon-moon";
+          // setTimeout(()=>{
+          //       this.icon = "";
+          // },500)
+          }
+        },
+        onBlur(){
+         this.passw = "password";
+         this.icon = "el-input__icon el-icon-view";
+        },
         login: function() {
           let fd = new FormData();
           fd.append("id",this.LoginForm.id);
@@ -173,6 +199,8 @@
   }
   .front{
       /* z-index: 1; */
+      width: 450px; 
+      height: 300px;
       position: absolute;
       /* border: 1px solid lightgray; */
       /* background-color:rgba(193, 200, 216, 0.5); */
@@ -197,8 +225,24 @@
       margin-left: 10px;
       border-radius: 4px;
     }
+    .buttons {
+      flex-direction: row;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 80px;
+    }
     .buttonlogin{
+      width: 100px; 
+      /* margin-ri: 0px;  */
       background-color: rgb(48, 65, 86);
-      border: rgb(113, 140, 173);
+      /* border: rgb(113, 140, 173); */
+      width: 100px;
+      border: 0px; 
+    }
+    .buttonreset {
+      margin-left: 20px;
+      width: 100px;
+      border: 0px; 
     }
 </style>
