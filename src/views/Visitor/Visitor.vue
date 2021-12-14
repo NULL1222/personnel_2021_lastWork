@@ -5,14 +5,14 @@
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
         <el-table :data="rolesList" style="width: 100%;margin-top:30px;float:center">
-          <el-table-column label="工号" width="100%">
+          <el-table-column label="账号" width="100%">
             <template slot-scope="scope">
-              {{ scope.row.id }}
+              {{ scope.row.phone }}
             </template>
           </el-table-column>
-          <el-table-column label="姓名" width="150%">
+          <el-table-column label="用户名" width="150%">
             <template slot-scope="scope">
-              {{ scope.row.name }}
+              {{ scope.row.nickname }}
             </template>
           </el-table-column>
           <el-table-column label="性别" width="80%">
@@ -21,48 +21,32 @@
             </template>
           </el-table-column>
           <el-table-column label="邮箱" width="200%">
-            <template slot-scope="scope">
+            <template slot-scope="scope"> 
               {{ scope.row.mail }}
             </template>
           </el-table-column>
-          <el-table-column label="手机号" width="120%">
-            <template slot-scope="scope">
-              {{ scope.row.phone }}
-            </template>
-          </el-table-column>
-          <el-table-column label="考勤（本月）" width="130%">
-            <template slot-scope="scope">
-              {{ scope.row.attendance }}
-            </template>
-          </el-table-column>
-          <el-table-column label="职务" width="150%">
+          <el-table-column label="用户状态" width="150%">
             <!-- slot-scope="scope" -->
             <template slot="header">
                 <el-dropdown trigger="click" @command="handleCommand">
                   <span class="el-dropdown-link" style="color:#909399">
-                    职务<i class="el-icon-arrow-down el-icon--right el-icon--right"></i>
+                    用户状态<i class="el-icon-arrow-down el-icon--right el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                        <el-radio-group v-model="radio">
-                          <el-dropdown-item command="全部">全部</el-dropdown-item>
-                          <el-dropdown-item command="人事管理">人事管理</el-dropdown-item>
-                          <el-dropdown-item command="财务管理">财务管理</el-dropdown-item>
-                          <el-dropdown-item command="铁路管理">铁路管理</el-dropdown-item>
-                          <el-dropdown-item command="用户管理">用户管理</el-dropdown-item>
-                        </el-radio-group>
+                    <el-dropdown-item command="全部">全部</el-dropdown-item>
+                    <el-dropdown-item command="已禁用">已禁用</el-dropdown-item>
+                    <el-dropdown-item command="已启用">已启用</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </template>
-
             <template slot-scope="scope">
-              {{ scope.row.job }}
+              {{ scope.row.power }}
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button type="primary" size="small" @click="openDrawer(scope.row.id)">详情</el-button>
-              <el-button type="primary" plain size="small" @click="handleEdit(scope.row.id)">编辑</el-button>
-              <el-button type="danger" plain size="small" @click="handleDelete(scope.row.id)">删除</el-button>
+              <el-button type="danger" plain size="small" @click="handleDisable(scope.row.id)">禁用</el-button>
     
               <el-drawer
                 title="详细信息"
@@ -188,17 +172,16 @@
           },
           totalPages: 0,
           role: {
-            job: '',
-            id: '',
+            password: '',
             name: '',
+            nickname: '',
             sex: '',
             mail: '',
             phone: '',
-            idCard: '',
-            card: '',
-            address: '',
-            attendance: '',
-            birthday: ''
+            id: '',
+            power: '',
+            documentType: '',
+            integral: '',
           },
           list: {
           radio: '1'
@@ -256,7 +239,7 @@
     },
     
       mounted: function() {
-        this.initUser()
+        this.loadVisitor()
       },
 
       methods: {
@@ -273,16 +256,16 @@
         
         initUser() {
           var _this = this
-          this.$axios.post("/manager/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
+          this.$axios.post("/user/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data.data
               _this.totalPages = resp.data.data.total
             }
           })
         },
-        loadStaff(){
+        loadVisitor(){
           var _this = this
-          this.$axios.get('/manager/all').then(resp => {
+          this.$axios.get('/user/all').then(resp => {
             if (resp.data.code === 200) {
               _this.rolesList = resp.data.data
             }
@@ -294,7 +277,7 @@
           //  alert(this.$refs.searchBar.keywords)    //测试输入框中的内容
           this.$axios
             //向后端发送数据
-            .get('/manager/search?keywords=' + this.$refs.searchBar.keywords, {}).then(resp => {
+            .get('/user/search?keywords=' + this.$refs.searchBar.keywords, {}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.rolesList = resp.data.data
               }
@@ -362,7 +345,7 @@
         var _this = this
         this.$axios
           //向后端发送数据
-          .post('/manager/view?id=' + id, {}).then(resp => {
+          .post('/user/view?id=' + id, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.role = resp.data.data
             }
@@ -372,7 +355,7 @@
         var _this = this
         this.$axios
           //向后端发送数据
-          .post('/manager/detail?id=' + id, {}).then(resp => {
+          .post('/user/detail?id=' + id, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.role = resp.data.data
             }
@@ -383,7 +366,7 @@
         this.dialogType = 'edit'
       },
 
-      handleDelete(id){
+      handleDisable(id){
         this.$confirm('确定删除此条信息吗?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
