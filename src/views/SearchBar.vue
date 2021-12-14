@@ -8,7 +8,7 @@
         style="width: 400px;margin-right: 10px"
         v-model="keywords">
       </el-input>
-      <el-button size="primary" type="primary" icon="el-icon-search" @click="searchClick">查询</el-button>
+      <el-button size="primary" type="primary" @click="searchClick">查询</el-button>
     </div>
   </template>
   
