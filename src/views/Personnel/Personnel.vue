@@ -297,14 +297,15 @@
           listen.$on("searchJob",()=>{
             console.log("in command")
             var _this = this
+            console.log(command)
             this.$axios.post('/manager/job?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
               }
+            })
           })
-
-          })
+          this.pages.pageNum = 1
           var _this = this
           console.log("out command")
           this.$axios.post('/manager/job?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
@@ -322,16 +323,19 @@
               //向后端发送数据
               .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
-                  _this.rolesList = resp.data.data
+                  _this.rolesList = resp.data.data.list
+                  _this.totalPages = resp.data.data.total
                 }
               })
           })
+          this.pages.pageNum = 1
           var _this = this
           this.$axios
             //向后端发送数据
-            .get('/manager/search?keywords=' + this.$refs.searchBar.keywords, {}).then(resp => {
+            .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
               if (resp && resp.data.code === 200) {
-                _this.rolesList = resp.data.data
+                _this.rolesList = resp.data.data.list
+                _this.totalPages = resp.data.data.total
               }
             })
         },
@@ -432,10 +436,10 @@
               else if(this.click === 'command')
                 listen.$emit("searchJob")
               else this.initUser()
-                this.$message({
-                type: 'success',
-                message: '删除成功!'
-                })
+              this.$message({
+              type: 'success',
+              message: '删除成功!'
+              })
             }
           }) 
         })
@@ -452,9 +456,8 @@
                 this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {
-                    console.log(resp);
                     _this.rolesList = resp.data.data
-                    console.log(_this.rolesList);
+                    _this.initUser()
                   }
                   var i = 0
                   for (i;i<(_this.rolesList.length);i++){ 
