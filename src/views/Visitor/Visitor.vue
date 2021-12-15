@@ -25,6 +25,11 @@
               {{ scope.row.mail }}
             </template>
           </el-table-column>
+          <el-table-column label="积分" width="200%">
+            <template slot-scope="scope"> 
+              {{ scope.row.integral }}
+            </template>
+          </el-table-column>
           <el-table-column label="用户状态" width="150%">
             <!-- slot-scope="scope" -->
             <template slot="header">
@@ -40,13 +45,13 @@
                 </el-dropdown>
               </template>
             <template slot-scope="scope">
-              {{ scope.row.power }}
+              {{ scope.row.state }}
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" @click="openDrawer(scope.row.id)">详情</el-button>
-              <el-button type="danger" plain size="small" @click="handleDisable(scope.row.id)">禁用</el-button>
+              <el-button type="primary" size="small" @click="openDrawer(scope.row.phone)">详情</el-button>
+              <el-button type="danger" plain size="small" @click="handleDisable(scope.row.phone)">禁用</el-button>
     
               <el-drawer
                 title="详细信息"
@@ -56,26 +61,25 @@
                 style="float:center"
               >
                 <el-descriptions class="margin-top" :column="2" :size="size" style="margin-left:80px">
-                  <el-descriptions-item label="工号">{{ role.id }}</el-descriptions-item>
+                  <el-descriptions-item label="手机号（账号）">{{ role.phone }}</el-descriptions-item>
                   <el-descriptions-item label="姓名">{{ role.name }}</el-descriptions-item>
-                  <el-descriptions-item label="身份证号">{{ role.idCard }}</el-descriptions-item>
-                  <el-descriptions-item label="生日">{{role.birthday }}</el-descriptions-item>
-                  <el-descriptions-item label="考勤（本月）">{{ role.attendance }}</el-descriptions-item>
-                  <el-descriptions-item label="职务">
-                    <el-tag size="medium">{{ role.job }}</el-tag>
+                  <el-descriptions-item label="用户名">{{ role.nickname }}</el-descriptions-item>
+                  <el-descriptions-item label="密码">{{ role.password }}</el-descriptions-item>
+                  <el-descriptions-item label="证件类型">
+                    <el-tag size="medium">{{ role.documentType }}</el-tag> 
                   </el-descriptions-item>
-                  <el-descriptions-item label="性别">{{ role.sex }}</el-descriptions-item>
-                  <el-descriptions-item label="联系方式">{{ role.phone }}</el-descriptions-item>
+                  <el-descriptions-item label="身份证号">{{ role.id }}</el-descriptions-item>
+                  <el-descriptions-item label="性别">{{role.sex }}</el-descriptions-item>
                   <el-descriptions-item label="邮箱">{{ role.mail }}</el-descriptions-item>
-                  <el-descriptions-item label="银行卡号">{{ role.card }}</el-descriptions-item>
-                  <el-descriptions-item label="联系地址">{{ role.address}}</el-descriptions-item>
+                  <el-descriptions-item label="用户状态">{{ role.state }}</el-descriptions-item>
+                  <el-descriptions-item label="用户积分">{{ role.integral}}</el-descriptions-item>
                 </el-descriptions>
               </el-drawer>
             </template>
           </el-table-column>
         </el-table>
 
-        <el-dialog :title="titleName" :visible.sync="dialogVisible" width="700px" destroy-on-close>
+        <!-- <el-dialog :title="titleName" :visible.sync="dialogVisible" width="700px" destroy-on-close>
           <el-form ref="ruleForm" :inline="true" :model="role" :rules="rules" label-width="80px" label-position="right">
             <el-span v-model="role.id" style="color:#FFF;font-size:1px">{{role.id}}</el-span>
             <el-form-item label="姓名" prop="name">
@@ -107,7 +111,6 @@
             <el-form-item label="银行卡号" prop="card">
               <el-input v-model="role.card" placeholder="请输入银行卡号" style="width:230px;" />
             </el-form-item>
-            <!-- </el-form-item> -->
             <el-form-item label="联系地址" prop="address">
               <el-input
                 v-model="role.address"
@@ -123,7 +126,7 @@
             <el-button type="primary" plain @click="resetForm('ruleForm')">重置</el-button>
             <el-button type="danger" @click="dialogVisible=false">取消</el-button>
           </div>
-        </el-dialog>
+        </el-dialog> -->
         <br><br>
       <div class="block">
         <el-pagination
@@ -179,62 +182,16 @@
             mail: '',
             phone: '',
             id: '',
-            power: '',
+            state: '',
             documentType: '',
             integral: '',
           },
           list: {
           radio: '1'
         },
-          rules: {
-            name: [{ required: true, message: '请输入姓名', trigger: 'blur' },
-              { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }],
-            idCard: [{ required: true, message: '请输入身份证号', trigger: 'blur' },
-              { min: 18, max: 18, message: '长度为18个数字', trigger: 'blur' }],
-            mail: [{
-              required: true,
-              message: '请输入邮箱',
-              trigger: 'blur'
-            },
-            {
-              validator: function(rule, value, callback) {
-                if (/^\w{1,64}@[a-z0-9\-]{1,256}(\.[a-z]{2,6}){1,2}$/i.test(value) === false) {
-                  callback(new Error('邮箱格式错误'))
-                } else {
-                  callback()
-                }
-              },
-              trigger: 'blur'
-            }],
-            phone: [{
-              required: true,
-              message: '请输入手机号码',
-              trigger: 'blur'
-            },
-            {
-              validator: function(rule, value, callback) {
-                if (/^1[34578]\d{9}$/.test(value) === false) {
-                  callback(new Error('手机号格式错误'))
-                } else {
-                  callback()
-                }
-              },
-              trigger: 'blur'
-            }],
-            manager: [{ required: true, message: '请选择管理权限', trigger: 'blur' }],
-            sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
-            job: [{ required: true, message: '请选择职务', trigger: 'blur' }],
-            card: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }]
-          },
           routes: [],
           rolesList: [],
-          dialogVisible: false,
-          dialogType: 'edit',
           checkStrictly: false,
-          defaultProps: {
-            children: 'children',
-            label: 'title'
-          }
         }
     },
     
@@ -284,31 +241,26 @@
             })
         },
         generateRoutes(routes, basePath = '/') {
-        const res = []
+          const res = []
+          for (let route of routes) {
+            // skip some route
+            if (route.hidden) { continue }
+            const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
 
-        for (let route of routes) {
-          // skip some route
-          if (route.hidden) { continue }
-
-          const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
-
-          if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-            route = onlyOneShowingChild
-          }
-
-          const data = {
-            path: path.resolve(basePath, route.path),
-            title: route.meta && route.meta.title
-
-          }
-
-          // recursive child routes
-            if (route.children) {
-              data.children = this.generateRoutes(route.children, data.path)
+            if (route.children && onlyOneShowingChild && !route.alwaysShow) {
+              route = onlyOneShowingChild
             }
-            res.push(data)
-          }
-          return res
+            const data = {
+              path: path.resolve(basePath, route.path),
+              title: route.meta && route.meta.title
+            }
+            // recursive child routes
+              if (route.children) {
+                data.children = this.generateRoutes(route.children, data.path)
+              }
+              res.push(data)
+            }
+            return res
         },
       generateArr(routes) {
         let data = []
@@ -323,21 +275,16 @@
         })
         return data
       },
-      handleAddRole() {
-        this.role = Object.assign({}, defaultRole)
-        if (this.$refs.tree) {
-          this.$refs.tree.setCheckedNodes([])
-        }
-        this.isShow = false
-        this.dialogType = 'new'
-        this.titleName = '添加用户'
-        this.dialogVisible = true
-      },
       refreshing() {
         location.reload()
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields()
+      handleCommand(command){
+        var _this = this
+        this.$axios.post('/user/state?state=' + command,{}).then(resp => {
+          if(resp && resp.data.code === 200){
+            _this.rolesList = resp.data.data
+          }
+        })
       },
       openDrawer(id) {
       this.drawer = true
@@ -351,23 +298,8 @@
             }
           })
       },
-      handleEdit(id) {
-        var _this = this
-        this.$axios
-          //向后端发送数据
-          .post('/user/detail?id=' + id, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.role = resp.data.data
-            }
-          })
-        this.isShow = true
-        this.titleName = '编辑信息'
-        this.dialogVisible = true
-        this.dialogType = 'edit'
-      },
-
       handleDisable(id){
-        this.$confirm('确定删除此条信息吗?', '警告', {
+        this.$confirm('确定禁用此用户吗?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -376,80 +308,17 @@
           var _this = this
           this.$axios
           //向后端发送数据
-          .post('/manager/delete?id=' + id, {}).then(resp => {
+          .post('/user/changeState?state=' + id, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data  //重新刷新数据
                 this.$message({
                 type: 'success',
-                message: '删除成功!'
+                message: '禁用成功!'
                 })
               }
           })
-        })
-          .catch(err => { console.error(err) })
-          },
-      submit(formName){
-        if(this.dialogType === 'new'){
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              var _this = this
-              this.$axios
-                //向后端发送数据
-                .post('/manager/add?name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
-                this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
-                              this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
-                  if (resp && resp.data.code === 200) {
-                    console.log(resp);
-                    _this.rolesList = resp.data.data
-                    console.log(_this.rolesList);
-                  }
-                  var i = 0
-                  for (i;i<(_this.rolesList.length);i++){ 
-                    if(_this.rolesList[i].idCard == this.role.idCard){
-                      break;
-                    }
-                  }
-                  console.log("i: ",i)
-                  console.log("rolesList[i]: ",_this.rolesList[i])
-                  this.$alert('此用户工号为：' + _this.rolesList[i].id + '</br>默认密码为：88888888', '信息', {
-                    confirmButtonText: '确定',
-                    dangerouslyUseHTMLString: true,
-                    center: true,
-                    callback: action => {
-                      this.$message({
-                        type: 'success',
-                        message: `添加成功`
-                      });
-                    }
-                  })
-                  this.dialogVisible = false
-                })
-              }else{
-                console.log('error submit!!');
-                return false;
-              }
-          });
-        }else{
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              var _this = this
-              this.$axios
-                //向后端发送数据
-                .post('/manager/edit?id='+this.role.id+'&name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
-                this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
-                              this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
-                  if (resp && resp.data.code === 200) {
-                    _this.rolesList = resp.data.data
-                  }
-                })
-              this.dialogVisible = false
-            }else{
-              console.log('error submit!!');
-              return false;
-            }
-          });
-        }
-      }
+        }).catch(err => { console.error(err) })},
+
     }
   }
 </script>
