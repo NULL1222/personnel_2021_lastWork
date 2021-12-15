@@ -158,10 +158,13 @@
  
 <script>
   import SearchBar from '../SearchBar.vue'
+  import Vue from 'vue'
   const defaultRole = {
     job: '人事管理',
     sex: '男',
   }
+
+  var listen = new Vue()
 
   import Cookies from 'js-cookie';
   export default{
@@ -175,6 +178,7 @@
       },
       data() {
         return {
+          click: 'all',
           currentPage1: 1,
           drawer: false,
           direction: 'rtl',
@@ -249,10 +253,6 @@
           dialogVisible: false,
           dialogType: 'edit',
           checkStrictly: false,
-          defaultProps: {
-            children: 'children',
-            label: 'title'
-          }
         }
     },
     
@@ -264,83 +264,118 @@
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
           this.pages.pageSize = val
-          this.initUser();
+          if(this.click === 'search')
+            listen.$emit("searchAll")
+          else if(this.click == 'command')
+            listen.$emit("searchJob")
+          else this.initUser();
         },
         handleCurrentChange(val) {
           console.log(`当前页: ${val}`);
           this.pages.pageNum = val
-          this.initUser();
+          if(this.click === 'search')
+            listen.$emit("searchAll")
+          else if(this.click == 'command')
+            listen.$emit("searchJob")
+          else this.initUser();
         }, 
         
         initUser() {
           var _this = this
           this.$axios.post("/manager/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
             if (resp && resp.data.code === 200) {
-              _this.rolesList = resp.data.data.data
+              _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
             }
           })
         },
-        loadStaff(){
+
+        handleCommand(command){
+          if(command === "全部")
+            this.click = 'all'
+          else this.click = 'command'
+          listen.$on("searchJob",()=>{
+            console.log("in command")
+            var _this = this
+            console.log(command)
+            this.$axios.post('/manager/job?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
+              if(resp && resp.data.code === 200){
+                _this.rolesList = resp.data.data.list
+                _this.totalPages = resp.data.data.total
+              }
+            })
+          })
+          this.pages.pageNum = 1
           var _this = this
-          this.$axios.get('/manager/all').then(resp => {
-            if (resp.data.code === 200) {
-              _this.rolesList = resp.data.data
+          console.log("out command")
+          this.$axios.post('/manager/job?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
+            if(resp && resp.data.code === 200){
+              _this.rolesList = resp.data.data.list
+              _this.totalPages = resp.data.data.total
             }
           })
         },
-
         searchResult() {
+          this.click = 'search'
+          listen.$on("searchAll",()=>{
+            var _this = this
+            this.$axios
+              //向后端发送数据
+              .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+                if (resp && resp.data.code === 200) {
+                  _this.rolesList = resp.data.data.list
+                  _this.totalPages = resp.data.data.total
+                }
+              })
+          })
+          this.pages.pageNum = 1
           var _this = this
-          //  alert(this.$refs.searchBar.keywords)    //测试输入框中的内容
           this.$axios
             //向后端发送数据
-            .get('/manager/search?keywords=' + this.$refs.searchBar.keywords, {}).then(resp => {
+            .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
               if (resp && resp.data.code === 200) {
-                _this.rolesList = resp.data.data
+                _this.rolesList = resp.data.data.list
+                _this.totalPages = resp.data.data.total
               }
             })
         },
-        generateRoutes(routes, basePath = '/') {
-        const res = []
+//        generateRoutes(routes, basePath = '/') {
+//        const res = []
+//        for (let route of routes) {
+//          // skip some route
+//          if (route.hidden) { continue }
+//
+//          const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
+//          if (route.children && onlyOneShowingChild && !route.alwaysShow) {
+//            route = onlyOneShowingChild
+//          }
+//          const data = {
+//            path: path.resolve(basePath, route.path),
+//            title: route.meta && route.meta.title
 
-        for (let route of routes) {
-          // skip some route
-          if (route.hidden) { continue }
+//          }
 
-          const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
-
-          if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-            route = onlyOneShowingChild
-          }
-
-          const data = {
-            path: path.resolve(basePath, route.path),
-            title: route.meta && route.meta.title
-
-          }
-
-          // recursive child routes
-            if (route.children) {
-              data.children = this.generateRoutes(route.children, data.path)
-            }
-            res.push(data)
-          }
-          return res
-        },
-      generateArr(routes) {
-        let data = []
-        routes.forEach(route => {
-          data.push(route)
-          if (route.children) {
-            const temp = this.generateArr(route.children)
-            if (temp.length > 0) {
-              data = [...data, ...temp]
-            }
-          }
-        })
-        return data
-      },
+//          // recursive child routes
+//            if (route.children) {
+//              data.children = this.generateRoutes(route.children, data.path)
+//            }
+//            res.push(data)
+//          }
+//          return res
+//        },
+//      generateArr(routes) {
+//        let data = []
+//        routes.forEach(route => {
+//          data.push(route)
+//          if (route.children) {
+//            const temp = this.generateArr(route.children)
+//            if (temp.length > 0) {
+//              data = [...data, ...temp]
+//            }
+//          }
+//        })
+//        return data
+//      },
       handleAddRole() {
         this.role = Object.assign({}, defaultRole)
         if (this.$refs.tree) {
@@ -395,14 +430,18 @@
           this.$axios
           //向后端发送数据
           .post('/manager/delete?id=' + id, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.rolesList = resp.data.data  //重新刷新数据
-                this.$message({
-                type: 'success',
-                message: '删除成功!'
-                })
-              }
-          })
+            if (resp.data.code === 200) {
+              if(this.click === 'search')
+                listen.$emit("searchAll")
+              else if(this.click === 'command')
+                listen.$emit("searchJob")
+              else this.initUser()
+              this.$message({
+              type: 'success',
+              message: '删除成功!'
+              })
+            }
+          }) 
         })
           .catch(err => { console.error(err) })
           },
@@ -417,9 +456,8 @@
                 this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {
-                    console.log(resp);
                     _this.rolesList = resp.data.data
-                    console.log(_this.rolesList);
+                    _this.initUser()
                   }
                   var i = 0
                   for (i;i<(_this.rolesList.length);i++){ 
