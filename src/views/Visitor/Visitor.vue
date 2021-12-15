@@ -107,7 +107,6 @@
             <el-form-item label="银行卡号" prop="card">
               <el-input v-model="role.card" placeholder="请输入银行卡号" style="width:230px;" />
             </el-form-item>
-            <!-- </el-form-item> -->
             <el-form-item label="联系地址" prop="address">
               <el-input
                 v-model="role.address"

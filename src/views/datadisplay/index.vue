@@ -82,7 +82,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .dashboard-editor-container {
   padding: 32px;
   background-color: rgb(240, 242, 245);
@@ -102,9 +102,9 @@ export default {
   }
 }
 
-@media (max-width:1024px) {
+/* @media (max-width:1024px) {
   .chart-wrapper {
     padding: 8px;
-  }
-}
+  } */
+
 </style>

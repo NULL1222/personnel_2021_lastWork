@@ -80,5 +80,10 @@ export default new Router({
       name: '修改密码',
       component: ChangePwd
     },
+    // {
+    //   path: '/datadisplay/index',
+    //   name: '数据图',
+    //   component: datadisplay
+    // },
   ],
 })
