@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="train">
     <el-form label-position="labelPosition" label-width="115px" :model="formInline" class="demo-form-inline">
       <div class="form-left">
         <el-form-item label="车次">
