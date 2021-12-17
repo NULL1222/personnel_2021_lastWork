@@ -257,7 +257,7 @@
     },
     
       mounted: function() {
-        this.initUser()
+        this.initStaff()
       },
 
       methods: {
@@ -268,7 +268,7 @@
             listen.$emit("searchAll")
           else if(this.click == 'command')
             listen.$emit("searchJob")
-          else this.initUser();
+          else this.initStaff();
         },
         handleCurrentChange(val) {
           console.log(`当前页: ${val}`);
@@ -277,10 +277,10 @@
             listen.$emit("searchAll")
           else if(this.click == 'command')
             listen.$emit("searchJob")
-          else this.initUser();
+          else this.initStaff();
         }, 
         
-        initUser() {
+        initStaff() {
           var _this = this
           this.$axios.post("/manager/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
             if (resp && resp.data.code === 200) {
@@ -315,6 +315,7 @@
             }
           })
         },
+
         searchResult() {
           this.click = 'search'
           listen.$on("searchAll",()=>{
@@ -376,6 +377,7 @@
 //        })
 //        return data
 //      },
+      
       handleAddRole() {
         this.role = Object.assign({}, defaultRole)
         if (this.$refs.tree) {
@@ -386,12 +388,15 @@
         this.titleName = '添加用户'
         this.dialogVisible = true
       },
+
       refreshing() {
         location.reload()
       },
+
       resetForm(formName) {
         this.$refs[formName].resetFields()
       },
+
       openDrawer(id) {
       this.drawer = true
       //drawer.visible=true
@@ -404,6 +409,7 @@
             }
           })
       },
+
       handleEdit(id) {
         var _this = this
         this.$axios
@@ -435,7 +441,7 @@
                 listen.$emit("searchAll")
               else if(this.click === 'command')
                 listen.$emit("searchJob")
-              else this.initUser()
+              else this.initStaff()
               this.$message({
               type: 'success',
               message: '删除成功!'
@@ -445,6 +451,7 @@
         })
           .catch(err => { console.error(err) })
           },
+          
       submit(formName){
         if(this.dialogType === 'new'){
           this.$refs[formName].validate((valid) => {
@@ -457,7 +464,7 @@
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {
                     _this.rolesList = resp.data.data
-                    _this.initUser()
+                    _this.initStaff()
                   }
                   var i = 0
                   for (i;i<(_this.rolesList.length);i++){ 

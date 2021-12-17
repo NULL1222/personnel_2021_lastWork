@@ -5,7 +5,7 @@
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
         <el-table :data="rolesList" style="width: 100%;margin-top:30px;float:center">
-          <el-table-column label="账号" width="100%">
+          <el-table-column label="账号（手机号）" width="100%">
             <template slot-scope="scope">
               {{ scope.row.phone }}
             </template>
@@ -64,12 +64,11 @@
                   <el-descriptions-item label="手机号（账号）">{{ role.phone }}</el-descriptions-item>
                   <el-descriptions-item label="姓名">{{ role.name }}</el-descriptions-item>
                   <el-descriptions-item label="用户名">{{ role.nickname }}</el-descriptions-item>
-                  <el-descriptions-item label="密码">{{ role.password }}</el-descriptions-item>
+                  <el-descriptions-item label="性别">{{role.sex }}</el-descriptions-item>
                   <el-descriptions-item label="证件类型">
                     <el-tag size="medium">{{ role.documentType }}</el-tag> 
                   </el-descriptions-item>
                   <el-descriptions-item label="身份证号">{{ role.id }}</el-descriptions-item>
-                  <el-descriptions-item label="性别">{{role.sex }}</el-descriptions-item>
                   <el-descriptions-item label="邮箱">{{ role.mail }}</el-descriptions-item>
                   <el-descriptions-item label="用户状态">{{ role.state }}</el-descriptions-item>
                   <el-descriptions-item label="用户积分">{{ role.integral}}</el-descriptions-item>
@@ -149,7 +148,10 @@
     sex: '男',
   }
 
+  var listen = new Vue()
+
   import Cookies from 'js-cookie';
+  import Vue from 'vue'
   export default{
       components: {
         SearchBar
@@ -161,6 +163,7 @@
       },
       data() {
         return {
+          click: 'all',
           currentPage1: 1,
           drawer: false,
           direction: 'rtl',
@@ -175,7 +178,6 @@
           },
           totalPages: 0,
           role: {
-            password: '',
             name: '',
             nickname: '',
             sex: '',
@@ -196,109 +198,140 @@
     },
     
       mounted: function() {
-        this.loadVisitor()
+        this.initUser()
       },
 
       methods: {
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
           this.pages.pageSize = val
-          this.initUser();
+          if(this.click === 'search')
+            listen.$emit("searchAll")
+          else if(this.click == 'command')
+            listen.$emit("searchState")
+          else this.initUser();
         },
         handleCurrentChange(val) {
           console.log(`当前页: ${val}`);
           this.pages.pageNum = val
-          this.initUser();
+          if(this.click === 'search')
+            listen.$emit("searchAll")
+          else if(this.click == 'command')
+            listen.$emit("searchState")
+          else this.initUser();
         }, 
         
         initUser() {
           var _this = this
           this.$axios.post("/user/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
             if (resp && resp.data.code === 200) {
-              _this.rolesList = resp.data.data.data
+              _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
             }
           })
         },
-        loadVisitor(){
-          var _this = this
-          this.$axios.get('/user/all').then(resp => {
-            if (resp.data.code === 200) {
-              _this.rolesList = resp.data.data
-            }
-          })
-        },
-
         searchResult() {
+          this.click = 'search'
+          listen.$on("searchAll",()=>{
+            var _this = this
+            this.$axios
+              //向后端发送数据
+              .get('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+                if (resp && resp.data.code === 200) {
+                  _this.rolesList = resp.data.data.list
+                  _this.totalPages = resp.data.data.total
+                }
+              })
+          })
+          this.pages.pageNum = 1
           var _this = this
-          //  alert(this.$refs.searchBar.keywords)    //测试输入框中的内容
           this.$axios
             //向后端发送数据
-            .get('/user/search?keywords=' + this.$refs.searchBar.keywords, {}).then(resp => {
+            .get('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
               if (resp && resp.data.code === 200) {
-                _this.rolesList = resp.data.data
+                _this.rolesList = resp.data.data.list
+                _this.totalPages = resp.data.data.total
               }
             })
         },
-        generateRoutes(routes, basePath = '/') {
-          const res = []
-          for (let route of routes) {
-            // skip some route
-            if (route.hidden) { continue }
-            const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
+//        generateRoutes(routes, basePath = '/') {
+//        const res = []
+//        for (let route of routes) {
+//          // skip some route
+//          if (route.hidden) { continue }
+//
+//          const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
+//          if (route.children && onlyOneShowingChild && !route.alwaysShow) {
+//            route = onlyOneShowingChild
+//          }
+//          const data = {
+//            path: path.resolve(basePath, route.path),
+//            title: route.meta && route.meta.title
 
-            if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-              route = onlyOneShowingChild
-            }
-            const data = {
-              path: path.resolve(basePath, route.path),
-              title: route.meta && route.meta.title
-            }
-            // recursive child routes
-              if (route.children) {
-                data.children = this.generateRoutes(route.children, data.path)
-              }
-              res.push(data)
-            }
-            return res
-        },
-      generateArr(routes) {
-        let data = []
-        routes.forEach(route => {
-          data.push(route)
-          if (route.children) {
-            const temp = this.generateArr(route.children)
-            if (temp.length > 0) {
-              data = [...data, ...temp]
-            }
-          }
-        })
-        return data
-      },
+//          }
+
+//          // recursive child routes
+//            if (route.children) {
+//              data.children = this.generateRoutes(route.children, data.path)
+//            }
+//            res.push(data)
+//          }
+//          return res
+//        },
+//      generateArr(routes) {
+//        let data = []
+//        routes.forEach(route => {
+//          data.push(route)
+//          if (route.children) {
+//            const temp = this.generateArr(route.children)
+//            if (temp.length > 0) {
+//              data = [...data, ...temp]
+//            }
+//          }
+//        })
+//        return data
+//      },
       refreshing() {
         location.reload()
       },
       handleCommand(command){
-        var _this = this
-        this.$axios.post('/user/state?state=' + command,{}).then(resp => {
-          if(resp && resp.data.code === 200){
-            _this.rolesList = resp.data.data
-          }
-        })
+          if(command === "全部")
+            this.click = 'all'
+          else this.click = 'command'
+          listen.$on("searchState",()=>{
+            console.log("in command")
+            var _this = this
+            console.log(command)
+            this.$axios.post('/user/state?state=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
+              if(resp && resp.data.code === 200){
+                _this.rolesList = resp.data.data.list
+                _this.totalPages = resp.data.data.total
+              }
+            })
+          })
+          this.pages.pageNum = 1
+          var _this = this
+          console.log("out command")
+          this.$axios.post('/user/state?state=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
+            if(resp && resp.data.code === 200){
+              _this.rolesList = resp.data.data.list
+              _this.totalPages = resp.data.data.total
+            }
+          })
       },
-      openDrawer(id) {
+      openDrawer(phone) {
       this.drawer = true
       //drawer.visible=true
         var _this = this
         this.$axios
           //向后端发送数据
-          .post('/user/view?id=' + id, {}).then(resp => {
+          .post('/user/detail?phone=' + phone, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.role = resp.data.data
             }
           })
       },
-      handleDisable(id){
+      handleDisable(phone){
         this.$confirm('确定禁用此用户吗?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -308,7 +341,7 @@
           var _this = this
           this.$axios
           //向后端发送数据
-          .post('/user/changeState?state=' + id, {}).then(resp => {
+          .post('/user/changeState?state=' + phone, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data  //重新刷新数据
                 this.$message({

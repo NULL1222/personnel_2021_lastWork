@@ -10,7 +10,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/baiduApi': {
+        target: 'https://aip.baidubce.com', //访问地址
+        changeOrigin: true,
+        secure: false, //只有代理https 地址需要次选项
+        pathRewrite: {
+          '^/baiduApi': ''
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
