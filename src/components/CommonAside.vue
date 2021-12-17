@@ -130,7 +130,7 @@
     min-height: 400px;
   }
   .el-menu {
-    /* transition: width 0.1s ease-in-out; */
+    transition: width 0.1s ease-in-out;
   }
   .menu-title {
     height: 60px;

@@ -14,7 +14,8 @@
             <el-input v-model="LoginForm.password"
             :type="passw" 
             @blur="onBlur"
-            clearable>
+            clearable
+            @keyup.enter.native="login">
              <i 
              slot="suffix" 
              :class="icon"
@@ -23,7 +24,7 @@
           </el-form-item>
           <el-form-item class="buttons">
             <!-- <el-button type="primary" @click="submitForm('LoginForm')" style="width: 200px; margin-right: 100px; " class="buttonlogin">登录</el-button> -->
-            <el-button type="primary" @click="login()" class="buttonlogin">登录</el-button>
+            <el-button type="primary" @click.native.prevent="login" class="buttonlogin">登录</el-button>
             <el-button @click="resetForm('LoginForm')" class="buttonreset">重置</el-button>
           </el-form-item>
           <!-- <router-link to='/Register'>
@@ -145,6 +146,7 @@
         },
         resetForm(formName) {
         this.$refs[formName].resetFields();
+        this.$refs.getFocus.focus()
         }
         // resetImg(){
         // this.imgUrl = "http://localhost:9000/manager/verifyCode?time="+new Date();
