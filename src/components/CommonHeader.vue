@@ -10,8 +10,8 @@
           <img :src="userImg" class="r-content-user"/>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item @click.native="personalCenter">个人中心</el-dropdown-item>
+          <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -28,6 +28,29 @@ export default {
   methods: {
     emitCollapse() {
       this.$emit('emitCollapse');
+    },
+    personalCenter() {
+      // this.dialogVisible = true
+    },
+    logout() {
+      this.$confirm('此操作将注销登录, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+      }).then(() => {
+        window.sessionStorage.clear()
+        // 跳转到登录页
+        this.$router.push('/')
+        history.pushState(null, null, document.URL);
+        window.addEventListener("popstate", function (e) {
+          history.pushState(null, null, document.URL);
+        }, false);
+      }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });    
+      });
     }
   }
 };

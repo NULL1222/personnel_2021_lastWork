@@ -106,10 +106,6 @@
           console.log(key, keyPath);
         },
         clickMenu(item) {
-          // if(item.name == null){
-          //   // console.log(index)
-          //   this.$router.push({name: item.children[index].name});
-          // }else{
             this.$router.push({name: item.name});
           }
       },

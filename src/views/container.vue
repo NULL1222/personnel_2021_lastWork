@@ -1,6 +1,6 @@
 <template>
    <div> 
-    <el-container class="container">
+    <el-container class="container" style="min-height: 100%;">
         <el-aside width="auto"><common-aside :isCollapse="collapseStatus"></common-aside></el-aside>
         <el-container>
           <el-header><common-header @emitCollapse="toggle"></common-header></el-header>
@@ -35,8 +35,17 @@ export default {
 .el-header {
   background-color: rgb(121, 157, 204);
 }
+.el-container {
+  min-height: 100%;
+}
 .el-main {
   padding-top: 0;
+  /* overflow-y: hidden; */
+    /* text-align: center; */
+    /* line-height: 160px; */
+    /* height: 95vh; */
+    /* overflow-y: scroll;
+    position: absolute; */
 }
 .el-aside {
   height: 100vh;
