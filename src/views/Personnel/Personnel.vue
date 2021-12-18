@@ -44,13 +44,11 @@
                     职务<i class="el-icon-arrow-down el-icon--right el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                        <el-radio-group v-model="radio">
                           <el-dropdown-item command="全部">全部</el-dropdown-item>
                           <el-dropdown-item command="人事管理">人事管理</el-dropdown-item>
                           <el-dropdown-item command="财务管理">财务管理</el-dropdown-item>
                           <el-dropdown-item command="铁路管理">铁路管理</el-dropdown-item>
                           <el-dropdown-item command="用户管理">用户管理</el-dropdown-item>
-                        </el-radio-group>
                   </el-dropdown-menu>
                 </el-dropdown>
               </template>
@@ -146,7 +144,7 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage1"
+          :current-page="currentPage"
           :page-sizes="[10, 20, 30, 40]"
           :page-size= pages.pageSize
           layout="total, sizes, prev, pager, next, jumper"
@@ -179,7 +177,8 @@
       data() {
         return {
           click: 'all',
-          currentPage1: 1,
+          myCommend: '',
+          currentPage: 1,
           drawer: false,
           direction: 'rtl',
           edit: false,
@@ -271,6 +270,7 @@
           else this.initStaff();
         },
         handleCurrentChange(val) {
+          this.currentPage = val
           console.log(`当前页: ${val}`);
           this.pages.pageNum = val
           if(this.click === 'search')
@@ -291,6 +291,11 @@
         },
 
         handleCommand(command){
+          this.myCommend = command
+//          this.searchBar.$on("onSearch",(keywords)=>{
+//            console.log(keywords)
+//          })
+          console.log(this.$refs.searchBar.keywords)
           if(command === "全部")
             this.click = 'all'
           else this.click = 'command'
@@ -298,7 +303,7 @@
             console.log("in command")
             var _this = this
             console.log(command)
-            this.$axios.post('/manager/job?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
+            this.$axios.post('/manager/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
@@ -308,7 +313,7 @@
           this.pages.pageNum = 1
           var _this = this
           console.log("out command")
-          this.$axios.post('/manager/job?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
+          this.$axios.post('/manager/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
             if(resp && resp.data.code === 200){
               _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
@@ -316,13 +321,13 @@
           })
         },
 
-        searchResult() {
+        searchResult(keywords) {
           this.click = 'search'
           listen.$on("searchAll",()=>{
             var _this = this
             this.$axios
               //向后端发送数据
-              .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+              .get('/manager/search?keywords=' + keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data.list
                   _this.totalPages = resp.data.data.total
@@ -333,7 +338,7 @@
           var _this = this
           this.$axios
             //向后端发送数据
-            .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+            .get('/manager/search?keywords=' + keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
@@ -459,7 +464,7 @@
               var _this = this
               this.$axios
                 //向后端发送数据
-                .post('/manager/add?name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
+                .post('/manager/add?name=' + this.role.name +'&sex='+this.role.sex+'&idCard='+
                 this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {

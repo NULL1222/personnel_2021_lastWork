@@ -51,16 +51,17 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button type="primary" size="small" @click="openDrawer(scope.row.phone)">详情</el-button>
-              <el-button type="danger" plain size="small" @click="handleDisable(scope.row.phone)">禁用</el-button>
+              <el-button v-if="scope.row.state == '已禁用'" type="success" size="small" @click="handleDisable(scope.row.phone,scope.row.state)">启用</el-button>
+              <el-button v-if="scope.row.state == '已启用'" type="danger" size="small" @click="handleDisable(scope.row.phone,scope.row.state)">禁用</el-button>
     
               <el-drawer
                 title="详细信息"
                 :visible.sync="drawer"
                 :direction="direction"
-                :size="800"
+                :size="500"
                 style="float:center"
               >
-                <el-descriptions class="margin-top" :column="2" :size="size" style="margin-left:80px">
+                <el-descriptions class="margin-top" :column="2" :size="size" style="margin-left:30px">
                   <el-descriptions-item label="手机号（账号）">{{ role.phone }}</el-descriptions-item>
                   <el-descriptions-item label="姓名">{{ role.name }}</el-descriptions-item>
                   <el-descriptions-item label="用户名">{{ role.nickname }}</el-descriptions-item>
@@ -163,6 +164,7 @@
       },
       data() {
         return {
+          nowState: '禁用',
           click: 'all',
           currentPage1: 1,
           drawer: false,
@@ -291,69 +293,92 @@
 //        })
 //        return data
 //      },
-      refreshing() {
-        location.reload()
-      },
-      handleCommand(command){
-          if(command === "全部")
-            this.click = 'all'
-          else this.click = 'command'
-          listen.$on("searchState",()=>{
-            console.log("in command")
+        refreshing() {
+          location.reload()
+        },
+        handleCommand(command){
+            if(command === "全部")
+              this.click = 'all'
+            else this.click = 'command'
+            listen.$on("searchState",()=>{
+              console.log("in command")
+              var _this = this
+              console.log(command)
+              this.$axios.post('/user/state?state=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
+                if(resp && resp.data.code === 200){
+                  _this.rolesList = resp.data.data.list
+                  _this.totalPages = resp.data.data.total
+                }
+              })
+            })
+            this.pages.pageNum = 1
             var _this = this
-            console.log(command)
+            console.log("out command")
             this.$axios.post('/user/state?state=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
               }
             })
-          })
-          this.pages.pageNum = 1
-          var _this = this
-          console.log("out command")
-          this.$axios.post('/user/state?state=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
-            if(resp && resp.data.code === 200){
-              _this.rolesList = resp.data.data.list
-              _this.totalPages = resp.data.data.total
-            }
-          })
-      },
-      openDrawer(phone) {
-      this.drawer = true
-      //drawer.visible=true
-        var _this = this
-        this.$axios
-          //向后端发送数据
-          .post('/user/detail?phone=' + phone, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.role = resp.data.data
-            }
-          })
-      },
-      handleDisable(phone){
-        this.$confirm('确定禁用此用户吗?', '警告', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-        .then(async() => {
+        },
+        openDrawer(phone) {
+        this.drawer = true
+        //drawer.visible=true
           var _this = this
           this.$axios
-          //向后端发送数据
-          .post('/user/changeState?state=' + phone, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.rolesList = resp.data.data  //重新刷新数据
-                this.$message({
-                type: 'success',
-                message: '禁用成功!'
-                })
+            //向后端发送数据
+            .post('/user/detail?phone=' + phone, {}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.role = resp.data.data
               }
-          })
-        }).catch(err => { console.error(err) })},
-
+            })
+        },
+        handleDisable(phone,state){
+          var _this = this
+          console.log(state)
+          if(state === '已启用')
+            this.$confirm('确定禁用此用户吗?', '警告', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            })
+            .then(async() => {
+              this.$axios
+              //向后端发送数据
+              .post('/user/changeState?phone=' + phone + '&state=' + state, {}).then(resp => {
+                if (resp && resp.data.code === 200) {
+                  _this.rolesList = resp.data.data  //重新刷新数据
+                  this.$message({
+                  type: 'success',
+                  message: '禁用成功!'
+                  })
+                  _this.nowState = '启用'
+                  }
+              })
+            }).catch(err => { console.error(err) })
+          else
+            this.$confirm('确定启用此用户吗?', '警告', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            })
+            .then(async() => {
+              this.$axios
+              //向后端发送数据
+              .post('/user/changeState?phone=' + phone + '&state=' + state, {}).then(resp => {
+                if (resp && resp.data.code === 200) {
+                  _this.rolesList = resp.data.data  //重新刷新数据
+                  this.$message({
+                  type: 'success',
+                  message: '启用成功!'
+                  })
+                  _this.nowState = '禁用'
+                  }
+              })
+            }).catch(err => { console.error(err) })
+        },
+      }  
     }
-  }
 </script>
  <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
  <style scoped>
