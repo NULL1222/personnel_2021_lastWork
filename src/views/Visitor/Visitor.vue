@@ -4,13 +4,13 @@
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
-        <el-table :data="rolesList" style="width: 100%;margin-top:30px;float:center">
-          <el-table-column label="账号（手机号）" width="100%">
+        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center" @sort-change="sortChange">
+          <el-table-column label="账号（手机号）" width="150%">
             <template slot-scope="scope">
               {{ scope.row.phone }}
             </template>
           </el-table-column>
-          <el-table-column label="用户名" width="150%">
+          <el-table-column label="用户名" width="100%">
             <template slot-scope="scope">
               {{ scope.row.nickname }}
             </template>
@@ -25,12 +25,12 @@
               {{ scope.row.mail }}
             </template>
           </el-table-column>
-          <el-table-column label="积分" width="200%">
+          <el-table-column label="积分" width="120%" prop="integral" sortable="custom">
             <template slot-scope="scope"> 
               {{ scope.row.integral }}
             </template>
           </el-table-column>
-          <el-table-column label="用户状态" width="150%">
+          <el-table-column label="用户状态" width="100%">
             <!-- slot-scope="scope" -->
             <template slot="header">
                 <el-dropdown trigger="click" @command="handleCommand">
@@ -164,6 +164,7 @@
       },
       data() {
         return {
+          mycommand: '',
           nowState: '禁用',
           click: 'all',
           currentPage1: 1,
@@ -196,6 +197,7 @@
           routes: [],
           rolesList: [],
           checkStrictly: false,
+          order: ''
         }
     },
     
@@ -211,6 +213,8 @@
             listen.$emit("searchAll")
           else if(this.click == 'command')
             listen.$emit("searchState")
+          else if(this.click === 'sort')
+            listen.$emit("sort")
           else this.initUser();
         },
         handleCurrentChange(val) {
@@ -238,7 +242,7 @@
             var _this = this
             this.$axios
               //向后端发送数据
-              .get('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+              .get('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&state=" + this.mycommand + "&sort=" + this.order, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data.list
                   _this.totalPages = resp.data.data.total
@@ -249,7 +253,7 @@
           var _this = this
           this.$axios
             //向后端发送数据
-            .get('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+            .get('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&state=" + this.mycommand + "&sort=" + this.order, {}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
@@ -297,6 +301,7 @@
           location.reload()
         },
         handleCommand(command){
+          this.mycommand = command
             if(command === "全部")
               this.click = 'all'
             else this.click = 'command'
@@ -304,7 +309,7 @@
               console.log("in command")
               var _this = this
               console.log(command)
-              this.$axios.post('/user/state?state=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
+              this.$axios.post('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&state=" + command + "&sort=" + this.order,{}).then(resp => {
                 if(resp && resp.data.code === 200){
                   _this.rolesList = resp.data.data.list
                   _this.totalPages = resp.data.data.total
@@ -314,7 +319,7 @@
             this.pages.pageNum = 1
             var _this = this
             console.log("out command")
-            this.$axios.post('/user/state?state=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize,{}).then(resp => {
+            this.$axios.post('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&state=" + command + "&sort=" + this.order,{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
@@ -376,6 +381,36 @@
                   }
               })
             }).catch(err => { console.error(err) })
+        },
+        sortChange(column){
+          this.click = "sort"
+          listen.$on("sort",()=>{
+            var _this = this
+            if(column.order === "descending")
+              this.order = "order by integral DESC"
+            else if(column.order === "ascending") 
+              this.order = "order by integral ASC"
+            else this.order = null
+            this.$axios.post('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&state=" + this.mycommand + "&sort=" + this.order,{}).then(resp => {
+                if(resp && resp.data.code === 200){
+                  _this.rolesList = resp.data.data.list
+                  _this.totalPages = resp.data.data.total
+                }
+              })
+          })
+
+          var _this = this
+          if(column.order === "descending")
+            this.order = "order by integral DESC"
+            else if(column.order === "ascending") 
+              this.order = "order by integral ASC"
+            else this.order = null
+          this.$axios.post('/user/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&state=" + this.mycommand + "&sort=" + this.order,{}).then(resp => {
+            if(resp && resp.data.code === 200){
+              _this.rolesList = resp.data.data.list
+              _this.totalPages = resp.data.data.total
+            }
+          })
         },
       }  
     }

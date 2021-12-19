@@ -1,47 +1,72 @@
 <template>
   <div >
     <br><br>
+    <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="80px">
+			
+		</el-form>
       <el-upload
         class="upload-demo"
         drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        multiple>
+        action="/test/upload"
+        multiple
+        :auto-upload = "true"
+        :file-list="fileList"
+        :on-success="uploadFileHandler"
+        :on-error="uploadFileErrorHandler"
+        :before-upload="beforeAvatarUpload"
+        :before-remove="beforeRemove">
+        <img v-if="imageUrl" :src="imageUrl" class="avatar" />
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
       </el-upload>
+
   </div>
 </template>
 <script>
   export default {
     data() {
       return {
-        fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+        headers: {
+						'Content-Type': 'multipart/form-data'
+					},
+        imageUrl: '',
+        fileList: [],
       };
     },
     methods: {
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
+      uploadFileHandler(res){
+        console.log(res.words_result[8])
+
+        // this.imageUrl = URL.createObjectURL(file.raw);
       },
-      handlePreview(file) {
-        console.log(file);
+      beforeAvatarUpload(file) {
+        console.log("看看这个",this.fileList)
+        // var _this = this;
+        // debugger;
+        // var files=file.target.files[0];
+        debugger;
+        const isJPG = file.type === "image/jpeg";
+        const isLt2M = file.size / 1024 / 1024 < 2;
+  
+        if (!isJPG) {
+          this.$message.error("上传头像图片只能是 JPG 格式!");
+        }
+        if (!isLt2M) {
+          this.$message.error("上传头像图片大小不能超过 2MB!");
+        }
+        return this.file
       },
-      handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      uploadFileErrorHandler(res){
+        this.$message.error("上传失败,请检查网络连接")
       },
       beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
+        console.log(fileList.length)
+        console.log(this.isJPG)
+        if (this.isJPG && this.isLt2M)
+          return this.$confirm(`确定移除 ${ file.name }？`);
+
       },
-      signIn(){
-        //获取百度图片识别的token
-      this.axios.get('/baiduApi/oauth/2.0/token?grant_type=client_credentials&client_id=KXBwgOkyn6H&client_secret=32uqmGIdHqD7RcrBRkVRG&',{headers:{
-        dataType:'json'
-      }}).then(res =>{
-        if(res.status ==200){
-          this.access_token = res.data.access_token;
-        }
-      })
-      }
     }
   }
 </script>

@@ -5,7 +5,7 @@
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
-        <el-table :data="rolesList" style="width: 100%;margin-top:30px;float:center">
+        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center">
           <el-table-column label="工号" width="100%">
             <template slot-scope="scope">
               {{ scope.row.id }}
@@ -321,13 +321,13 @@
           })
         },
 
-        searchResult(keywords) {
+        searchResult() {
           this.click = 'search'
           listen.$on("searchAll",()=>{
             var _this = this
             this.$axios
               //向后端发送数据
-              .get('/manager/search?keywords=' + keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
+              .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data.list
                   _this.totalPages = resp.data.data.total
@@ -338,7 +338,7 @@
           var _this = this
           this.$axios
             //向后端发送数据
-            .get('/manager/search?keywords=' + keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
+            .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
