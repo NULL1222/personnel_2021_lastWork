@@ -1,8 +1,9 @@
 <template>
 <div>
-{{myname}}
+<cardgroup></cardgroup>
 <zhutu></zhutu>
 <bintu></bintu>
+<yuanhuan></yuanhuan>
 </div>
 </template>
 
@@ -10,6 +11,7 @@
 <script>
 import zhutu from './zhutu/index'
 import bintu from './bintu/index'
+import cardgroup from './cardgroup/index'
 import Vue from 'vue'
 // 全局注册
 // Vue.component('zhutu',zhutu)
@@ -17,12 +19,13 @@ import Vue from 'vue'
 export default {
     data() {
         return {
-            myname:"hhn"
+            
         }
     },
     components: {
         zhutu,
-        bintu
+        bintu,
+        cardgroup
     },
     methods: {
         
