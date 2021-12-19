@@ -2,7 +2,7 @@
   <header>
     <div class="l-content">
       <el-button plain icon="el-icon-menu" size="mini" @click="emitCollapse"></el-button>
-      <h3 class="l-content-text">数据总览</h3>
+      <h3 class="l-content-text"></h3>
     </div>
     <div class="r-content">
       <el-dropdown trigger="click" size="mini">
@@ -30,7 +30,7 @@ export default {
       this.$emit('emitCollapse');
     },
     personalCenter() {
-      // this.dialogVisible = true
+      this.$router.push('/PersonalCenter')
     },
     logout() {
       this.$confirm('此操作将注销登录, 是否继续?', '提示', {

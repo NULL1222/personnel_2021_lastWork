@@ -35,8 +35,13 @@ export default new Router({
         },
         {
           path: '/container/finance',
-          name: 'Finance',
-          component: ()=>import('../views/Finance/Finance.vue')
+          name: 'finance',
+          component: ()=>import('../views/Finance/finance.vue')
+        },
+        {
+          path: '/container/staff',
+          name: 'staff',
+          component: ()=>import('../views/Finance/staff.vue')
         },
         {
           path: '/container/railway',
@@ -57,6 +62,11 @@ export default new Router({
           path: '/container/input',
           name: 'input',
           component: ()=>import('../views/Data_Scanning/input.vue')
+        },
+        {
+          path: '/PersonalCenter',
+          name: 'PersonalCenter',
+          component: ()=>import('../views/PersonalCenter.vue')
         }
       ]
     },
@@ -80,10 +90,5 @@ export default new Router({
       name: '修改密码',
       component: ChangePwd
     },
-    // {
-    //   path: '/datadisplay/index',
-    //   name: '数据图',
-    //   component: datadisplay
-    // },
   ],
 })

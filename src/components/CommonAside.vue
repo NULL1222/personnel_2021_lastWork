@@ -55,10 +55,24 @@
             },
             {
               path: "/finance",
-              name: "Finance",
               label: "财政管理",
               icon: "coin",
-              url: "Finance/Finance", 
+              children: [
+                {
+                  path: "/finance",
+                  name: "finance",
+                  label: "公司收支",
+                  icon: "coin",
+                  url: "Finance/finance",
+                },
+                {
+                  path: "/staff",
+                  name: "staff",
+                  label: "员工工资",
+                  icon: "setting",
+                  url: "Finance/staff",
+                }
+              ]
             },
             {
               path: "/railway",

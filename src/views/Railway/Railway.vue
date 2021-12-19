@@ -20,9 +20,9 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="" label-width="20px">
-              <el-radio-group v-model="train">
-                <el-radio label="G高铁"></el-radio>
-                <el-radio label="D动车"></el-radio>
+              <el-radio-group v-model="formInline.train">
+                <el-radio label="G高铁" @click.native.prevent = 'handleCancel("G")'></el-radio>
+                <el-radio label="D动车" @click.native.prevent = 'handleCancel("D")'></el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -85,19 +85,15 @@
             <el-button type="primary" icon="el-icon-search" style="width: 150px;" @click="searchResult">查询</el-button>
           </el-col>
       </el-row>
-
       </div>
-      <!-- <div class="form-right"> -->
-        
-        <!-- <search-bar @onSearch="searchResult" ref="formInline" ></search-bar> -->
-      <!-- </div> -->
     </el-form>
     <el-table
     :data="rolesList"
     height = "450"
     stripe
     :header-cell-style="{background: 'lightblue', color: '#fff'}"
-    style="width: 95%; margin-top: 10px;margin-left: 30px;">
+    style="width: 95%; margin-top: 10px;margin-left: 30px;"
+    @sort-change='sortChange'>
     <el-table-column
       label="日期"
       fixed
@@ -112,20 +108,6 @@
       label="车次"
       width="100"
       align="center">
-      <!-- <template slot="header">
-        <el-dropdown trigger="click" @command="handleCommand">
-          <span class="el-dropdown-link" @click="test">
-            车次<i class="el-icon-arrow-down el-icon--right el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-                <el-radio-group v-model="radio">
-                  <el-dropdown-item command="全部">全部</el-dropdown-item>
-                  <el-dropdown-item command="G高铁">G高铁</el-dropdown-item>
-                  <el-dropdown-item command="D动车">D动车</el-dropdown-item>
-                </el-radio-group>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </template> -->
       <template slot-scope="scope">
         {{ scope.row.id }}
       </template>
@@ -149,7 +131,9 @@
     <el-table-column
       label="出发时间"
       width="100"
-      align="center">
+      align="center"
+      sortable="custom"
+      prop="depTime">
       <template slot-scope="scope">
         {{ scope.row.depTime }}
       </template>
@@ -224,7 +208,52 @@
       width="100"
       align="center">
       <template slot-scope="scope">
-        <el-button @click="handleClick(scope.row.id)" type="text" size="small">设置</el-button>
+        <el-button @click="openDrawer(scope.row.id, scope.row.date)" type="text" size="small">详情</el-button>
+        <el-drawer
+          title="车次信息"
+          :visible.sync="drawer"
+          :direction="direction"
+          append-to-body class="drawer-title">
+          <el-descriptions class="margin-top" :labelStyle="{'font-size': '16px','font-weight': 'bold', }" :column="2" style="margin-left:40px">
+            <el-descriptions-item label="日期" >{{ role.date }}</el-descriptions-item>
+            <el-descriptions-item label="车次">{{ role.id}}</el-descriptions-item>
+            <el-descriptions-item label="出发站">{{ role.depStation }}</el-descriptions-item>
+            <el-descriptions-item label="到达站">{{role.desStation }}</el-descriptions-item>
+            <el-descriptions-item label="出发时间">{{ role.depTime }}</el-descriptions-item>
+            <el-descriptions-item label="到达时间">{{ role.desTime }}</el-descriptions-item>
+            <el-descriptions-item label="历时">{{ role.lastTime }}</el-descriptions-item>
+            <el-descriptions-item label="停站时间">{{ role.dwellTime }}</el-descriptions-item>
+
+          </el-descriptions>
+          <el-table :data="gridData" class="table-gridData" style="margin-left: 30px;">
+            <el-table-column label="一等座" width=100 align="center">
+              <el-table-column label="余票" property="firstClass" width=65 align="center" ></el-table-column>
+              <el-table-column property="firstPrice" label="票价" width=65 align="center"></el-table-column>
+            </el-table-column>
+            <el-table-column label="二等座" width=100 align="center">
+              <el-table-column label="余票" property="secondClass" width=65 align="center"></el-table-column>
+              <el-table-column property="secondPrice" label="票价" width=65 align="center"></el-table-column>
+            </el-table-column>
+            <el-table-column label="无座" width=100 align="center">
+              <el-table-column label="余票" property="noSeats" width=65 align="center"></el-table-column>
+              <el-table-column property="thirdPrice" label="票价" width=65 align="center"></el-table-column>
+            </el-table-column>
+          </el-table>
+          <br>
+          <span class="title-middle">车身信息</span>
+          <el-descriptions class="margin-top" :labelStyle="{'font-size': '16px','font-weight': 'bold', }" :column="1" style="margin-left:40px" :colon='false'>
+            <el-descriptions-item label="">
+              <img :src="trainImg" class="photo-train"/>
+            </el-descriptions-item>
+            <el-descriptions-item label="车型：">{{ role.train}}</el-descriptions-item>
+            <el-descriptions-item label="时速：">{{ role.speed}}</el-descriptions-item>
+            <el-descriptions-item label="列车编组：">{{ role.group}}</el-descriptions-item>
+            <el-descriptions-item label="制造商：">{{ role.producer}}</el-descriptions-item>
+            <el-descriptions-item label="制造时间：">{{ role.makeDate}}</el-descriptions-item>
+          </el-descriptions>
+          
+        </el-drawer>
+        <!-- <addDialog ref="aaa" :dialogForm="dialogForm"></addDialog> -->
       </template>
     </el-table-column>
   </el-table>
@@ -232,12 +261,41 @@
 </template>
 
 <script>
-// import SearchBar from '../SearchBar'
+// import addDialog from './addDialog'
 
   export default {
     data() {
       return {
+        order: '',
+        trainImg: require("../../assets/train.png"),
+        // dialogForm: {
+        //   show: false
+        // },
+        // dialogVisible: false,
+        direction: 'rtl',
+        drawer: false,
         radio: '',
+        gridData: [{
+          date: '',
+          id: '',
+          depStation: '',
+          desStation: '',
+          depTime: '',
+          desTime: '',
+          lastTime: '',
+          dwellTime: '',
+          firstClass: '',
+          firstPrice: '',
+          secondClass: '',
+          secondPrice: '',
+          noSeats: '',
+          thirdPrice: '',
+          train: '',
+          speed: '',
+          group: '',
+          producer: '',
+          makeDate: '',
+        }],
         rolesList: [
           {
           date: '12.1',
@@ -253,143 +311,8 @@
           secondPrice: '80',
           noSeats: '售空',
           thirdPrice: "50"
-        }, 
-        {
-          date: '12.1',
-          id: 'D553',
-          depStation: '杭州',
-          desStation: '北京',
-          depTime: '7:00',
-          desTime: '13:30',
-          lastTime: '6小时30分',
-          firstClass: '66',
-          firstPrice: '100元',
-          secondClass: '189',
-          secondPrice: '80元',
-          noSeats: '45',
-          thirdPrice: "50元"
-        },
-        {
-          date: '12.1',
-          id: 'D553',
-          depStation: '杭州',
-          desStation: '北京',
-          depTime: '7:00',
-          desTime: '13:30',
-          lastTime: '6小时30分',
-          firstClass: '66',
-          firstPrice: '100元',
-          secondClass: '189',
-          secondPrice: '80元',
-          noSeats: '45',
-          thirdPrice: "50元"
-        },
-        {
-          date: '12.1',
-          id: 'D553',
-          depStation: '杭州',
-          desStation: '北京',
-          depTime: '7:00',
-          desTime: '13:30',
-          lastTime: '6小时30分',
-          firstClass: '66',
-          firstPrice: '100元',
-          secondClass: '189',
-          secondPrice: '80元',
-          noSeats: '45',
-          thirdPrice: "50元"
-        },
-        {
-          date: '12.1',
-          id: 'D553',
-          depStation: '杭州',
-          desStation: '北京',
-          depTime: '7:00',
-          desTime: '13:30',
-          lastTime: '6小时30分',
-          firstClass: '66',
-          firstPrice: '100元',
-          secondClass: '189',
-          secondPrice: '80元',
-          noSeats: '45',
-          thirdPrice: "50元"
-        },
-        {
-          date: '12.1',
-          id: 'D553',
-          depStation: '杭州',
-          desStation: '北京',
-          depTime: '7:00',
-          desTime: '13:30',
-          lastTime: '6小时30分',
-          firstClass: '66',
-          firstPrice: '100元',
-          secondClass: '189',
-          secondPrice: '80元',
-          noSeats: '45',
-          thirdPrice: "50元"
-        },
-        {
-          date: '12.1',
-          id: 'D553',
-          depStation: '杭州',
-          desStation: '北京',
-          depTime: '7:00',
-          desTime: '13:30',
-          lastTime: '6小时30分',
-          firstClass: '66',
-          firstPrice: '100元',
-          secondClass: '189',
-          secondPrice: '80元',
-          noSeats: '45',
-          thirdPrice: "50元"
-        },
-        {
-          date: '12.1',
-          id: 'D553',
-          depStation: '杭州',
-          desStation: '北京',
-          depTime: '7:00',
-          desTime: '13:30',
-          lastTime: '6小时30分',
-          firstClass: '66',
-          firstPrice: '100元',
-          secondClass: '189',
-          secondPrice: '80元',
-          noSeats: '45',
-          thirdPrice: "50元"
-        },
-        {
-          date: '12.1',
-          id: 'D553',
-          depStation: '杭州',
-          desStation: '北京',
-          depTime: '7:00',
-          desTime: '13:30',
-          lastTime: '6小时30分',
-          firstClass: '66',
-          firstPrice: '100元',
-          secondClass: '189',
-          secondPrice: '80元',
-          noSeats: '45',
-          thirdPrice: "50元"
-        },
-        // {
-        //   date: '12.1',
-        //   id: 'D553',
-        //   depStation: '杭州',
-        //   desStation: '北京',
-        //   depTime: '7:00',
-        //   desTime: '13:30',
-        //   lastTime: '6小时30分',
-        //   firstClass: '66',
-        //   firstPrice: '100元',
-        //   secondClass: '189',
-        //   secondPrice: '80元',
-        //   noSeats: '45',
-        //   thirdPrice: "50元"
-        // },
-        ],
+          }
+        ], 
         formInline: {
           id: '',
           depStation: '',
@@ -397,15 +320,31 @@
           startDay: '',
           endDay: '',
           earliestTime: '',
-          latestTime: ''
+          latestTime: '',
+          train: ''
         },
         labelPosition: 'right',
-        // pickerOptions0: {
-        //   disabledDate(time) {
-        //     return time.getTime() < Date.now() - 8.64e7;
-        //   }
-        // } 
-        train: null
+        role: {
+          date: '',
+          id: '',
+          depStation: '',
+          desStation: '',
+          depTime: '',
+          desTime: '',
+          lastTime: '',
+          dwellTime: '',
+          firstClass: '',
+          firstPrice: '',
+          secondClass: '',
+          secondPrice: '',
+          noSeats: '',
+          thirdPrice: '',
+          train: '',
+          speed: '',
+          group: '',
+          producer: '',
+          makeDate: '',
+        },
       }
     },
     created() {
@@ -415,37 +354,75 @@
         this.initUser()
       },
     methods: {
-      test() {
-        console.log('111111')
+      sortChange: function(column) {
+        // console.log(column + '-' + column.prop + '-' + column.order)
+        var _this = this
+          // console.log(this.order)
+            if(column.order === "descending")
+              this.order = "tr.depTime DESC"
+            else if(column.order === "ascending")
+              this.order = "tr.depTime ASC"
+            else
+              this.order = null
+            // console.log(this.order)
+            this.$axios.post('/train/search?sort=' + this.order
+            + "&id=" + this.formInline.id 
+            + "&startDay=" + this.formInline.startDay 
+            + "&endDay=" + this.formInline.endDay 
+            + "&depStation=" + this.formInline.depStation
+            + "&desStation=" + this.formInline.desStation 
+            + "&earliestTime=" + this.formInline.earliestTime
+            + "&latestTime=" + this.formInline.latestTime
+            + "&type=" + this.formInline.train ,{}).then(resp => {
+                if(resp && resp.data.code === 200){
+                  _this.rolesList = resp.data.data
+                }
+          })
+      },
+      handleCancel(e) {
+        e === this.formInline.train ? this.formInline.train = '' : this.formInline.train = e
       },
       setTime(){
         const nowD = new Date()
         nowD.setTime(nowD.getTime())
-        this.formInline.startDay = nowD
-        this.formInline.endDay = nowD
-        this.formInline.earliestTime = nowD
-        this.formInline.latestTime = nowD
+        // this.formInline.startDay = nowD
+        // this.formInline.endDay = nowD
+        // this.formInline.earliestTime = nowD
+        // this.formInline.latestTime = nowD
         this.formInline.startDay = nowD.getFullYear() + '-' + (nowD.getMonth() + 1) + '-' + nowD.getDate();
         this.formInline.endDay = nowD.getFullYear() + '-' + (nowD.getMonth() + 1) + '-' + nowD.getDate();
-        this.formInline.earliestTime = nowD.getHours() + ':' + nowD.getMinutes();
-        this.formInline.latestTime = nowD.getHours() + ':' + nowD.getMinutes();
-        console.log(this.formInline.startDay)
-        console.log(this.formInline.earliestTime)
+        // this.formInline.earliestTime = nowD.getHours() + ':' + nowD.getMinutes();
+        // this.formInline.latestTime = nowD.getHours() + ':' + nowD.getMinutes();
        },
       initUser() {
         var _this = this
           this.$axios.post("/train/initial?startDay="+this.formInline.startDay+"&endDay="+this.formInline.endDay, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data
+              console.log(resp.data.data)
             }
           })
       },
-      handleClick(id) {
+      openDrawer(id, date) {
         console.log(id);
+        this.drawer = true
+        var _this = this
+        this.$axios
+          //向后端发送数据
+          .post('/train/detail?id=' + id + "&date="+ date , {}).then(resp => {
+            if (resp && resp.data.code === 200) {
+              _this.role = resp.data.data[0]
+              _this.gridData = resp.data.data
+            }
+          })
+        // this.dialogVisible = true
+        // this.dialogForm.show = true
+        // this.$ref.aaa.bool = true
       },
       searchResult() {
         console.log("searchResult");
         var _this = this
+        console.log(this.order);
           this.$axios
             //向后端发送数据
             .post('/train/search?id=' + this.formInline.id 
@@ -454,7 +431,9 @@
             + "&depStation=" + this.formInline.depStation
             + "&desStation=" + this.formInline.desStation 
             + "&earliestTime=" + this.formInline.earliestTime
-            + "&latestTime=" + this.formInline.latestTime ,{}).then(resp => {
+            + "&latestTime=" + this.formInline.latestTime
+            + "&type=" + this.formInline.train 
+            + "&sort=" + this.order,{}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.rolesList = resp.data.data
               }
@@ -468,6 +447,10 @@
         this.formInline.depStation = "",
         this.formInline.desStation = "",
         this.$options.methods.setTime.bind(this)()
+        this.$options.methods.initUser.bind(this)()
+        this.formInline.train = ""
+        this.formInline.earliestTime = "",
+        this.formInline.latestTime = ""
       },
     },
   }
@@ -488,7 +471,10 @@
   display: flex;
   justify-content: flex-end;
 }
-
+.drawer-title {
+  font-size: 18px;
+  font-weight: bold;
+}
 /* .form-left {
   flex: 1;
   flex-direction: row;
@@ -515,7 +501,12 @@
   margin-left: 0;
   margin-bottom: 20px;
 }
-.resetButton {
-
+.photo-train {
+  width: 380px;
+  height: 110px;
+}
+.title-middle {
+  color: rgb(114, 118, 123);
+  margin-left: 20px;
 }
 </style>

@@ -65,14 +65,10 @@
           } else {
             alert("两次输入的新密码不同")
           }
-  
         }
-  
       }
     }
   </script>
-  
-  
   <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
   <style scoped>
   
