@@ -23,6 +23,18 @@ export default {
   data() {
     return {
       userImg: require("../assets/Me.png"),
+      role: {
+        id: '',
+        name: '',
+        sex: '',
+        mail: '',
+        phone: '',
+        idCard: '',
+        card: '',
+        address: '',
+        attendance: '',
+        birthday: ''
+      }
     };
   },
   methods: {
@@ -30,7 +42,11 @@ export default {
       this.$emit('emitCollapse');
     },
     personalCenter() {
-      this.$router.push('/PersonalCenter')
+      // eventBus.$emit('eventBusName', "hellokugou");
+      this.$router.push({
+        path: '/personalCenter'
+      })
+      console.log("clickpersonCenter")
     },
     logout() {
       this.$confirm('此操作将注销登录, 是否继续?', '提示', {

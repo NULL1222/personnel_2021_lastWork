@@ -38,6 +38,8 @@
   
   <script>
     import Cookies from 'js-cookie';
+    import bus from '../bus.js'
+
     export default {
       name: 'Login',
       data() {
@@ -47,7 +49,15 @@
           passw: "password",
           LoginForm: {
             id: '',
-            password: '',
+            name: '',
+            sex: '',
+            mail: '',
+            phone: '',
+            idCard: '',
+            card: '',
+            address: '',
+            attendance: '',
+            birthday: ''
           },
           rules: {
             id: [
@@ -65,6 +75,9 @@
       mounted() {
         this.$refs.getFocus.focus()
       },
+      // mounted: function() {
+      //   this.initUser()
+      // },
       created() {  
       },
       methods: {
@@ -101,6 +114,24 @@
         //     });
         //   }
         // }
+        // login() {
+        //   var _this = this
+        //   this.$axios.post("/manager/login?id="+this.LoginForm.id 
+        //   + "&password="+ this.LoginForm.password, {}).then(resp => {
+        //     alert(resp.data.msg)
+        //     if (resp && resp.data.code === 200) {
+        //       _this.LoginForm = resp.data.data
+        //       console.log(_this.LoginForm)
+        //       this.$router.push({
+        //         path: '/container'
+        //       })
+        //     }else {
+
+        //     }
+        //   }).catch (resp=> {
+        //     alert(resp.data.msg)
+        //   })
+        // },
         showPass() {
           if (this.passw == "text") {
           this.passw = "password";
@@ -122,27 +153,30 @@
           let fd = new FormData();
           fd.append("id",this.LoginForm.id);
           fd.append("password", this.LoginForm.password);
-          console.log(fd.get("password"));
   
           let config = {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           }
-  
           this.$axios.post("manager/login", fd, config).then(res => {
             alert(res.data.msg)
             if (res.data.code === 200) {
               Cookies.set('id', fd.get('id'));
+              console.log("id1=" + this.LoginForm.id);
               this.$router.push({
                 path: '/container'
-              })
-            } else {
-  
+              })           
+            } else {  
             }
           }).catch(res => {
             alert(res.data.msg)
           })
+          // eventBus.$emit('eventBusName', this.LoginForm.id);
+          bus.$emit('fromA', {
+            phone: 18768580852
+          })
+          console.log("id2=" + this.LoginForm.id);
         },
         resetForm(formName) {
         this.$refs[formName].resetFields();

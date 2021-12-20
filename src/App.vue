@@ -4,12 +4,22 @@
     <!-- <div class="background">
     <img src="../src/images/login_background.jpg">
     </div> -->
+    <!-- <comA></comA>
+    <comB></comB> -->
     <router-view/>
+    
   </div>
 </template>
 
 <script>
+import ComA from './views/Login'
+import ComB from './views/PersonalCenter'
+
 export default {
+  components: {
+    ComA,
+    ComB
+  },
   name: 'App'
 }
 </script>

@@ -33,7 +33,7 @@
           </el-table-column>
           <el-table-column label="考勤（本月）" width="130%">
             <template slot-scope="scope">
-              {{ scope.row.attendance }}
+              {{ scope.row.attendance }}天
             </template>
           </el-table-column>
           <el-table-column label="职务" width="150%">
