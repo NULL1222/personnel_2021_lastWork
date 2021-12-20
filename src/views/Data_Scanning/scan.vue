@@ -32,12 +32,25 @@
 					},
         imageUrl: '',
         fileList: [],
+        time: '',
+        postTime: '',
       };
     },
     methods: {
       uploadFileHandler(res){
-        console.log(res.words_result[8])
-
+        console.log(res.words_result[8].words)
+        const nowTime = new Date()
+        this.time = nowTime.getFullYear() + '-' + (nowTime.getMonth() + 1) + '-' + nowTime.getDate() + ' ' + nowTime.getHours() + ':' + nowTime.getMinutes() + ':' + nowTime.getSeconds()
+        this.postTime = nowTime.getFullYear() + '-' + (nowTime.getMonth() + 1) + '-' + nowTime.getDate()
+        console.log(this.time)
+        this.$confirm('工号为'+res.words_result[8].words+'的'+res.words_result[4].words+'，您好！'+'</br>您已于'+this.time+'签到成功！'+'</br>好好工作，天天加薪！'
+        , '签到成功！', {
+          confirmButtonText: '确定',
+          dangerouslyUseHTMLString: true,
+          cancelButtonText: '取消',
+          type: 'success'
+        })
+        this.$axios.post('/checking/attendance?id=' + res.words_result[8].words +'&date=' + this.postTime, {})
         // this.imageUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {

@@ -4,7 +4,7 @@
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
-        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center" @sort-change="sortChange">
+        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center" @sort-change="sortChange" :header-cell-style="{textAlign: 'center'}">
           <el-table-column label="账号（手机号）" width="150%">
             <template slot-scope="scope">
               {{ scope.row.phone }}
@@ -78,55 +78,6 @@
             </template>
           </el-table-column>
         </el-table>
-
-        <!-- <el-dialog :title="titleName" :visible.sync="dialogVisible" width="700px" destroy-on-close>
-          <el-form ref="ruleForm" :inline="true" :model="role" :rules="rules" label-width="80px" label-position="right">
-            <el-span v-model="role.id" style="color:#FFF;font-size:1px">{{role.id}}</el-span>
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="role.name" :disabled="isShow" placeholder="请输入姓名" style="width:200px;" />
-            </el-form-item>
-            <el-form-item label="身份证号" prop="idCard">
-              <el-input v-model="role.idCard" :disabled="isShow" maxlength="18" placeholder="请输入身份证号" style="width:270px;" />
-            </el-form-item>
-            <el-form-item label="职务" prop="job">
-              <template label-position="center">
-                <el-radio v-model="role.job" class="job" label="人事管理"></el-radio>
-                <el-radio v-model="role.job" class="job" label="财务管理"></el-radio>
-                <el-radio v-model="role.job" class="job" label="铁路管理"></el-radio>
-                <el-radio v-model="role.job" class="job" label="用户管理"></el-radio>
-              </template>
-            </el-form-item>
-            <el-form-item label="性别" prop="sex" style="width:450px;">
-              <template label-position="center">
-                <el-radio v-model="role.sex" :disabled="isShow" class="sex" label="男">男</el-radio>
-                <el-radio v-model="role.sex" :disabled="isShow" class="sex" label="女">女</el-radio>
-              </template>
-            </el-form-item>
-            <el-form-item label="联系方式" prop="phone">
-              <el-input v-model="role.phone" maxlength="11" placeholder="请输入联系方式" style="width:200px;" />
-            </el-form-item>
-            <el-form-item label="邮箱" prop="mail">
-              <el-input v-model="role.mail" placeholder="请输入邮箱" style="width:270px;" />
-            </el-form-item>
-            <el-form-item label="银行卡号" prop="card">
-              <el-input v-model="role.card" placeholder="请输入银行卡号" style="width:230px;" />
-            </el-form-item>
-            <el-form-item label="联系地址" prop="address">
-              <el-input
-                v-model="role.address"
-                :autosize="{ minRows: 2, maxRows: 4}"
-                type="textarea"
-                placeholder="请输入联系地址"
-                style="width:240px;"
-              />
-            </el-form-item>
-          </el-form>
-          <div style="text-align:center;">
-            <el-button type="primary" @click="submit('ruleForm')">提交</el-button>
-            <el-button type="primary" plain @click="resetForm('ruleForm')">重置</el-button>
-            <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-          </div>
-        </el-dialog> -->
         <br><br>
       <div class="block">
         <el-pagination
@@ -144,15 +95,11 @@
  
 <script>
   import SearchBar from '../SearchBar.vue'
-  const defaultRole = {
-    job: '人事管理',
-    sex: '男',
-  }
+  import Vue from 'vue'
 
   var listen = new Vue()
 
   import Cookies from 'js-cookie';
-  import Vue from 'vue'
   export default{
       components: {
         SearchBar
@@ -170,11 +117,7 @@
           currentPage1: 1,
           drawer: false,
           direction: 'rtl',
-          edit: false,
-          index: -1,
           keywords: '',
-          titleName: '编辑',
-          isShow: true,
           pages: {
             pageNum: 1,
             pageSize: 10,
@@ -191,18 +134,15 @@
             documentType: '',
             integral: '',
           },
-          list: {
-          radio: '1'
-        },
           routes: [],
           rolesList: [],
-          checkStrictly: false,
           order: ''
         }
     },
     
       mounted: function() {
         this.initUser()
+        this.$refs.searchBar.text = "请输入手机号或证件号"
       },
 
       methods: {

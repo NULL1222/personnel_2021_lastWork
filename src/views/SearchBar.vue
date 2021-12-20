@@ -2,7 +2,7 @@
     <div style="margin-bottom: 30px;display: flex;justify-content: center;align-items: center">
       <el-input
         @keyup.enter.native="searchClick"
-        placeholder="请输入工号或姓名"
+        :placeholder="text"
         prefix-icon="el-icon-search"
         size="primary"
         style="width: 400px;margin-right: 10px"
@@ -17,6 +17,7 @@
         name: 'SearchBar',
         data () {
           return {
+            text: "请输入工号或姓名",
             keywords: '',
             books: [],
             cardLoading: []
