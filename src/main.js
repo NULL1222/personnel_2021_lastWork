@@ -9,6 +9,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 // import axios from 'axios'
 // import VueAxios from 'vue-axios'
 // import Vuex from 'vuex'
+// Vue.prototype.$EventBus = new Vue()
+
+// import bus from './event-bus'
+// Vue.prototype.bus = bus
+window.eventBus = new Vue();
 
 Vue.use(ElementUI);
 

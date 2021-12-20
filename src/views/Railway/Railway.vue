@@ -351,8 +351,8 @@
       this.setTime()
     },
     mounted: function() {
-        this.initUser()
-      },
+      this.initUser()
+    },
     methods: {
       sortChange: function(column) {
         // console.log(column + '-' + column.prop + '-' + column.order)
