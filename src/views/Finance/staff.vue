@@ -3,6 +3,7 @@
       <br><br>
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <el-button type="primary" style="margin-left:10px;" @click="output">导出</el-button>
+        <el-button type="primary" style="margin-left:10px;" @click="send">发送工资单</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
         <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center" @filter-change="filterChange" :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelectionChange" :row-key="getRowKeys">
@@ -126,6 +127,7 @@
           },
           routes: [],
           rolesList: [],
+          salaryList: [],
         }
     },
     
@@ -282,29 +284,68 @@
         },
         output(){
           let datalist = [];
-      datalist.push([
-        "工号",
-        "姓名",
-        "性别",
-        "手机号",
-        "时间",
-        "基础工资",
-        "绩效工资",
-        "总工资",
-      ]);
-      this.rolesList.forEach(item => {
-        datalist.push([
-          item.id,
-          item.name,
-          item.sex,
-          item.phone,
-          item.salaryMonth,
-          item.achievement,
-          item.basicSalary,
-          item.salary,
-        ]);
-      });
+          datalist.push([
+            "工号",
+            "姓名",
+            "性别",
+            "手机号",
+            "时间",
+            "基础工资",
+            "绩效工资",
+            "总工资",
+          ]);
+          this.rolesList.forEach(item => {
+            datalist.push([
+              item.id,
+              item.name,
+              item.sex,
+              item.phone,
+              item.salaryMonth,
+              item.achievement,
+              item.basicSalary,
+              item.salary,
+            ]);
+          });
           downloadXlsx(datalist, "员工工资单.xlsx");
+        },
+        send(){
+          var _this = this
+          const nowTime = new Date()
+          var time = nowTime.getFullYear() + '-' + nowTime.getMonth() + '-11'
+          let salaryList = []
+          salaryList.push([
+            "工号",
+            "姓名",
+            "性别",
+            "手机号",
+            "时间",
+            "基础工资",
+            "绩效工资",
+            "总工资",
+          ]);
+
+          this.$axios.post('/salary/sameMonth?salaryMonth=' + time , {}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.salaryList = resp.data.data
+              }
+            })
+            console.log(_this.salaryList)
+          this.salaryList.forEach(item => {
+            salaryList.push([
+              item.id,
+              item.name,
+              item.sex,
+              item.phone,
+              item.salaryMonth,
+              item.achievement,
+              item.basicSalary,
+              item.salary,
+            ]);
+            salaryList = []
+            downloadXlsx(salaryList, item.id+"员工工资单.xlsx");
+          });
+
+
         },
 //        generateRoutes(routes, basePath = '/') {
 //        const res = []
