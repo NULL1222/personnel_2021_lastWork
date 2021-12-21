@@ -157,6 +157,13 @@
             {text: '2021-09', value: '2021-09'}, {text: '2021-10', value: '2021-10'}, {text: '2021-11', value: '2021-11'}, {text: '2021-12', value: '2021-12'}];
 //          apiArr = _this.salaryMonth
           console.log(apiArr[3].text)
+
+          // for(var n = 0;n < _this.monthSize;n++){
+          //   apiArr[n].text = _this.salaryMonth[n]
+          //   console.log(apiArr[n].text)
+          //   apiArr[n].value = _this.salaryMonth[n]
+          //   console.log(apiArr[n].value)
+          // }
           return apiArr;
         },
         handleSizeChange(val) {
@@ -311,39 +318,39 @@
         send(){
           var _this = this
           const nowTime = new Date()
-          var time = nowTime.getFullYear() + '-' + nowTime.getMonth() + '-11'
+          var time = nowTime.getFullYear() + '-' + (nowTime.getMonth()+1) + '-11'
           let salaryList = []
-          salaryList.push([
-            "工号",
-            "姓名",
-            "性别",
-            "手机号",
-            "时间",
-            "基础工资",
-            "绩效工资",
-            "总工资",
-          ]);
 
           this.$axios.post('/salary/sameMonth?salaryMonth=' + time , {}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.salaryList = resp.data.data
               }
+              console.log(_this.salaryList)
+              this.salaryList.forEach(item => {
+                salaryList.push([
+                "工号",
+                "姓名",
+                "性别",
+                "手机号",
+                "时间",
+                "基础工资",
+                "绩效工资",
+                "总工资",
+                ]);
+                salaryList.push([
+                  item.id,
+                  item.name,
+                  item.sex,
+                  item.phone,
+                  item.salaryMonth,
+                  item.basicSalary,
+                  item.achievement,
+                  item.salary,
+                ]);
+                downloadXlsx(salaryList, item.id+"员工工资单.xlsx");
+                salaryList = []
+              });
             })
-            console.log(_this.salaryList)
-          this.salaryList.forEach(item => {
-            salaryList.push([
-              item.id,
-              item.name,
-              item.sex,
-              item.phone,
-              item.salaryMonth,
-              item.achievement,
-              item.basicSalary,
-              item.salary,
-            ]);
-            salaryList = []
-            downloadXlsx(salaryList, item.id+"员工工资单.xlsx");
-          });
 
 
         },
