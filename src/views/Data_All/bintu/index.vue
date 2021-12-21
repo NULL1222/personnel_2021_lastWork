@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div class="pie">
-        <div id="pie1">
+    <div class="pie" style="margin-top=18px">
+        <div id="pie1" class="kk">
             <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-            <div id="main1" style="float:left;width:33%;height: 270px;display: inline-block;"></div>
+            <div id="main1" style="float:left;width:33%;height: 220px;display: inline-block;"></div>
         </div>
-        <div id="pie2">
-            <div id="main2" style="float:left;width:34%;height: 270px;display: inline-block"></div>
+        <div id="pie2" class="kk">
+            <div id="main2" style="float:left;width:34%;height: 220px;display: inline-block"></div>
         </div>
-        <div id="pie2">
-            <div id="main3" style="float:left;width:33%;height: 270px;;display: inline-block;"></div>
+        <div id="pie2" class="kk">
+            <div id="main3" style="float:left;width:33%;height: 220px;;display: inline-block;"></div>
         </div>
     </div>
   </div>
@@ -24,14 +24,64 @@ require('echarts/lib/component/tooltip')
 require('echarts/lib/component/title')
  
 export default {
-  created(){
+    data(){
+        return{
+             mdg:"饼图",
+             nnbdatay:[
+            
+                  ],
+            hxdatay:[
+    
+            ],
+        };
+    },
+    mounted:function(){
+    this.drawLine();
   },
-  mounted(){
-    this.initData();
+   created(){
+      var _this = this;
+      var length=2;
+            var llength=3;
+      this.$axios.post("/manager/scale").then((response) => {
+        if (response.data.code == 200) {
+                _this.nnbdatay.length = 0; //清空数组
+        for (let i = 0; i <2; i++) {
+          _this.nnbdatay.push(response.data.data[i]);
+        }
+        
+        }
+        });
+      this.$axios.post("/economic/scale").then((response) => {
+        if (response.data.code == 200) {
+                _this.hxdatay.llength = 0; //清空数组
+        for (let i = 0; i <3; i++) {
+          _this.hxdatay.push(response.data.data[i]);
+        }
+        
+        }
+        });
+    },
+
+    watch: {
+    nnbdatay: {
+      //对于深层对象的属性，watch不可达，因此对数组监控需要将数组先清空，再添加数据
+      handler: function () {
+        this.drawLine();
+      },
+      deep: true,
+    },
+    hxdatay: {
+      //对于深层对象的属性，watch不可达，因此对数组监控需要将数组先清空，再添加数据
+      handler: function () {
+        this.drawLine();
+      },
+      deep: true,
+    },
   },
+
   methods:{
     //初始化数据
-    initData() {
+    drawLine() {
       // 基于准备好的dom，初始化echarts实例
       var myChart = echarts.init(document.getElementById('main1'));
       var yourChart = echarts.init(document.getElementById('main2'));
@@ -46,22 +96,13 @@ export default {
               trigger: 'item',
               formatter: "{a} <br/>{b} : {c} ({d}%)"
           },
-          legend: {
-              orient: 'vertical',
-              bottom: 'bottom',
-              data: ['工资支出','卖票收入','水电费']
-          },
           series : [
               {
                   name: '支出:',
                   type: 'pie',
                   radius : '55%',
                   center: ['50%', '60%'],
-                  data:[
-                      {value:335, name:'工资支出'},
-                      {value:310, name:'卖票收入'},
-                      {value:234, name:'水电费'}
-                  ],
+                  data:this.hxdatay,
                   itemStyle: {
                       emphasis: {
                           shadowBlur: 10,
@@ -75,29 +116,20 @@ export default {
 
       yourChart.setOption({
           title : {
-              text: '公司花销分布',//主标题
+              text: '员工男女比',//主标题
               x:'center',//x轴方向对齐方式
           },
           tooltip : {
               trigger: 'item',
               formatter: "{a} <br/>{b} : {c} ({d}%)"
           },
-          legend: {
-              orient: 'vertical',
-              bottom: 'bottom',
-              data: ['工资支出','卖票收入','水电费']
-          },
           series : [
               {
-                  name: '支出:',
+                  name: '占比:',
                   type: 'pie',
                   radius : '55%',
                   center: ['50%', '60%'],
-                  data:[
-                      {value:335, name:'工资支出'},
-                      {value:310, name:'卖票收入'},
-                      {value:234, name:'水电费'}
-                  ],
+                  data:this.nnbdatay,
                   itemStyle: {
                       emphasis: {
                           shadowBlur: 10,
@@ -111,28 +143,24 @@ export default {
       
       herChart.setOption({
           title : {
-              text: '公司花销分布',//主标题
+              text: '员工年龄分布',//主标题
               x:'center',//x轴方向对齐方式
           },
           tooltip : {
               trigger: 'item',
               formatter: "{a} <br/>{b} : {c} ({d}%)"
           },
-          legend: {
-              orient: 'vertical',
-              bottom: 'bottom',
-              data: ['工资支出','卖票收入','水电费']
-          },
           series : [
               {
-                  name: '支出:',
+                  name: '年龄占比:',
                   type: 'pie',
                   radius : '55%',
                   center: ['50%', '60%'],
                   data:[
-                      {value:335, name:'工资支出'},
-                      {value:310, name:'卖票收入'},
-                      {value:234, name:'水电费'}
+                      {value:32, name:'18~30岁'},
+                      {value:159, name:'30~40岁'},
+                      {value:29, name:'40~50岁'},
+                      {value:13, name:'50岁及以上'}
                   ],
                   itemStyle: {
                       emphasis: {
@@ -148,3 +176,15 @@ export default {
   }
 }
 </script>
+<style>
+.pie{
+    height: 250px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    color: #666;
+    background: #fff;
+    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
+    border-color: rgba(0, 0, 0, .05);
+}
+</style>
