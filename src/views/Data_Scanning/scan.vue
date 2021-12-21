@@ -18,7 +18,7 @@
         <img v-if="imageUrl" :src="imageUrl" class="avatar" />
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+        <div class="el-upload__tip" slot="tip">只能上传jpg文件，且不超过500kb</div>
       </el-upload>
 
   </div>
@@ -28,6 +28,7 @@
   export default {
     data() {
       return {
+        loadId: '',
         headers: {
 						'Content-Type': 'multipart/form-data'
 					},
@@ -37,6 +38,10 @@
         postTime: '',
       };
     },
+    created() {
+    const myData2 = sessionStorage.getItem('userId2');
+    this.loadId = myData2;
+    },
     methods: {
       uploadFileHandler(res){
         console.log(res.words_result[8].words)
@@ -44,14 +49,34 @@
         this.time = nowTime.getFullYear() + '-' + (nowTime.getMonth() + 1) + '-' + nowTime.getDate() + ' ' + nowTime.getHours() + ':' + nowTime.getMinutes() + ':' + nowTime.getSeconds()
         this.postTime = nowTime.getFullYear() + '-' + (nowTime.getMonth() + 1) + '-' + nowTime.getDate()
         console.log(this.time)
-        this.$confirm('工号为'+res.words_result[8].words+'的'+res.words_result[4].words+'，您好！'+'</br>您已于'+this.time+'签到成功！'+'</br>好好工作，天天加薪！'
-        , '签到成功！', {
-          confirmButtonText: '确定',
-          dangerouslyUseHTMLString: true,
-          cancelButtonText: '取消',
-          type: 'success'
-        })
-        this.$axios.post('/checking/attendance?id=' + res.words_result[8].words +'&date=' + this.postTime, {})
+        if(res.words_result[8].words === this.loadId){
+          this.$axios.post('/checking/attendance?id=' + res.words_result[8].words +'&date=' + this.postTime, {}).then(resp=>{
+            if(resp && resp.data.code === 200){
+              this.$confirm('工号为'+res.words_result[8].words+'的'+res.words_result[4].words+'，您好！'+'</br>您已于'+this.time+'签到成功！'+'</br>好好工作，天天加薪！'
+              , '签到成功！', {
+                confirmButtonText: '确定',
+                dangerouslyUseHTMLString: true,
+                cancelButtonText: '取消',
+                type: 'success'
+              })
+            }else{
+              this.$confirm('您今日已签到，谢谢！', '签到失败！', {
+                confirmButtonText: '确定',
+                dangerouslyUseHTMLString: true,
+                cancelButtonText: '取消',
+                type: 'warning '
+              })
+            }
+          })
+        }
+        else{
+          this.$confirm('您的工号与登录账号不符，请重试！', '签到失败！', {
+            confirmButtonText: '确定',
+            dangerouslyUseHTMLString: true,
+            cancelButtonText: '取消',
+            type: 'error'
+          })
+        }
         // this.imageUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
@@ -75,11 +100,7 @@
         this.$message.error("上传失败,请检查网络连接")
       },
       beforeRemove(file, fileList) {
-        console.log(fileList.length)
-        console.log(this.isJPG)
-        if (this.isJPG && this.isLt2M)
-          return this.$confirm(`确定移除 ${ file.name }？`);
-
+        return this.$confirm(`确定移除 ${ file.name }？`);
       },
     }
   }
