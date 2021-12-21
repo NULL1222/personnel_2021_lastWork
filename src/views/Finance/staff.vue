@@ -74,6 +74,7 @@
 <script>
   import SearchBar from '../SearchBar.vue'
   import Vue from 'vue'
+  import { downloadXlsx } from '../../../utils/xlsx.js'
   const defaultRole = {
     job: '人事管理',
     sex: '男',

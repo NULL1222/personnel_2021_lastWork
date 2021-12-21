@@ -6,7 +6,6 @@
       <div class="left-content-buttons">
         <el-button type="text" @click="dialogFormVisible = true" class="change-pwd">修改密码</el-button>
         <el-button @click="dialogVisible = true">编辑信息</el-button>  
-        <!-- <el-button @click="initUser">点击看看输出</el-button> -->
       </div>
     </div>
     <div>
@@ -43,7 +42,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="changePwd">确 定</el-button>
+        <el-button type="primary" @click="changePwd(); return false;">确 定</el-button>
       </div>
     </el-dialog>
     <!-- dialog 编辑信息 -->
@@ -57,26 +56,6 @@
         <el-descriptions-item label="性别">{{ role.sex }}</el-descriptions-item>
       </el-descriptions>   
       <el-form ref="ruleForm" :inline="true" :model="role" :rules="rulesForm" label-width="80px" label-position="right">
-        <!-- <el-span v-model="role.id" style="color:#FFF;font-size:1px">{{role.id}}</el-span> -->
-        <!-- <el-form-item label="姓名" prop="name">
-          <span>小李</span>
-          <span>{{role.name}}</span>
-           <el-input v-model="role.name" :disabled="true" placeholder="" style="width:200px;" />
-        </el-form-item> 
-        <el-form-item label="工号" prop="name">
-          <span>{{role.id}}</span>
-          <el-input v-model="role.name" :disabled="true" placeholder="" style="width:200px;" />
-        </el-form-item>
-        <el-form-item label="身份证号" prop="idCard">
-          <span>{{role.idCard}}</span>
-          <el-input v-model="role.idCard" :disabled="true" maxlength="18" placeholder="" style="width:270px;" />
-        </el-form-item> -->
-        <!-- <el-form-item label="职务" prop="job">
-          <el-input v-model="role.job" :disabled="true" maxlength="18" placeholder="" style="width:270px;" />
-        </el-form-item>
-        <el-form-item label="性别" prop="sex" style="width:450px;">
-          <el-input v-model="role.sex" :disabled="true" maxlength="18" placeholder="" style="width:270px;" />
-        </el-form-item> -->
         <el-form-item label="联系方式" prop="phone">
           <el-input v-model="role.phone" maxlength="11" placeholder="请输入联系方式" style="width:200px;" />
         </el-form-item>
@@ -102,18 +81,6 @@
         <el-button type="danger" @click="dialogVisible=false">取消</el-button>
       </div>
     </el-dialog>
-    <!-- <el-dialog
-    title="编辑信息"
-    :visible.sync="dialogVisible"
-    width="50%"
-    :before-close="handleClose">
-     <span>这是一段信息</span> 
-
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-    </span>
-  </el-dialog> -->
   </div>
 </template>
 
@@ -121,6 +88,28 @@
 import bus from '../bus.js'
 export default {
   data() {
+
+    let validateNewPassword = (rule, value, callback) => {
+      if (value === ''){
+        callback(new Error('请输入密码'))
+        
+      } else if (value === this.form.password) {
+         callback(new Error('新密码不能与原密码相同!'))
+         
+      } else {
+         callback()
+      }
+    }
+    let validateNewPassword2 = (rule, value, callback) => {
+      if (value === ''){
+        callback(new Error('请输入密码'))
+      } else if (value !== this.form.newPassword) {
+          callback(new Error('与新密码不一致!'))
+          
+      } else {
+          callback()
+      }
+    }
     return {
       userImg: require("../assets/Me.png"),
       dialogFormVisible: false,
@@ -177,69 +166,127 @@ export default {
         card: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }]
       },
       rules: {
-        password: [{
-          required: true,
-          message: '请输入旧密码',
-          trigger: 'blur'
-        }],
-        newPassword: [
-          { required: true, message: '请输入新密码', trigger: 'blur' },
-          // { min: 8, max: 8, message: '长度为 8 个字符', trigger: 'blur' }
-        ],
-        checkPassword: [
-          { required: true, message: '请再次输入新密码', trigger: 'blur' },
+        password: [
+          {
+            required: true,
+            message: '请输入旧密码',
+            trigger: 'blur'
+          },
           {
             validator:(rule,value,callback)=>{
               if(value===''){
               callback(new Error('请再次输入密码'))
-              }else if(value!==this.form.newPassword){
-              callback(new Error('两次输入密码不一致'))
-              }else{
+              }else {
                 callback( )
               }
             }
           }
+        ],
+        newPassword: [
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+          { validator: validateNewPassword, trigger: 'blur' }
+          // { min: 8, max: 8, message: '长度为 8 个字符', trigger: 'blur' }
+        ],
+        checkPassword: [
+          { required: true, message: '请再次输入新密码', trigger: 'blur' },
+          { validator: validateNewPassword2, trigger: 'blur' }
+          // {
+          //   validator:(rule,value,callback)=>{
+          //     if(value===''){
+          //     callback(new Error('请再次输入密码'))
+          //     }else if(value!==this.form.newPassword){
+          //     callback(new Error('两次输入密码不一致'))
+          //     }else{
+          //       callback( )
+          //     }
+          //   }
+          // }
         ]
       },
       formLabelWidth: '80px'
     }
   },
-  // mounted: function() {
-  //   this.initUser()
-  // },
   mounted() {
-    bus.$on('fromA', param => {
-      this.role.id = param.phone;
-      console.log(param.phone);
-      console.log(this.role.id)
-    })
+    // bus.$on('fromA', param => {
+    //   this.role.id = param.phone;
+    //   console.log(param.phone);
+    //   console.log(this.role.id)
+    // })
+    this.initUser();
+    this.initPwd();
   },
   created() {
-    // eventBus.$off('eventBusName')
-    // eventBus.$on('eventBusName', val => {
-		// console.log(val)
-    // })
+    const myData2 = sessionStorage.getItem('userId2');
+    this.role.id = myData2;
   },
   methods: {
-    // initUser() {
-    //   eventBus.$on('eventBusName', function(val) {
-    //     console.log(val)
-    //   })
-    // },
+    initUser() {
+      var _this = this
+      console.log(_this.myData2);
+      this.$axios.post("/manager/view?id=" + _this.role.id, {}).then(resp => {
+        if (resp && resp.data.code === 200) {
+          _this.role = resp.data.data
+          // console.log(_this.role);
+        }
+      })
+    },
+    initPwd() {
+      this.form.password = '',
+      this.form.newPassword = '',
+      this.form.checkPassword = ''
+    },
+    submit(ruleForm) {
+      this.$refs[ruleForm].validate((valid) => {
+        if (valid) {
+          var _this = this
+          this.$axios
+            //向后端发送数据
+            .post('/manager/edit?id=' + this.role.id
+            +'&name=' + this.role.name
+            +'&sex=' + this.role.sex
+            +'&idCard=' + this.role.idCard
+            +'&job=' + this.role.job
+            +'&phone=' + this.role.phone
+            +'&mail='+ this.role.mail
+            +'&card='+this.role.card
+            +'&address='+this.role.address, {}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.role = resp.data.data
+              }
+            })
+          this.dialogVisible = false
+        }else{
+          console.log('修改失败！');
+          return false;
+        }
+      });
+    },
     changePwd() {
       console.log("changepwd")
       this.dialogFormVisible = false
       var _this = this
-      this.$axios.post("/manager/changePassword?id="+ this.role.id 
+      this.$axios.post("/manager/changePassword?id="+ _this.role.id 
       +"&oldPassword=" + this.form.password 
       + "&newPassword=" + this.form.newPassword, {}).then(resp => {
         if (resp && resp.data.code === 200) {
           _this.$message('密码修改成功！3秒后重新登录')
           this.$router.push({
             path: '/'
-          })
+          }),
+          history.pushState(null, null, document.URL);
+          window.addEventListener("popstate", function (e) {
+            history.pushState(null, null, document.URL);
+          }, false);
+        // }else if(resp && resp.data.code === 400) {
+        //   alert(resp.data.msg);
+        //   // alert("密码修改失败,请重试！")
+        // }else {
+          // alert(resp.data.msg);
         }else {
           alert("密码修改失败,请重试！")
+          this.dialogFormVisible = true;
+          initPwd();
+          return false;
         }
       })
     },
