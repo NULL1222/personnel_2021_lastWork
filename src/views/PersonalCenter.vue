@@ -241,7 +241,7 @@ export default {
           var _this = this
           this.$axios
             //向后端发送数据
-            .post('/manager/edit?id=' + this.role.id
+            .post('/manager/editIndividual?id=' + this.role.id
             +'&name=' + this.role.name
             +'&sex=' + this.role.sex
             +'&idCard=' + this.role.idCard

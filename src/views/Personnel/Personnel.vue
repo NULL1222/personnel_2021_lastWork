@@ -68,9 +68,9 @@
                 :visible.sync="drawer"
                 :direction="direction"
                 :size="800"
-                style="float:center"
+                style="float:center"   
               >
-                <el-descriptions class="margin-top" :column="2" :size="size" style="margin-left:80px">
+                <el-descriptions class="margin-top" :labelStyle="{'font-size': '16px','font-weight': 'bold', }" :column="2" :size="size" style="margin-left:80px">
                   <el-descriptions-item label="工号">{{ role.id }}</el-descriptions-item>
                   <el-descriptions-item label="姓名">{{ role.name }}</el-descriptions-item>
                   <el-descriptions-item label="身份证号">{{ role.idCard }}</el-descriptions-item>
