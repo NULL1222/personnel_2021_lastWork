@@ -2,9 +2,10 @@
     <div style="text-align:left">
       <br><br>
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
+        <el-button type="primary" style="margin-left:10px;" @click="output">导出</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
-        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center" @filter-change="filterChange" :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelectionChange">
+        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center" @filter-change="filterChange" :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelectionChange" :row-key="getRowKeys">
           <el-table-column width="50%" type="selection">
           </el-table-column>
           <el-table-column label="工号" width="100%">
@@ -74,7 +75,7 @@
 <script>
   import SearchBar from '../SearchBar.vue'
   import Vue from 'vue'
-  import { downloadXlsx } from '../../../utils/xlsx.js'
+  import { downloadXlsx } from '../../../utils/xlsx.js';
   const defaultRole = {
     job: '人事管理',
     sex: '男',
@@ -268,10 +269,43 @@
             })
           }
         },
-        handleSelectionChange(val) {
-        this.multipleSelection = val;
-        console.log(val)
-      },
+        handleSelectionChange(rows) {
+            this.multipleSelection = [];
+            if (rows) {
+                rows.forEach(row => {
+                    if (row) {
+                        this.multipleSelection.push(row.id);
+                    }
+                });
+            }
+            console.log(this.multipleSelection);
+        },
+        output(){
+          let datalist = [];
+      datalist.push([
+        "工号",
+        "姓名",
+        "性别",
+        "手机号",
+        "时间",
+        "基础工资",
+        "绩效工资",
+        "总工资",
+      ]);
+      this.rolesList.forEach(item => {
+        datalist.push([
+          item.id,
+          item.name,
+          item.sex,
+          item.phone,
+          item.salaryMonth,
+          item.achievement,
+          item.basicSalary,
+          item.salary,
+        ]);
+      });
+          downloadXlsx(datalist, "员工工资单.xlsx");
+        },
 //        generateRoutes(routes, basePath = '/') {
 //        const res = []
 //        for (let route of routes) {
