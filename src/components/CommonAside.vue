@@ -90,20 +90,20 @@
             },
             {
               path: "/scan",
-              label: "数据采集",
+              label: "考勤签到",
               icon: "upload",
               children: [
                 {
                   path: "/scan",
                   name: "scan",
-                  label: "扫描输入",
+                  label: "工牌签到",
                   icon: "upload",
                   url: "Data_Scanning/scan",
                 },
                 {
                   path: "/input",
                   name: "input",
-                  label: "人工输入",
+                  label: "手动签到",
                   icon: "setting",
                   url: "Data_Scanning/input",
                 }

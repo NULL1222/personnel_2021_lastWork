@@ -13,7 +13,7 @@
     <el-calendar>
       <template slot="dateCell" slot-scope="{ data }">
         <p>{{ data.day.split("-").slice(1).join("-") }}<br/>
-        <br></p>
+        <br><br></p>
           <p>{{ data.isSelected ? '✔️' : ''}}</p>
         <div v-for="(item, index) in calendarData" :key="index">
           <div v-if="data.day == item.day[0]">
@@ -63,7 +63,7 @@ export default {
         if (resp && resp.data.code === 200) {
           console.log(_count);
           for( var i = 0; i < _count; i++) {
-            _this.calendarData.push({day: [], status: 'pass'});
+            _this.calendarData.push({day: [], status: '✔️'});
             _this.calendarData[i].day[0]= resp.data.data[i].date;
             // console.log("calendarDar[" + i "]: " + _this.calendarData[i].day);
             // console.log("calendarDar[0]= " + _this.calendarData[0].day[i]);
