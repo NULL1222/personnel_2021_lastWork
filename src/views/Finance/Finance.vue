@@ -1,9 +1,11 @@
 <template>
   <div style="text-align:left">
-    <br><br>
-      <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
+      <groupcard></groupcard>
+      <el-button type="primary" style="float: right;margin-left:10px;" @click="refreshing">刷新</el-button>
       <el-col :span=24>
+
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick" style="margin-left:10px;">
+
         <el-tab-pane label="收入" name="first">
           <el-table aria-disabled="true" :data="InList" height=400px style="margin-left:250px;width:100%;margin-top:20px;float:center">
           <el-table-column label="日期" width="180">
@@ -104,6 +106,7 @@
 </template>
 
 <script>
+import groupcard from './groupcard/index'
 import SearchBar from '../SearchBar.vue'
 import Vue from 'vue'
 
@@ -117,7 +120,8 @@ var listen = new Vue()
 import Cookies from 'js-cookie';
 export default{
     components: {
-      SearchBar
+      SearchBar,
+      groupcard
     },
     computed:{
       username(){

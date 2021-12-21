@@ -77,10 +77,19 @@
   import SearchBar from '../SearchBar.vue'
   import Vue from 'vue'
   import { downloadXlsx } from '../../../utils/xlsx.js';
+  import { Loading } from 'element-ui';
+  let loading;
   const defaultRole = {
     job: '人事管理',
     sex: '男',
   }
+  const startLoading = () => {  // 使用Element loading-start 方法
+    loading = Loading.service({
+      lock: true,
+      text: '邮件发送中……',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
+  };
 
   var listen = new Vue()
 
@@ -124,10 +133,12 @@
             basicSalary: '',
             salary: '',
             salaryMonth: '',
+            mail: '',
           },
           routes: [],
           rolesList: [],
           salaryList: [],
+          salaryNum: 0,
         }
     },
     
@@ -283,7 +294,7 @@
             if (rows) {
                 rows.forEach(row => {
                     if (row) {
-                        this.multipleSelection.push(row.id);
+                      this.multipleSelection.push(row.id);
                     }
                 });
             }
@@ -321,36 +332,52 @@
           var time = nowTime.getFullYear() + '-' + (nowTime.getMonth()+1) + '-11'
           let salaryList = []
 
+          this.$axios.post('/salary/countMonth?salaryMonth=' + time , {}).then(resp => {
+            if (resp && resp.data.code === 200) {
+              _this.salaryNum = resp.data.data
+            }
+          })
+          var count = 0
+
           this.$axios.post('/salary/sameMonth?salaryMonth=' + time , {}).then(resp => {
-              if (resp && resp.data.code === 200) {
-                _this.salaryList = resp.data.data
-              }
-              console.log(_this.salaryList)
-              this.salaryList.forEach(item => {
-                salaryList.push([
-                "工号",
-                "姓名",
-                "性别",
-                "手机号",
-                "时间",
-                "基础工资",
-                "绩效工资",
-                "总工资",
-                ]);
-                salaryList.push([
-                  item.id,
-                  item.name,
-                  item.sex,
-                  item.phone,
-                  item.salaryMonth,
-                  item.basicSalary,
-                  item.achievement,
-                  item.salary,
-                ]);
-                downloadXlsx(salaryList, item.id+"员工工资单.xlsx");
-                salaryList = []
-              });
-            })
+            if (resp && resp.data.code === 200) {
+              _this.salaryList = resp.data.data
+            }
+            console.log(_this.salaryList)
+            this.salaryList.forEach(item => {
+              salaryList.push([
+              "工号",
+              "姓名",
+              "性别",
+              "手机号",
+              "时间",
+              "基础工资",
+              "绩效工资",
+              "总工资",
+              ]);
+              salaryList.push([
+                item.id,
+                item.name,
+                item.sex,
+                item.phone,
+                item.salaryMonth,
+                item.basicSalary,
+                item.achievement,
+                item.salary,
+              ]);
+              count += 1
+              downloadXlsx(salaryList, item.id+"员工工资单.xlsx");
+              salaryList = []
+              startLoading();
+              this.$axios.post('/test/email?email=' + item.mail + "&file=" + item.id+"员工工资单.xlsx", {}).then(resp => {
+                if (resp && resp.data.code === 200) {
+                  loading.close();
+                }
+              })
+            });
+          })
+          
+
 
 
         },
