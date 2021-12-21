@@ -172,11 +172,7 @@
           }).catch(res => {
             alert(res.data.msg)
           })
-          // eventBus.$emit('eventBusName', this.LoginForm.id);
-          bus.$emit('fromA', {
-            phone: 18768580852
-          })
-          console.log("id2=" + this.LoginForm.id);
+          sessionStorage.setItem('userId2',this.LoginForm.id)
         },
         resetForm(formName) {
         this.$refs[formName].resetFields();
