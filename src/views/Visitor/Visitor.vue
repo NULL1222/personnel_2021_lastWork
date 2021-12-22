@@ -4,33 +4,33 @@
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
-        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center" @sort-change="sortChange" :header-cell-style="{textAlign: 'center'}">
-          <el-table-column label="账号（手机号）" width="150%">
+        <el-table :data="rolesList" height=450px style="width: 1000px;margin-top:30px;float:center;margin-left:75px;" @sort-change="sortChange" :header-cell-style="{textAlign: 'center'}">
+          <el-table-column label="账号（手机号）" width="150%" align="center">
             <template slot-scope="scope">
               {{ scope.row.phone }}
             </template>
           </el-table-column>
-          <el-table-column label="用户名" width="100%">
+          <el-table-column label="用户名" width="100%" align="center">
             <template slot-scope="scope">
               {{ scope.row.nickname }}
             </template>
           </el-table-column>
-          <el-table-column label="性别" width="80%">
+          <el-table-column label="性别" width="80%" align="center">
             <template slot-scope="scope">
               {{ scope.row.sex }}
             </template>
           </el-table-column>
-          <el-table-column label="邮箱" width="200%">
+          <el-table-column label="邮箱" width="200%" align="center">
             <template slot-scope="scope"> 
               {{ scope.row.mail }}
             </template>
           </el-table-column>
-          <el-table-column label="积分" width="120%" prop="integral" sortable="custom">
+          <el-table-column label="积分" width="120%" prop="integral" sortable="custom" align="center">
             <template slot-scope="scope"> 
               {{ scope.row.integral }}
             </template>
           </el-table-column>
-          <el-table-column label="用户状态" width="100%">
+          <el-table-column label="用户状态" width="100%" style="text-align: center;" align="center">
             <!-- slot-scope="scope" -->
             <template slot="header">
                 <el-dropdown trigger="click" @command="handleCommand">
@@ -48,7 +48,7 @@
               {{ scope.row.state }}
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" style="text-align: center;" align="center">
             <template slot-scope="scope">
               <el-button type="primary" size="small" @click="openDrawer(scope.row.phone)">详情</el-button>
               <el-button v-if="scope.row.state == '已禁用'" type="success" size="small" @click="handleDisable(scope.row.phone,scope.row.state)">启用</el-button>
@@ -87,7 +87,8 @@
           :page-sizes="[10, 20, 30, 40]"
           :page-size= pages.pageSize
           layout="total, sizes, prev, pager, next, jumper"
-          :total= totalPages>
+          :total= totalPages
+          style="margin-top:-23px;">
         </el-pagination>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <template>
 <div class="bk">
-    <div id="zhexian" style="width: 50%;height: 235px;margin-top:10px;display:inline-block;float:left" />
+    <div id="zhexian" style="width: 50%;height: 235px;margin-top:5px;display:inline-block;float:left" />
     <zhutu class="zhutu" style="width:50%;height:270px;margin-top:10px;display:inline-block;float:left"></zhutu>
 </div>
 </template>

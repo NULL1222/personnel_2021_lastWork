@@ -6,55 +6,51 @@
         <el-button type="primary" style="margin-left:10px;" @click="send">发送工资单</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
-        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center" @filter-change="filterChange" :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelectionChange" :row-key="getRowKeys">
-          <el-table-column width="50%" type="selection">
+        <el-table :data="rolesList" height=430px style="width: 1100px;margin-top:30px;float:center;margin-left:70px;" @filter-change="filterChange" 
+          :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelectionChange" :row-key="getRowKeys">
+          <el-table-column width="50%" type="selection" align="center">
           </el-table-column>
-          <el-table-column label="工号" width="100%">
+          <el-table-column label="工号" width="100%" align="center">
             <template slot-scope="scope">
               {{ scope.row.id }}
             </template>
           </el-table-column>
-          <el-table-column label="姓名" width="150%">
+          <el-table-column label="姓名" width="150%" align="center">
             <template slot-scope="scope">
               {{ scope.row.name }}
             </template>
           </el-table-column>
-          <el-table-column label="性别" width="80%">
+          <el-table-column label="性别" width="80%" align="center">
             <template slot-scope="scope">
               {{ scope.row.sex }}
             </template>
           </el-table-column>
-          <el-table-column label="手机号" width="120%">
+          <el-table-column label="手机号" width="120%" align="center">
             <template slot-scope="scope">
               {{ scope.row.phone }}
             </template>
           </el-table-column>
-          <el-table-column label="基础工资" width="130%">
+          <el-table-column label="基础工资" width="130%" align="center">
             <template slot-scope="scope">
               {{ scope.row.basicSalary }}
             </template>
           </el-table-column>
-          <el-table-column label="绩效工资" width="130%">
+          <el-table-column label="绩效工资" width="130%" align="center">
             <template slot-scope="scope">
               {{ scope.row.achievement }}
             </template>
           </el-table-column>
-          <el-table-column label="工资" width="130%">
+          <el-table-column label="工资" width="130%" align="center">
             <template slot-scope="scope">
               {{ scope.row.salary }}
             </template>
           </el-table-column>
           <el-table-column label="工资月份" width="130%" 
             :filters="getfilterNameItem()"
-            column-key="salaryMonth">
+            column-key="salaryMonth"
+            align="center">
             <template slot-scope="scope">
               {{ scope.row.salaryMonth }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button type="primary" size="small" @click="openDrawer(scope.row.id)">发送工资单</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -67,7 +63,8 @@
           :page-sizes="[10, 20, 30, 40]"
           :page-size= pages.pageSize
           layout="total, sizes, prev, pager, next, jumper"
-          :total= totalPages>
+          :total= totalPages
+          style="margin-top:-20px;">
         </el-pagination>
       </div>
     </div>

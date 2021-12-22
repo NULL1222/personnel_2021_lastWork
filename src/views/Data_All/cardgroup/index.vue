@@ -147,7 +147,7 @@ numOfUser() {
       }
 
       .icon-people:hover {
-        background: red;
+        background: #34bfa3
       }
 
       .icon-message:hover {
@@ -164,7 +164,7 @@ numOfUser() {
     
 
  .card-panel-col {
-    margin-bottom: 18px;
+    margin-bottom: 8px;
   }
 
     .icon-people {
@@ -220,7 +220,7 @@ numOfUser() {
     }
 
 .panel-group {
-  margin-top: 18px;
+  margin-top: 8px;
   }
 
 @media (max-width:550px) {

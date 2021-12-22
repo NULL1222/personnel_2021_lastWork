@@ -89,7 +89,7 @@
     </el-form>
     <el-table
     :data="rolesList"
-    height = "450"
+    height = "430"
     stripe
     :header-cell-style="{background: 'lightblue', color: '#fff'}"
     style="width: 95%; margin-top: 10px;margin-left: 30px;"

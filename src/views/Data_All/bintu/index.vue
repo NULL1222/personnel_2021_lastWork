@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="pie" style="margin-top=18px">
+    <div class="pie" style="margin-top=15px">
         <div id="pie1" class="kk">
             <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
             <div id="main1" style="float:left;width:33%;height: 220px;display: inline-block;"></div>
@@ -178,7 +178,7 @@ export default {
 </script>
 <style>
 .pie{
-    height: 250px;
+    height: 220px;
     cursor: pointer;
     position: relative;
     overflow: hidden;

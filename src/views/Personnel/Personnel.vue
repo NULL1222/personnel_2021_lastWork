@@ -5,38 +5,38 @@
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
 
-        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center">
-          <el-table-column label="工号" width="100%">
+        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center;text-align:center" :header-cell-style="{textAlign: 'center'}">
+          <el-table-column label="工号" width="100%" align="center">
             <template slot-scope="scope">
               {{ scope.row.id }}
             </template>
           </el-table-column>
-          <el-table-column label="姓名" width="150%">
+          <el-table-column label="姓名" width="130%" align="center">
             <template slot-scope="scope">
               {{ scope.row.name }}
             </template>
           </el-table-column>
-          <el-table-column label="性别" width="80%">
+          <el-table-column label="性别" width="70%" align="center">
             <template slot-scope="scope">
               {{ scope.row.sex }}
             </template>
           </el-table-column>
-          <el-table-column label="邮箱" width="200%">
+          <el-table-column label="邮箱" width="200%" align="center">
             <template slot-scope="scope">
               {{ scope.row.mail }}
             </template>
           </el-table-column>
-          <el-table-column label="手机号" width="120%">
+          <el-table-column label="手机号" width="120%" align="center">
             <template slot-scope="scope">
               {{ scope.row.phone }}
             </template>
           </el-table-column>
-          <el-table-column label="考勤（本月）" width="130%">
+          <el-table-column label="考勤（本月）" width="130%" align="center">
             <template slot-scope="scope">
               {{ scope.row.attendance }}天
             </template>
           </el-table-column>
-          <el-table-column label="职务" width="150%">
+          <el-table-column label="职务" width="100" align="center">
             <!-- slot-scope="scope" -->
             <template slot="header">
                 <el-dropdown trigger="click" @command="handleCommand">
@@ -57,7 +57,7 @@
               {{ scope.row.job }}
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button type="primary" size="small" @click="openDrawer(scope.row.id)">详情</el-button>
               <el-button type="primary" plain size="small" @click="handleEdit(scope.row.id)">编辑</el-button>

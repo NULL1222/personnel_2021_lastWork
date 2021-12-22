@@ -1,29 +1,27 @@
 <template>
   <div style="text-align:left">
       <groupcard></groupcard>
-      <el-button type="primary" style="float: right;margin-left:10px;" @click="refreshing">刷新</el-button>
+      <el-button type="primary" style="float: right;margin-left:10px;margin-top: -25px;" @click="refreshing">刷新</el-button>
       <el-col :span=24>
-
-      <el-tabs v-model="activeName" type="card" @tab-click="handleClick" style="margin-left:10px;">
-
+      <el-tabs v-model="activeName" type="card" @tab-click="handleClick" style="margin-left:10px;margin-top: -35px;">
         <el-tab-pane label="收入" name="first">
-          <el-table aria-disabled="true" :data="InList" height=400px style="margin-left:250px;width:100%;margin-top:20px;float:center">
-          <el-table-column label="日期" width="180">
+          <el-table aria-disabled="true" :data="InList" height=385px style="margin-left:250px;width:100%;margin-top:-15px;float:center">
+          <el-table-column label="日期" width="180" align="center">
             <template slot-scope="scope">
               {{ scope.row.date }}
             </template>
           </el-table-column>
-          <el-table-column label="售票收入" width="180">
+          <el-table-column label="售票收入" width="180" align="center">
             <template slot-scope="scope">
               {{ scope.row.ticketingRevenue }}
             </template>
           </el-table-column>
-          <el-table-column label="广告费收入" width="180">
+          <el-table-column label="广告费收入" width="180" align="center">
             <template slot-scope="scope">
               {{ scope.row.advertisement }}
             </template>
           </el-table-column>
-          <el-table-column label="商务合作收入" width="180">
+          <el-table-column label="商务合作收入" width="180" align="center">
             <template slot-scope="scope">
               {{ scope.row.cooperation }}
             </template>
@@ -38,7 +36,8 @@
               :page-sizes="[10, 20, 30, 40]"
               :page-size= pages1.pageSize
               layout="total, sizes, prev, pager, next, jumper"
-              :total= totalPages1>
+              :total= totalPages1
+              style="margin-top: -30px;">
             </el-pagination>
           </div>
       
@@ -46,27 +45,27 @@
 
         <el-tab-pane label="支出" name="second">
           <el-table :data="OutList" height=400px style="margin-left:170px;width:100%;margin-top:20px;float:center" :header-cell-style="{textAlign: 'center'}">
-            <el-table-column label="日期" width="180">
+            <el-table-column label="日期" width="180" align="center">
               <template slot-scope="scope">
                 {{ scope.row.date }}
               </template>
             </el-table-column>
-            <el-table-column label="工资支出" width="180">
+            <el-table-column label="工资支出" width="180" align="center">
             <template slot-scope="scope">
               {{ scope.row.salaryExpend }}
             </template>
           </el-table-column>
-          <el-table-column label="水电支出" width="180">
+          <el-table-column label="水电支出" width="180" align="center">
             <template slot-scope="scope">
               {{ scope.row.hydropower }}
             </template>
           </el-table-column>
-          <el-table-column label="物业管理费" width="180">
+          <el-table-column label="物业管理费" width="180" align="center">
             <template slot-scope="scope">
               {{ scope.row.managementFee }}
             </template>
           </el-table-column>
-          <el-table-column label="服务器费" width="180">
+          <el-table-column label="服务器费" width="180" align="center">
             <template slot-scope="scope">
               {{ scope.row.server }}
             </template>
