@@ -14,7 +14,7 @@
       <template slot="dateCell" slot-scope="{ data }">
         <p>{{ data.day.split("-").slice(1).join("-") }}<br/>
         <br><br></p>
-          <p>{{ data.isSelected ? '✔️' : ''}}</p>
+          <p>{{ (data.day == today) ? '✔️' : ''}}</p>
         <div v-for="(item, index) in calendarData" :key="index">
           <div v-if="data.day == item.day[0]">
             {{item.status}}
@@ -31,18 +31,49 @@ export default {
     return {
       id: '',
       // _count: '',
-      calendarData: [
-        // { 
-        // day: [],
-        // status:'pass',
-        // },
-        // { day: "2021-12-19",status:"unpass", },
-      ],
+      calendarData: [ ],
+      today: new Date()
     }
   },
   created() {
+    var _this = this;
     const myData = sessionStorage.getItem('userId2');
     this.id = myData;
+    this.$nextTick(() => {
+      let preBtn = document.querySelector('tbody');
+      preBtn.addEventListener('click', () => {
+        let currDate = document.querySelector('.is-today');
+        let currSelected = document.querySelector('.is-selected');
+        if (currDate.isSameNode(currSelected)) {
+          let dd = String(this.today.getDate()).padStart(2, '0');
+          let mm = String(this.today.getMonth() + 1).padStart(2, '0');
+          let yyyy = this.today.getFullYear();
+          if (currDate.textContent == `${yyyy}-${mm}-${dd}`) {
+            this.today = `${yyyy}-${mm}-${dd}`;
+          }
+
+          // this.today = `${yyyy}-${mm}-${dd}`;
+
+          // this.$axios.post("/save/count?id=" + _this.id, { /*currFullDate */}).then(resp => {
+          //   if (resp && resp.data.code === 200) {
+          //   _count = resp.data.data;
+          //   }
+          //   console.log("count" + _count);
+          // });
+
+          this.$axios.post("/checking/attendance?id=" + _this.id
+          +"&date=" + this.today, {}).then(resp => {
+            if (resp && resp.data.code === 200) {
+              const h = this.$createElement;
+              this.$notify({
+              title: 'Notification',
+              message: h('i', { style: 'color: teal'}, '今日打卡成功！')
+              });
+            } 
+          })
+        }
+      })
+    })
   },
   mounted: function() {
     this.initCalendar()
@@ -84,4 +115,24 @@ export default {
   .is-selected {
     color: #1989FA;
   }
+
+
+  /* .el-calendar-table {
+
+    &:not(.is-range){
+      td.next{
+          pointer-events: none;
+      }
+      td.prev{
+          pointer-events: none;
+      }
+      }
+      /* //td{
+      //    pointer-events: none;
+      //} */
+.el-calendar-table:not(.is-range) td.next, .el-calendar-table:not(.is-range) td.prev{
+pointer-events: none;
+}
+
+
 </style>
