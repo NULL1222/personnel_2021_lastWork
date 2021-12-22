@@ -100,7 +100,7 @@
         this.$message.error("上传失败,请检查网络连接")
       },
       beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
+        this.$confirm(`确定移除 ${ file.name }？`);
       },
     }
   }

@@ -1,17 +1,16 @@
 <template>
 <div>
 <cardgroup></cardgroup>
-<zhutu></zhutu>
+<zhexian></zhexian>
 <bintu></bintu>
-<yuanhuan></yuanhuan>
 </div>
 </template>
-
 // Es6 导出规范
 <script>
-import zhutu from './zhutu/index'
+
 import bintu from './bintu/index'
 import cardgroup from './cardgroup/index'
+import zhexian from './zhexian/index'
 import Vue from 'vue'
 // 全局注册
 // Vue.component('zhutu',zhutu)
@@ -23,9 +22,9 @@ export default {
         }
     },
     components: {
-        zhutu,
         bintu,
-        cardgroup
+        cardgroup,
+        zhexian
     },
     methods: {
         

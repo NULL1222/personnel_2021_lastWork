@@ -10,7 +10,7 @@
           <div class="card-panel-text">
             用户人数
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val=userNum :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -24,7 +24,7 @@
           <div class="card-panel-text">
             员工人数
           </div>
-          <count-to :start-val="0" :end-val="78" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val=managerNum :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -38,7 +38,7 @@
           <div class="card-panel-text">
             今日售票数
           </div>
-          <count-to :start-val="0" :end-val="1983" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val=ticketNum :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -52,7 +52,7 @@
           <div class="card-panel-text">
             访问次数
           </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val=hitsNum :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -67,8 +67,62 @@ export default {
   components: {
     CountTo
   },
+  data(){
+      return {
+        managerNum:' ',
+        hitsNum:'',
+        userNum:'',
+        ticketNum:''
+      }
+     
+  },
+  mounted:function(){
+      this.numOfManager(),
+      this.numOfHits(),
+      this.numOfUser(),
+      this.numOfTicket()
+  },
   methods: {
-
+        numOfTicket() {
+        var _this = this
+          this.$axios
+            //向后端发送数据
+            .post('/train/numOfTickets' ,{}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.ticketNum = resp.data.data
+              }
+            })
+      },
+  numOfManager() {
+        var _this = this
+          this.$axios
+            //向后端发送数据
+            .post('/manager/numOfManager' ,{}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.managerNum = resp.data.data
+              }
+            })
+      },
+numOfHits() {
+             var _this = this
+          this.$axios
+            //向后端发送数据
+            .post('/analysis/numOfHits' ,{}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.hitsNum= resp.data.data
+              }
+            })
+      },
+numOfUser() {
+        var _this = this
+          this.$axios
+            //向后端发送数据
+            .post('/user/numOfUser' ,{}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.userNum = resp.data.data
+              }
+            })
+      },
   }
 }
 </script>
@@ -110,7 +164,7 @@ export default {
     
 
  .card-panel-col {
-    margin-bottom: 32px;
+    margin-bottom: 18px;
   }
 
     .icon-people {
