@@ -60,7 +60,7 @@ export default {
           //   }
           //   console.log("count" + _count);
           // });
-
+          console.log("today=" + this.today)
           this.$axios.post("/checking/attendance?id=" + _this.id
           +"&date=" + this.today, {}).then(resp => {
             if (resp && resp.data.code === 200) {
