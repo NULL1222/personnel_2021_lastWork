@@ -39,45 +39,45 @@ export default {
     var _this = this;
     const myData = sessionStorage.getItem('userId2');
     this.id = myData;
+
     this.$nextTick(() => {
       let preBtn = document.querySelector('tbody');
       preBtn.addEventListener('click', () => {
         let currDate = document.querySelector('.is-today');
         let currSelected = document.querySelector('.is-selected');
         if (currDate.isSameNode(currSelected)) {
+          this.today = new Date();
           let dd = String(this.today.getDate()).padStart(2, '0');
           let mm = String(this.today.getMonth() + 1).padStart(2, '0');
           let yyyy = this.today.getFullYear();
-          if (currDate.textContent == `${yyyy}-${mm}-${dd}`) {
+          if (currDate.textContent.includes( `${mm}-${dd}`) && !currDate.textContent.includes( `✔️`)) {
             this.today = `${yyyy}-${mm}-${dd}`;
+            this.$axios.post("/checking/attendance?id=" + _this.id +"&date=" + this.today, {}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                const h = this.$createElement;
+                this.$notify({
+                title: 'Success',
+                message: h('i', { style: 'color: teal'}, '今日打卡成功！'),
+                type: 'success'
+                });
+              } 
+            })
+          } else if (currDate.textContent.includes(`${mm}-${dd}`) && currDate.textContent.includes( `✔️`)) {
+            // 已经打过卡了
+            const h = this.$createElement;
+            this.$notify({
+              title: 'Warning',
+              message: h('i', { style: 'color: black'}, '今日已打卡, 请勿重复打卡!'),
+              type: 'warning'
+            });
           }
-
-          // this.today = `${yyyy}-${mm}-${dd}`;
-
-          // this.$axios.post("/save/count?id=" + _this.id, { /*currFullDate */}).then(resp => {
-          //   if (resp && resp.data.code === 200) {
-          //   _count = resp.data.data;
-          //   }
-          //   console.log("count" + _count);
-          // });
-
-          this.$axios.post("/checking/attendance?id=" + _this.id
-          +"&date=" + this.today, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              const h = this.$createElement;
-              this.$notify({
-              title: 'Notification',
-              message: h('i', { style: 'color: teal'}, '今日打卡成功！')
-              });
-            } 
-          })
         }
       })
     })
   },
   mounted: function() {
-    this.initCalendar()
-    this.showAble()
+    // this.initCalendar()
+    // this.showAble()
   },
   methods: {
     showAble(){
@@ -153,10 +153,7 @@ export default {
           if (resp && resp.data.code === 200) {
            _count = resp.data.data;
           }
-          console.log("count" + _count);
         })
-
-      console.log("_count = " + _count)
       this.$axios.post("/checking/all?id="+ _this.id, {}).then(resp => {
         if (resp && resp.data.code === 200) {
           console.log(_count);
@@ -197,9 +194,9 @@ export default {
       /* //td{
       //    pointer-events: none;
       //} */
-.el-calendar-table:not(.is-range) td.next, .el-calendar-table:not(.is-range) td.prev{
+/* .el-calendar-table:not(.is-range) td.next, .el-calendar-table:not(.is-range) td.prev{
 pointer-events: none;
-}
+} */
 
 
 </style>
