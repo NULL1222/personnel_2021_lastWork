@@ -291,7 +291,7 @@
             if (rows) {
                 rows.forEach(row => {
                     if (row) {
-                      this.multipleSelection.push(row.id);
+                      this.multipleSelection.push(row);
                     }
                 });
             }
@@ -309,7 +309,7 @@
             "绩效工资",
             "总工资",
           ]);
-          this.rolesList.forEach(item => {
+          this.multipleSelection.forEach(item=>{
             datalist.push([
               item.id,
               item.name,
