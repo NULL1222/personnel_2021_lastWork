@@ -1,15 +1,5 @@
 <template>
   <div>
-    <!-- <el-calendar>
-       这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法
-      <template
-        slot="dateCell"
-        slot-scope="{date, data}">
-        <p :class="data.isSelected ? 'is-selected' : ''">
-          {{ data.day.split('-').slice(1).join('-') }} {{ data.isSelected ? '✔️' : ''}}
-        </p>
-      </template>
-    </el-calendar> -->
     <el-calendar>
       <template slot="dateCell" slot-scope="{ data }">
         <p>{{ data.day.split("-").slice(1).join("-") }}<br/>
@@ -30,7 +20,6 @@ export default {
   data() {
     return {
       id: '',
-      // _count: '',
       calendarData: [ ],
       today: new Date()
     }
@@ -45,15 +34,17 @@ export default {
       preBtn.addEventListener('click', () => {
         let currDate = document.querySelector('.is-today');
         let currSelected = document.querySelector('.is-selected');
-        if (currDate.isSameNode(currSelected)) {
+        if (currDate && currSelected && currDate.isSameNode(currSelected)) {
           this.today = new Date();
           let dd = String(this.today.getDate()).padStart(2, '0');
           let mm = String(this.today.getMonth() + 1).padStart(2, '0');
           let yyyy = this.today.getFullYear();
-          if (currDate.textContent.includes( `${mm}-${dd}`) && !currDate.textContent.includes( `✔️`)) {
-            this.today = `${yyyy}-${mm}-${dd}`;
+          // console.log("yyyymmdd=" + yyyy + mm + dd);
+          this.today = `${yyyy}-${mm}-${dd}`
+          if (!currDate.textContent.includes( `✔️`)) {
             this.$axios.post("/checking/attendance?id=" + _this.id +"&date=" + this.today, {}).then(resp => {
               if (resp && resp.data.code === 200) {
+                this.today = `${yyyy}-${mm}-${dd}`;
                 const h = this.$createElement;
                 this.$notify({
                 title: 'Success',
@@ -61,9 +52,10 @@ export default {
                 type: 'success'
                 });
               } 
-            })
-          } else if (currDate.textContent.includes(`${mm}-${dd}`) && currDate.textContent.includes( `✔️`)) {
+            }).catch(err => console.log("Error: ", err))
+          } else {
             // 已经打过卡了
+            this.today = `${yyyy}-${mm}-${dd}`;
             const h = this.$createElement;
             this.$notify({
               title: 'Warning',
@@ -76,101 +68,28 @@ export default {
     })
   },
   mounted: function() {
-    // this.initCalendar()
-    // this.showAble()
+    this.initCalendar();
   },
   methods: {
-    showAble(){
-      this.$nextTick(() => {
-        let prevBtn = document.querySelector(
-          '.el-calendar__button-group .el-button-group>button:nth-child(1)');
-        prevBtn.addEventListener('click', () => {
-          // count =0 说明是本月    count 在 data中定义
-          this.count--
-          this.getMonthInfo(this.count) //获取本月的排班信息
-          // 判断 是否月份是上个月还是下个月    
-          // count < 0 说明是上个月
-          // count >0 说明是下个月
-          if (this.count < 0) {
-            // 如果是上个月  那就全都不可选  文字变灰
-            console.log(this.count);
-            $('.current').css('pointer-events', 'none')
-            $('.current').find('span').css('color', '#b4b4bb')
-          } else if (this.count > 0) {
-            // 如果是上个月  那就全都可选  文字变蓝
-            $('.current').css('pointer-events', 'auto')
-            $('.current').find('span').css('color', '#1c9bf7')
-          } else if (this.count == 0) {
-            // 如果是 等于七月  那么刷新页面  
-            // 毕竟多次操纵dom节点  最开始的月份已经被该乱
-            // 这里我直接刷新页面解决初始月份被该乱的问题  简单粗暴
-            // 如果有大佬有更简单的办法更好
-            location.reload();
-          }
-        })
-      })
-      // 点击后一个月
-      this.$nextTick(() => {
-        let prevBtn = document.querySelector(
-          '.el-calendar__button-group .el-button-group>button:last-child');
-        prevBtn.addEventListener('click', () => {
-          this.count++
-          this.getMonthInfo(this.count) //获取本月的排班信息
-          // 判断 是否月份是上个月还是下个月    
-          // count < 0 说明是上个月
-          // count >0 说明是下个月
-          if (this.count < 0) {
-            // 如果是上个月  那就全都不可选  文字变灰
-            console.log(this.count);
-            $('.current').css('pointer-events', 'none')
-            $('.current').find('span').css('color', '#b4b4bb')
-          } else if (this.count > 0) {
-            // 如果是上个月  那就全都可选  文字变蓝
-            $('.current').css('pointer-events', 'auto')
-            $('.current').find('span').css('color', '#1c9bf7')
-          } else if (this.count == 0) {
-            // 如果是 等于七月  那么刷新页面  
-            // 毕竟多次操纵dom节点  最开始的月份已经被该乱
-            // 这里我直接刷新页面解决初始月份被该乱的问题  简单粗暴
-            // 如果有大佬有更简单的办法更好
-            location.reload();
-          }
-        })
-      })
-    // 点击今天  刷新页面  回到本日
-      this.$nextTick(() => {
-        let prevBtn = document.querySelector(
-          '.el-calendar__button-group .el-button-group>button:nth-child(2)');
-        prevBtn.addEventListener('click', () => {
-          location.reload();
-        })
-      })
-    },
     initCalendar() {   
-      var _this = this
-      var _count = null
-      this.$axios.post("/checking/count?id=" + _this.id, {}).then(resp => {
-          if (resp && resp.data.code === 200) {
-           _count = resp.data.data;
+      var _this = this;
+      var _count = null;
+      this.$axios.all([
+        this.$axios.post("/checking/count?id=" + _this.id, {}),
+        this.$axios.post("/checking/all?id="+ _this.id, {})
+      ]).then(
+        this.$axios.spread((resp1, resp2) => {
+          if (resp1.data && resp1.data.code === 200) {
+            _count = resp1.data.data;
+          }
+          if (resp2.data && resp2.data.code === 200) {
+            for( var i = 0; i < _count; i++) {
+              _this.calendarData.push({day: [], status: '✔️'});
+              _this.calendarData[i].day[0]= resp2.data.data[i].date;            
+            }
           }
         })
-      this.$axios.post("/checking/all?id="+ _this.id, {}).then(resp => {
-        if (resp && resp.data.code === 200) {
-          console.log(_count);
-          for( var i = 0; i < _count; i++) {
-            _this.calendarData.push({day: [], status: '✔️'});
-            _this.calendarData[i].day[0]= resp.data.data[i].date;
-            // console.log("calendarDar[" + i "]: " + _this.calendarData[i].day);
-            // console.log("calendarDar[0]= " + _this.calendarData[0].day[i]);
-            
-            // console.log("list[" + i +"] = " + _this.calendarData[0].list[i]); 
-            // if( data.day === _this.calendarData[0].list[i]) {
-            //   _this.calendarData[0].status = "pass";
-            // }
-            // console.log("_this.canlendarData[0].status = " + _this.calendarData[0].status);
-          }
-        }
-      })
+      ).catch(err => console.log("Error: ", err))
     },
   },
 }
@@ -180,23 +99,13 @@ export default {
     color: #1989FA;
   }
 
-
-  /* .el-calendar-table {
-
-    &:not(.is-range){
-      td.next{
-          pointer-events: none;
-      }
-      td.prev{
-          pointer-events: none;
-      }
-      }
-      /* //td{
-      //    pointer-events: none;
-      //} */
-/* .el-calendar-table:not(.is-range) td.next, .el-calendar-table:not(.is-range) td.prev{
-pointer-events: none;
-} */
-
-
+  .el-calendar-table:not(.is-range) td.next {
+    pointer-events: none;
+  }
+  .el-calendar-table:not(.is-range) td.prev {
+    pointer-events: none;
+  }
+  .el-calendar-table td:not(.is-today) {
+    pointer-events: none;
+  }
 </style>
