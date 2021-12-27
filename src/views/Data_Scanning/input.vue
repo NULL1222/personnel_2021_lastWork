@@ -40,11 +40,11 @@ export default {
           let mm = String(this.today.getMonth() + 1).padStart(2, '0');
           let yyyy = this.today.getFullYear();
           // console.log("yyyymmdd=" + yyyy + mm + dd);
-          this.today = `${yyyy}-${mm}-${dd}`
+          let todayString = `${yyyy}-${mm}-${dd}`//here
           if (!currDate.textContent.includes( `✔️`)) {
-            this.$axios.post("/checking/attendance?id=" + _this.id +"&date=" + this.today, {}).then(resp => {
+            this.$axios.post("/checking/attendance?id=" + _this.id +"&date=" + todayString, {}).then(resp => {
               if (resp && resp.data.code === 200) {
-                this.today = `${yyyy}-${mm}-${dd}`;
+                this.today = todayString;
                 const h = this.$createElement;
                 this.$notify({
                 title: 'Success',
@@ -55,7 +55,7 @@ export default {
             }).catch(err => console.log("Error: ", err))
           } else {
             // 已经打过卡了
-            this.today = `${yyyy}-${mm}-${dd}`;
+            // this.today = `${yyyy}-${mm}-${dd}`;
             const h = this.$createElement;
             this.$notify({
               title: 'Warning',
