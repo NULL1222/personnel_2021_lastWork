@@ -6,7 +6,7 @@
         <br><br></p>
           <p>{{ (data.day == today) ? '✔️' : ''}}</p>
         <div v-for="(item, index) in calendarData" :key="index">
-          <div v-if="data.day == item.day[0]">
+          <div v-if="data.day == item.day[0] && (data.day !== today)">
             {{item.status}}
           </div>
         </div>
