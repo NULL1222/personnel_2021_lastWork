@@ -165,6 +165,10 @@
             listen.$emit("searchAll")
           else if(this.click == 'command')
             listen.$emit("searchState")
+          else if(this.click === 'sort'){
+            console.log(this.click)
+            listen.$emit("sort")
+          }
           else this.initUser();
         }, 
         
@@ -325,7 +329,9 @@
         },
         sortChange(column){
           this.click = "sort"
+          console.log(column.order)
           listen.$on("sort",()=>{
+            console.log(column.order)
             var _this = this
             if(column.order === "descending")
               this.order = "order by integral DESC"
