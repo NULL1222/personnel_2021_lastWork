@@ -5,6 +5,7 @@
       用户名: <input id="Username" type="text" v-model="LoginuserName" disabled="disabled" />
       <br><br>
       <!-- 一个git测试 -->
+      <!-- text -->
       原密码: <input id="oldpassword" type="password" v-model="oldpassword" placeholder="请输入原密码" />
       <br><br>
       新密码: <input id="newpassword" type="password" v-model="newpassword" placeholder="请输入新密码" />
