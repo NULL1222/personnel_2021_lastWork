@@ -24,7 +24,7 @@ var axios = require('axios')
 // Vue.use(Vuex);
 
 axios.defaults.baseURL = 'http://localhost:8002';
-Vue.prototype.HOST='/manager'
+Vue.prototype.HOST='/staff'
 Vue.prototype.$axios = axios
 
 /* eslint-disable no-new */

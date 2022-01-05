@@ -24,7 +24,7 @@
           <div class="card-panel-text">
             员工人数
           </div>
-          <count-to :start-val="0" :end-val=managerNum :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val=staffNum :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -69,7 +69,7 @@ export default {
   },
   data(){
       return {
-        managerNum:' ',
+        staffNum:' ',
         hitsNum:'',
         userNum:'',
         ticketNum:''
@@ -97,9 +97,9 @@ export default {
         var _this = this
           this.$axios
             //向后端发送数据
-            .post('/manager/numOfManager' ,{}).then(resp => {
+            .post('/staff/numOfManager' ,{}).then(resp => {
               if (resp && resp.data.code === 200) {
-                _this.managerNum = resp.data.data
+                _this.staffNum = resp.data.data
               }
             })
       },

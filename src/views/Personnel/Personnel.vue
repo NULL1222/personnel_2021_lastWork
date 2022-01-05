@@ -90,7 +90,7 @@
                 <el-calendar>
                   <template slot="dateCell" slot-scope="{ data }">
                     <p>{{ data.day.split("-").slice(1).join("-") }}<br/>
-                    <br><br></p>
+                    <br></p>
                       <p>{{ (data.day == today) ? '✔️' : ''}}</p>
                     <div v-for="(item, index) in calendarData" :key="index">
                       <div v-if="data.day == item.day[0] && (data.day !== today)">
@@ -262,7 +262,7 @@
               },
               trigger: 'blur'
             }],
-            manager: [{ required: true, message: '请选择管理权限', trigger: 'blur' }],
+            staff: [{ required: true, message: '请选择管理权限', trigger: 'blur' }],
             sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
             job: [{ required: true, message: '请选择职务', trigger: 'blur' }],
             card: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }]
@@ -275,77 +275,79 @@
         }
     },
 
-    created() {
-    var _this = this;
-    const myData = sessionStorage.getItem('userId2');
-    this.id = myData;
+  //   created() {
+  //   var _this = this;
+  //   // const myData = sessionStorage.getItem('userId2');
+  //   this.id = this.role.id;
+  //   console.log("this.id = " + this.id);
 
-    this.$nextTick(() => {
-      let preBtn = document.querySelector('tbody');
-      preBtn.addEventListener('click', () => {
-        let currDate = document.querySelector('.is-today');
-        let currSelected = document.querySelector('.is-selected');
-        if (currDate && currSelected && currDate.isSameNode(currSelected)) {
-          this.today = new Date();
-          let dd = String(this.today.getDate()).padStart(2, '0');
-          let mm = String(this.today.getMonth() + 1).padStart(2, '0');
-          let yyyy = this.today.getFullYear();
-          console.log("yyyymmdd=" + yyyy + mm + dd);
-          let todayString = `${yyyy}-${mm}-${dd}`//here
-          if (!currDate.textContent.includes( `✔️`)) {
-            this.$axios.post("/checking/attendance?id=" + _this.id +"&date=" + todayString, {}).then(resp => {
-              if (resp && resp.data.code === 200) {
-                this.today = todayString;
-                const h = this.$createElement;
-                this.$notify({
-                title: 'Success',
-                message: h('i', { style: 'color: teal'}, '今日打卡成功！'),
-                type: 'success'
-                });
-              } 
-            }).catch(err => console.log("Error: ", err))
-          } else {
-            // 已经打过卡了
-            // this.today = `${yyyy}-${mm}-${dd}`;
-            this.today = todayString;
-            const h = this.$createElement;
-            this.$notify({
-              title: 'Warning',
-              message: h('i', { style: 'color: black'}, '今日已打卡, 请勿重复打卡!'),
-              type: 'warning'
-            });
-          }
-        }
-      })
-    })
-  },
+  //   this.$nextTick(() => {
+  //     let preBtn = document.querySelector('tbody');
+  //     preBtn.addEventListener('click', () => {
+  //       let currDate = document.querySelector('.is-today');
+  //       let currSelected = document.querySelector('.is-selected');
+  //       if (currDate && currSelected && currDate.isSameNode(currSelected)) {
+  //         this.today = new Date();
+  //         let dd = String(this.today.getDate()).padStart(2, '0');
+  //         let mm = String(this.today.getMonth() + 1).padStart(2, '0');
+  //         let yyyy = this.today.getFullYear();
+  //         console.log("yyyymmdd=" + yyyy + mm + dd);
+  //         let todayString = `${yyyy}-${mm}-${dd}`//here
+  //         if (!currDate.textContent.includes( `✔️`)) {
+  //           this.$axios.post("/checking/attendance?id=" + _this.id +"&date=" + todayString, {}).then(resp => {
+  //             if (resp && resp.data.code === 200) {
+  //               this.today = todayString;
+  //               const h = this.$createElement;
+  //               this.$notify({
+  //               title: 'Success',
+  //               message: h('i', { style: 'color: teal'}, '今日打卡成功！'),
+  //               type: 'success'
+  //               });
+  //             } 
+  //           }).catch(err => console.log("Error: ", err))
+  //         } else {
+  //           // 已经打过卡了
+  //           // this.today = `${yyyy}-${mm}-${dd}`;
+  //           this.today = todayString;
+  //           const h = this.$createElement;
+  //           this.$notify({
+  //             title: 'Warning',
+  //             message: h('i', { style: 'color: black'}, '今日已打卡, 请勿重复打卡!'),
+  //             type: 'warning'
+  //           });
+  //         }
+  //       }
+  //     })
+  //   })
+  // },
     
       mounted: function() {
-        this.initStaff(),
-        this.initCalendar();
+        this.initStaff()
+        // this.initCalendar();
       },
 
       methods: {
-        initCalendar() {   
-          var _this = this;
-          var _count = null;
-          this.$axios.all([
-            this.$axios.post("/checking/count?id=" + _this.id, {}),
-            this.$axios.post("/checking/all?id="+ _this.id, {})
-          ]).then(
-            this.$axios.spread((resp1, resp2) => {
-              if (resp1.data && resp1.data.code === 200) {
-                _count = resp1.data.data;
-              }
-              if (resp2.data && resp2.data.code === 200) {
-                for( var i = 0; i < _count; i++) {
-                  _this.calendarData.push({day: [], status: '✔️'});
-                  _this.calendarData[i].day[0]= resp2.data.data[i].date;            
-                }
-              }
-            })
-          ).catch(err => console.log("Error: ", err))
-        },
+        // initCalendar() {   
+        //   var _this = this;
+        //   _this.id = 
+        //   var _count = null;
+        //   this.$axios.all([
+        //     this.$axios.post("/checking/count?id=" + _this.id, {}),
+        //     this.$axios.post("/checking/all?id="+ _this.id, {})
+        //   ]).then(
+        //     this.$axios.spread((resp1, resp2) => {
+        //       if (resp1.data && resp1.data.code === 200) {
+        //         _count = resp1.data.data;
+        //       }
+        //       if (resp2.data && resp2.data.code === 200) {
+        //         for( var i = 0; i < _count; i++) {
+        //           _this.calendarData.push({day: [], status: '✔️'});
+        //           _this.calendarData[i].day[0]= resp2.data.data[i].date;            
+        //         }
+        //       }
+        //     })
+        //   ).catch(err => console.log("Error: ", err))
+        // },
 
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
@@ -487,14 +489,38 @@
       },
 
       openDrawer(id) {
-      this.drawer = true
+        this.drawer = true
       //drawer.visible=true
         var _this = this
+        var _count = null;
         this.$axios
           //向后端发送数据
           .post('/staff/view?id=' + id, {}).then(resp => {
             if (resp && resp.data.code === 200) {
-              _this.role = resp.data.data
+              _this.role = resp.data.data,
+              // var _this = this;
+              // _this.id = _this.role.id,
+              console.log("_this.id="+ _this.id);
+              console.log(id);
+              _this.id = id;
+              console.log(this.id);
+              // var _count = null;
+              this.$axios.all([
+                this.$axios.post("/checking/count?id=" + _this.id, {}),
+                this.$axios.post("/checking/all?id="+ _this.id, {})
+              ]).then(
+                this.$axios.spread((resp1, resp2) => {
+                  if (resp1.data && resp1.data.code === 200) {
+                    _count = resp1.data.data;
+                  }
+                  if (resp2.data && resp2.data.code === 200) {
+                    for( var i = 0; i < _count; i++) {
+                      _this.calendarData.push({day: [], status: '✔️'});
+                      _this.calendarData[i].day[0]= resp2.data.data[i].date;            
+                    }
+                  }
+                })
+              ).catch(err => console.log("Error: ", err))
             }
           })
       },

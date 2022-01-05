@@ -223,7 +223,7 @@ export default {
     initUser() {
       var _this = this
       console.log(_this.myData2);
-      this.$axios.post("/manager/view?id=" + _this.role.id, {}).then(resp => {
+      this.$axios.post("/staff/view?id=" + _this.role.id, {}).then(resp => {
         if (resp && resp.data.code === 200) {
           _this.role = resp.data.data
           // console.log(_this.role);
@@ -241,7 +241,7 @@ export default {
           var _this = this
           this.$axios
             //向后端发送数据
-            .post('/manager/editIndividual?id=' + this.role.id
+            .post('/staff/editIndividual?id=' + this.role.id
             +'&name=' + this.role.name
             +'&sex=' + this.role.sex
             +'&idCard=' + this.role.idCard
@@ -265,7 +265,7 @@ export default {
       console.log("changepwd")
       this.dialogFormVisible = false
       var _this = this
-      this.$axios.post("/manager/changePassword?id="+ _this.role.id 
+      this.$axios.post("/staff/changePassword?id="+ _this.role.id 
       +"&oldPassword=" + this.form.password 
       + "&newPassword=" + this.form.newPassword, {}).then(resp => {
         if (resp && resp.data.code === 200) {

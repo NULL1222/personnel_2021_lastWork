@@ -107,7 +107,7 @@
               'Content-Type': 'multipart/form-data'
             }
           }
-          this.$axios.post("manager/login", fd, config).then(res => {
+          this.$axios.post("staff/login", fd, config).then(res => {
             alert(res.data.msg)
             if (res.data.code === 200) {
               Cookies.set('id', fd.get('id'));

@@ -228,7 +228,7 @@
               },
               trigger: 'blur'
             }],
-            manager: [{ required: true, message: '请选择管理权限', trigger: 'blur' }],
+            staff: [{ required: true, message: '请选择管理权限', trigger: 'blur' }],
             sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
             job: [{ required: true, message: '请选择职务', trigger: 'blur' }],
             card: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }]
@@ -258,7 +258,7 @@
         },      
         loadStaff(){
           var _this = this
-          this.$axios.get('/manager/all').then(resp => {
+          this.$axios.get('/staff/all').then(resp => {
             if (resp.data.code === 200) {
               _this.rolesList = resp.data.data
             }
@@ -270,7 +270,7 @@
           //  alert(this.$refs.searchBar.keywords)    //测试输入框中的内容
           this.$axios
             //向后端发送数据
-            .get('/manager/search?keywords=' + this.$refs.searchBar.keywords, {}).then(resp => {
+            .get('/staff/search?keywords=' + this.$refs.searchBar.keywords, {}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.rolesList = resp.data.data
 
@@ -338,7 +338,7 @@
         var _this = this
         this.$axios
           //向后端发送数据
-          .post('/manager/view?id=' + id, {}).then(resp => {
+          .post('/staff/view?id=' + id, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.role = resp.data.data
             }
@@ -348,7 +348,7 @@
         var _this = this
         this.$axios
           //向后端发送数据
-          .post('/manager/detail?id=' + id, {}).then(resp => {
+          .post('/staff/detail?id=' + id, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.role = resp.data.data
             }
@@ -368,7 +368,7 @@
           var _this = this
           this.$axios
           //向后端发送数据
-          .post('/manager/delete?id=' + id, {}).then(resp => {
+          .post('/staff/delete?id=' + id, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data  //重新刷新数据
                 this.$message({
@@ -384,7 +384,7 @@
 //        var _this = this
 //        this.$axios
 //          //向后端发送数据
-//          .post('/manager/add?name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
+//          .post('/staff/add?name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
 //          this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
 //                        this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
 //            if (resp && resp.data.code === 200) {
@@ -400,7 +400,7 @@
               var _this = this
               this.$axios
                 //向后端发送数据
-                .post('/manager/add?name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
+                .post('/staff/add?name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
                 this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {
@@ -460,7 +460,7 @@
               var _this = this
               this.$axios
                 //向后端发送数据
-                .post('/manager/edit?id='+this.role.id+'&name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
+                .post('/staff/edit?id='+this.role.id+'&name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
                 this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {

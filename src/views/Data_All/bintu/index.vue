@@ -42,7 +42,7 @@ export default {
       var _this = this;
       var length=2;
             var llength=3;
-      this.$axios.post("/manager/scale").then((response) => {
+      this.$axios.post("/staff/scale").then((response) => {
         if (response.data.code == 200) {
                 _this.nnbdatay.length = 0; //清空数组
         for (let i = 0; i <2; i++) {
