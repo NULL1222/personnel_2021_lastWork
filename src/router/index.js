@@ -15,18 +15,18 @@ Router.prototype.push = function push (location) {
 }
 
 export default new Router({
-  mode: 'hash',
+  mode: 'history',
   routes: [
     {
       path: '/container',
       name: 'container',
       component: container,
-      redirect: '/container/data',
+      redirect: '/container/Interview',
       children: [
         {
-          path: '/container/data',
-          name: 'Data_All',
-          component: ()=>import('../views/Data_All/Data.vue')
+          path: '/container/Interview',
+          name: 'Interview',
+          component: ()=>import('../views/Interview/Interview.vue')
         },
         {
           path: '/container/personnel',

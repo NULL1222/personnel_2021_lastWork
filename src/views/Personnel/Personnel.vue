@@ -44,11 +44,12 @@
                     职务<i class="el-icon-arrow-down el-icon--right el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item command="全部">全部</el-dropdown-item>
-                          <el-dropdown-item command="人事管理">人事管理</el-dropdown-item>
-                          <el-dropdown-item command="财务管理">财务管理</el-dropdown-item>
-                          <el-dropdown-item command="铁路管理">铁路管理</el-dropdown-item>
-                          <el-dropdown-item command="用户管理">用户管理</el-dropdown-item>
+                    <el-dropdown-item command="全部">全部</el-dropdown-item>
+                    <el-dropdown-item command="普通职员">普通职员</el-dropdown-item>
+                    <el-dropdown-item command="财务管理">财务管理</el-dropdown-item>
+                    <el-dropdown-item command="铁路管理">铁路管理</el-dropdown-item>
+                    <el-dropdown-item command="用户管理">用户管理</el-dropdown-item>
+                    <el-dropdown-item command="人事管理">人事管理</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </template>
@@ -105,6 +106,7 @@
                 <el-radio v-model="role.job" class="job" label="财务管理"></el-radio>
                 <el-radio v-model="role.job" class="job" label="铁路管理"></el-radio>
                 <el-radio v-model="role.job" class="job" label="用户管理"></el-radio>
+                <el-radio v-model="role.job" class="job" label="普通职员"></el-radio>
               </template>
             </el-form-item>
             <el-form-item label="性别" prop="sex" style="width:450px;">
@@ -281,7 +283,7 @@
         
         initStaff() {
           var _this = this
-          this.$axios.post("/manager/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
+          this.$axios.post("/staff/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
@@ -299,7 +301,7 @@
             console.log("in command")
             var _this = this
             console.log(command)
-            this.$axios.post('/manager/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
+            this.$axios.post('/staff/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
@@ -309,7 +311,7 @@
           this.pages.pageNum = 1
           var _this = this
           console.log("out command")
-          this.$axios.post('/manager/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
+          this.$axios.post('/staff/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
             if(resp && resp.data.code === 200){
               _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
@@ -323,7 +325,7 @@
             var _this = this
             this.$axios
               //向后端发送数据
-              .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
+              .get('/staff/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data.list
                   _this.totalPages = resp.data.data.total
@@ -334,7 +336,7 @@
           var _this = this
           this.$axios
             //向后端发送数据
-            .get('/manager/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
+            .get('/staff/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
@@ -404,7 +406,7 @@
         var _this = this
         this.$axios
           //向后端发送数据
-          .post('/manager/view?id=' + id, {}).then(resp => {
+          .post('/staff/view?id=' + id, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.role = resp.data.data
             }
@@ -415,7 +417,7 @@
         var _this = this
         this.$axios
           //向后端发送数据
-          .post('/manager/detail?id=' + id, {}).then(resp => {
+          .post('/staff/detail?id=' + id, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.role = resp.data.data
             }
@@ -436,7 +438,7 @@
           var _this = this
           this.$axios
           //向后端发送数据
-          .post('/manager/delete?id=' + id, {}).then(resp => {
+          .post('/staff/delete?id=' + id, {}).then(resp => {
             if (resp.data.code === 200) {
               if(this.click === 'search')
                 listen.$emit("searchAll")
@@ -460,7 +462,7 @@
               var _this = this
               this.$axios
                 //向后端发送数据
-                .post('/manager/add?name=' + this.role.name +'&sex='+this.role.sex+'&idCard='+
+                .post('/staff/add?name=' + this.role.name +'&sex='+this.role.sex+'&idCard='+
                 this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {
@@ -499,7 +501,7 @@
               var _this = this
               this.$axios
                 //向后端发送数据
-                .post('/manager/edit?id='+this.role.id+'&name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
+                .post('/staff/edit?id='+this.role.id+'&name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
                 this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {
