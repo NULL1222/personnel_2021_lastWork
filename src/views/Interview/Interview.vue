@@ -204,17 +204,11 @@
         check(id){
           var _this = this
           this.$axios.post("/apply/showPDF?id=" + id ,{}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              this.$message({
+            this.$message({
                 message: '成功打开pdf',
                 type: 'success'
-              });
-              // this.$router.push({name:'pdfView',params:{url:resp.data.data.endFile}});
-            }else{
-              this.$message.error('pdf打开失败，请重试');
-              this.$router.push({path:'/pdfView',query:{url:"/apply/showPDF?id="+id}});
-              // window.open("localhost:8002/apply/showPDF?id="+id);
-            }
+            });
+            window.open("http://localhost:8002/apply/showPDF?id="+id);
           })
         },
         back(){
@@ -234,6 +228,11 @@
                 })
               }
             })
+            this.$message({
+                message: '成功退回',
+                type: 'success'
+            });
+
         },
         pass(){
           var _this = this
@@ -252,6 +251,11 @@
                 })
               }
             })
+          this.$message({
+              message: '成功通过',
+              type: 'success'
+          });
+
         },
         revocationFail(){
           var _this = this
@@ -270,6 +274,11 @@
                 })
               }
             })
+          this.$message({
+            message: '成功撤销退回',
+            type: 'success'
+          });
+
         },
         revocationPass(){
           var _this = this
@@ -288,6 +297,11 @@
                 })
               }
             })
+          this.$message({
+            message: '成功撤销通过',
+            type: 'success'
+          });
+
         },
 
 //        generateRoutes(routes, basePath = '/') {
