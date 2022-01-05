@@ -506,8 +506,8 @@
               console.log(this.id);
               // var _count = null;
               this.$axios.all([
-                this.$axios.post("/checking/count?id=" + _this.id, {}),
-                this.$axios.post("/checking/all?id="+ _this.id, {})
+                this.$axios.post("/checking/count?id=" + this.id, {}),
+                this.$axios.post("/checking/all?id="+ this.id, {})
               ]).then(
                 this.$axios.spread((resp1, resp2) => {
                   if (resp1.data && resp1.data.code === 200) {

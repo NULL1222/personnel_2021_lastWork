@@ -39,12 +39,19 @@
         return {
            //isCollapse: false,
           menu: [
+            // {
+            //   path: "/",
+            //   name: "Data_All",
+            //   label: "数据总览",
+            //   icon: "s-data",
+            //   url: "Data_All/Data", 
+            // },
             {
               path: "/",
-              name: "Data_All",
-              label: "数据总览",
-              icon: "s-data",
-              url: "Data_All/Data", 
+              name: "Notice",
+              label: "公告",
+              icon: "s-order",
+              url: "Notice/notice", 
             },
             {
               path: "/personnel",
@@ -55,43 +62,22 @@
             },
             {
               path: "/finance",
-              label: "财政管理",
+              label: "员工工资",
+              name: "finance",
               icon: "coin",
-              children: [
-                {
-                  path: "/finance",
-                  name: "finance",
-                  label: "公司收支",
-                  icon: "coin",
-                  url: "Finance/finance",
-                },
-                {
-                  path: "/staff",
-                  name: "staff",
-                  label: "员工工资",
-                  icon: "setting",
-                  url: "Finance/staff",
-                }
-              ]
+              url: "Finance/staff", 
             },
             {
-              path: "/railway",
-              name: "Railway",
-              label: "铁路管理",
-              icon: "location",
-              url: "Railway/Railway", 
-            },
-            {
-              path: "/visitor",
-              name: "Visitor",
-              label: "旅客管理",
-              icon: "s-custom",
-              url: "Visitor/Visitor", 
+              path: "/interview",
+              name: "interview",
+              label: "应聘",
+              icon: "folder-checked",
+              url: "Interview/interview", 
             },
             {
               path: "/scan",
               label: "考勤签到",
-              icon: "upload",
+              icon: "date",
               children: [
                 {
                   path: "/scan",
@@ -109,6 +95,38 @@
                 }
               ]
             }
+              // children: [
+                // {
+                //   path: "/finance",
+                //   name: "finance",
+                //   label: "公司收支",
+                //   icon: "coin",
+                //   url: "Finance/finance",
+                // },
+                // {
+                //   path: "/staff",
+                //   name: "staff",
+                //   label: "员工工资",
+                //   icon: "setting",
+                //   url: "Finance/staff",
+                // }
+              // ]
+            // },
+            // {
+            //   path: "/railway",
+            //   name: "Railway",
+            //   label: "铁路管理",
+            //   icon: "location",
+            //   url: "Railway/Railway", 
+            // },
+            // {
+            //   path: "/visitor",
+            //   name: "Visitor",
+            //   label: "旅客管理",
+            //   icon: "s-custom",
+            //   url: "Visitor/Visitor", 
+            // },
+            
           ]
         };
       },

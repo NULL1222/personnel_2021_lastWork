@@ -14,6 +14,29 @@ Router.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
 }
 
+// export const fixedRouter = [{
+//   path: '',
+//   component: reload,
+//   hidden: true
+// },
+// {
+//   path: '',
+//   component: layout, //整体页面的布局(包含左侧菜单跟主内容区域)
+//   children: [{
+//     path: 'main',
+//     component: main,
+//     meta: {
+//       title: '首页', //菜单名称
+//       roles: ['user', 'admin'], //当前菜单哪些角色可以看到
+//       icon: 'el-icon-info' //菜单左侧的icon图标
+//     }
+//   }]
+// },
+// ]
+
+
+
+
 export default new Router({
   mode: 'history',
   routes: [
@@ -21,12 +44,12 @@ export default new Router({
       path: '/container',
       name: 'container',
       component: container,
-      redirect: '/container/Interview',
+      redirect: '/container/notice',
       children: [
         {
-          path: '/container/Interview',
-          name: 'Interview',
-          component: ()=>import('../views/Interview/Interview.vue')
+          path: '/container/notice',
+          name: 'Notice',
+          component: ()=>import('../views/Notice/notice.vue')
         },
         {
           path: '/container/personnel',
@@ -36,22 +59,12 @@ export default new Router({
         {
           path: '/container/finance',
           name: 'finance',
-          component: ()=>import('../views/Finance/finance.vue')
-        },
-        {
-          path: '/container/staff',
-          name: 'staff',
           component: ()=>import('../views/Finance/staff.vue')
         },
         {
-          path: '/container/railway',
-          name: 'Railway',
-          component: ()=>import('../views/Railway/Railway.vue')
-        },
-        {
-          path: '/container/visitor',
-          name: 'Visitor',
-          component: ()=>import('../views/Visitor/Visitor.vue')
+          path: '/container/interview',
+          name: 'interview',
+          component: ()=>import('../views/Interview/Interview.vue')
         },
         {
           path: '/container/scan',
@@ -68,6 +81,21 @@ export default new Router({
           name: 'PersonalCenter',
           component: ()=>import('../views/PersonalCenter.vue')
         }
+        // {
+        //   path: '/container/staff',
+        //   name: 'staff',
+        //   component: ()=>import('../views/Finance/staff.vue')
+        // },
+        // {
+        //   path: '/container/railway',
+        //   name: 'Railway',
+        //   component: ()=>import('../views/Railway/Railway.vue')
+        // },
+        // {
+        //   path: '/container/visitor',
+        //   name: 'Visitor',
+        //   component: ()=>import('../views/Visitor/Visitor.vue')
+        // },
       ]
     },
     {
