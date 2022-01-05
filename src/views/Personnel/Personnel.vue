@@ -85,6 +85,20 @@
                   <el-descriptions-item label="银行卡号">{{ role.card }}</el-descriptions-item>
                   <el-descriptions-item label="联系地址">{{ role.address}}</el-descriptions-item>
                 </el-descriptions>
+
+                <el-calendar>
+                  <template slot="dateCell" slot-scope="{ data }">
+                    <p>{{ data.day.split("-").slice(1).join("-") }}<br/>
+                    <br><br></p>
+                      <p>{{ (data.day == today) ? '✔️' : ''}}</p>
+                    <div v-for="(item, index) in calendarData" :key="index">
+                      <div v-if="data.day == item.day[0] && (data.day !== today)">
+                        {{item.status}}
+                      </div>
+                    </div>
+                  </template>
+                </el-calendar>
+
               </el-drawer>
             </template>
           </el-table-column>
@@ -175,6 +189,11 @@
       },
       data() {
         return {
+          //calendar
+          id: '',
+          calendarData: [ ],
+          today: new Date(),
+
           click: 'all',
           myCommend: '',
           currentPage: 1,
@@ -253,12 +272,79 @@
           checkStrictly: false,
         }
     },
+
+    created() {
+    var _this = this;
+    const myData = sessionStorage.getItem('userId2');
+    this.id = myData;
+
+    this.$nextTick(() => {
+      let preBtn = document.querySelector('tbody');
+      preBtn.addEventListener('click', () => {
+        let currDate = document.querySelector('.is-today');
+        let currSelected = document.querySelector('.is-selected');
+        if (currDate && currSelected && currDate.isSameNode(currSelected)) {
+          this.today = new Date();
+          let dd = String(this.today.getDate()).padStart(2, '0');
+          let mm = String(this.today.getMonth() + 1).padStart(2, '0');
+          let yyyy = this.today.getFullYear();
+          console.log("yyyymmdd=" + yyyy + mm + dd);
+          let todayString = `${yyyy}-${mm}-${dd}`//here
+          if (!currDate.textContent.includes( `✔️`)) {
+            this.$axios.post("/checking/attendance?id=" + _this.id +"&date=" + todayString, {}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                this.today = todayString;
+                const h = this.$createElement;
+                this.$notify({
+                title: 'Success',
+                message: h('i', { style: 'color: teal'}, '今日打卡成功！'),
+                type: 'success'
+                });
+              } 
+            }).catch(err => console.log("Error: ", err))
+          } else {
+            // 已经打过卡了
+            // this.today = `${yyyy}-${mm}-${dd}`;
+            this.today = todayString;
+            const h = this.$createElement;
+            this.$notify({
+              title: 'Warning',
+              message: h('i', { style: 'color: black'}, '今日已打卡, 请勿重复打卡!'),
+              type: 'warning'
+            });
+          }
+        }
+      })
+    })
+  },
     
       mounted: function() {
-        this.initStaff()
+        this.initStaff(),
+        this.initCalendar();
       },
 
       methods: {
+        initCalendar() {   
+          var _this = this;
+          var _count = null;
+          this.$axios.all([
+            this.$axios.post("/checking/count?id=" + _this.id, {}),
+            this.$axios.post("/checking/all?id="+ _this.id, {})
+          ]).then(
+            this.$axios.spread((resp1, resp2) => {
+              if (resp1.data && resp1.data.code === 200) {
+                _count = resp1.data.data;
+              }
+              if (resp2.data && resp2.data.code === 200) {
+                for( var i = 0; i < _count; i++) {
+                  _this.calendarData.push({day: [], status: '✔️'});
+                  _this.calendarData[i].day[0]= resp2.data.data[i].date;            
+                }
+              }
+            })
+          ).catch(err => console.log("Error: ", err))
+        },
+
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
           this.pages.pageSize = val
@@ -519,4 +605,21 @@
 </script>
  <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
  <style scoped>
+
+.is-selected {
+    color: #1989FA;
+  }
+
+  .el-calendar-table:not(.is-range) td.next {
+    pointer-events: none;
+  }
+  .el-calendar-table:not(.is-range) td.prev {
+    pointer-events: none;
+  }
+  .el-calendar-table td:not(.is-today) {
+    pointer-events: none;
+  }
+
+
+
  </style>
