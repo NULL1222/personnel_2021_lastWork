@@ -39,7 +39,7 @@ export default {
           let dd = String(this.today.getDate()).padStart(2, '0');
           let mm = String(this.today.getMonth() + 1).padStart(2, '0');
           let yyyy = this.today.getFullYear();
-          // console.log("yyyymmdd=" + yyyy + mm + dd);
+          console.log("yyyymmdd=" + yyyy + mm + dd);
           let todayString = `${yyyy}-${mm}-${dd}`//here
           if (!currDate.textContent.includes( `✔️`)) {
             this.$axios.post("/checking/attendance?id=" + _this.id +"&date=" + todayString, {}).then(resp => {
@@ -56,6 +56,7 @@ export default {
           } else {
             // 已经打过卡了
             // this.today = `${yyyy}-${mm}-${dd}`;
+            this.today = todayString;
             const h = this.$createElement;
             this.$notify({
               title: 'Warning',
