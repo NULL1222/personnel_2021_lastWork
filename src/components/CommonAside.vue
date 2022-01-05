@@ -164,10 +164,16 @@
   .el-menu {
     transition: width 0.1s ease-in-out;
   }
+  .el-menu-item {
+    text-align: left;
+  }
   .menu-title {
     height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .el-submenu {
+    text-align: left;
   }
 </style>

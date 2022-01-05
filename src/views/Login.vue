@@ -112,6 +112,9 @@
             if (res.data.code === 200) {
               Cookies.set('id', fd.get('id'));
               console.log("id1=" + this.LoginForm.id);
+              let getUserRole = fd.get('job') === '管理员' ? 'admin' : 'user';
+              console.log("getUserRole=" + getUserRole);
+              sessionStorage.setItem('userRole', getUserRole);
               this.$router.push({
                 path: '/container'
               })           
