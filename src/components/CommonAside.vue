@@ -9,6 +9,8 @@
       <h3 v-show="!isCollapse">铁路后台管理系统</h3>
       <h3 v-show="isCollapse">导航</h3>
     </div>
+    
+    <div v-if="userRole_1 === 'admin'">
       <el-menu-item :index="item.path" v-for="item in noChildren" 
       :key="item.path" @click="clickMenu(item)">
         <i :class="'el-icon-' + item.icon"></i>
@@ -29,7 +31,32 @@
         </el-menu-item-group>
         
       </el-submenu>
+    </div>
+    <div v-else>
+      <el-menu-item :index="item.path" v-for="item in userMenu" 
+      :key="item.path" @click="clickMenu(item)">
+      <i :class="'el-icon-' + item.icon"></i>
+      <span slot="title">{{ item.label }}</span>
+      </el-menu-item>
+
+      <el-submenu :index="item.label" v-for="item in hasChildren" 
+      :key="item.path">
+        <template slot="title">
+          <i :class="'el-icon-' + item.icon"></i>
+          <span slot="title">{{ item.label }}</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item :index="subItem.path" v-for="(subItem, subIndex) in item.children" 
+          :key="subIndex" @click="clickMenu(subItem)">
+          <i :class="'el-icon-' + subItem.icon"></i>
+          <span slot="title">{{ subItem.label }}</span>
+        </el-menu-item>
+        </el-menu-item-group>
+        
+      </el-submenu>
+    </div>
       </el-menu>  
+      
 </template>
 
 <script>
@@ -37,7 +64,8 @@
       props: ["isCollapse"],
       data() {
         return {
-           //isCollapse: false,
+          userRole_1: sessionStorage.getItem('userRole'),
+          // isCollapse: false,
           menu: [
             // {
             //   path: "/",
@@ -127,6 +155,23 @@
             //   url: "Visitor/Visitor", 
             // },
             
+          ],
+          userMenu: [
+            {
+              path: "/",
+              name: "Notice-u",
+              label: "公告",
+              icon: "s-order",
+              url: "Notice/notice-u", 
+            },
+            {
+              path: "/normalStaff",
+              name: "normalStaff",
+              label: "工资",
+              icon: "s-order",
+              url: "Finance/normalStaff", 
+            },
+            
           ]
         };
       },
@@ -175,5 +220,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .el-submenu {
+    text-align: left;
   }
 </style>

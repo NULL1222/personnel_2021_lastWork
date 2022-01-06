@@ -71,7 +71,7 @@
                 :size="800"
                 style="float:center"   
               >
-                <el-descriptions class="margin-top" :labelStyle="{'font-size': '16px','font-weight': 'bold', }" :column="2" :size="size" style="margin-left:80px">
+                <el-descriptions class="margin-top" :labelStyle="{'font-size': '16px','font-weight': 'bold', }" :column="2" style="margin-left:80px">
                   <el-descriptions-item label="工号">{{ role.id }}</el-descriptions-item>
                   <el-descriptions-item label="姓名">{{ role.name }}</el-descriptions-item>
                   <el-descriptions-item label="身份证号">{{ role.idCard }}</el-descriptions-item>
@@ -192,7 +192,7 @@
       data() {
         return {
           click: 'all',
-          myCommend: '',
+          myCommand: '',
           currentPage: 1,
           drawer: false,
           direction: 'rtl',
@@ -265,7 +265,24 @@
             card: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }]
           },
           routes: [],
-          rolesList: [],
+          rolesList: [{
+            id: '',
+            calendarData: [ ],
+            today: new Date(),
+            job: '1',
+            id: '111111',
+            name: '111',
+            sex: '1',
+            mail: '1',
+            phone: '1',
+            idCard: '1',
+            card: '1',
+            address: '1',
+            attendance: '1',
+            birthday: '1'
+          }
+          
+          ],
           dialogVisible: false,
           dialogType: 'edit',
           checkStrictly: false,
@@ -377,7 +394,7 @@
         },
 
         handleCommand(command){
-          this.myCommend = command
+          this.myCommand = command
           console.log(this.$refs.searchBar.keywords)
           if(command === "全部")
             this.click = 'all'
@@ -410,7 +427,7 @@
             var _this = this
             this.$axios
               //向后端发送数据
-              .get('/staff/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
+              .get('/staff/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommand, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data.list
                   _this.totalPages = resp.data.data.total
@@ -421,7 +438,7 @@
           var _this = this
           this.$axios
             //向后端发送数据
-            .get('/staff/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommend, {}).then(resp => {
+            .get('/staff/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommand, {}).then(resp => {
               if (resp && resp.data.code === 200) {
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
@@ -518,10 +535,14 @@
                       _this.calendarData[i].day[0]= resp2.data.data[i].date;
                     }
                   }
+                  
                 })
               ).catch(err => console.log("Error: ", err))
             }
           })
+          _this.id = '',
+          _this.calendarData = [ ],
+          _this.today = new Date()
       },
 
       handleEdit(id) {
@@ -632,11 +653,16 @@
 </script>
  <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
  <style scoped>
-
+.el-calendar {
+  width: 700px;
+  margin-left: 30px;
+}
 .is-selected {
     color: #1989FA;
   }
-
+.el-calendar__header {
+  padding: 12px 10px 12px 30px;;
+}
   .el-calendar-table:not(.is-range) td.next {
     pointer-events: none;
   }
