@@ -212,6 +212,9 @@
   .el-menu-item {
     text-align: left;
   }
+  .el-submenu {
+    text-align: left;
+  }
   .menu-title {
     height: 60px;
     display: flex;

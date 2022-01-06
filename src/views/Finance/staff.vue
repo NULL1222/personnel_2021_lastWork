@@ -25,9 +25,9 @@
               {{ scope.row.sex }}
             </template>
           </el-table-column>
-          <el-table-column label="手机号" width="120%" align="center">
+          <el-table-column label="银行卡号" width="120%" align="center">
             <template slot-scope="scope">
-              {{ scope.row.phone }}
+              {{ scope.row.card }}
             </template>
           </el-table-column>
           <el-table-column label="基础工资" width="130%" align="center">
@@ -110,12 +110,7 @@
           myCommend: '',
           currentPage: 1,
           drawer: false,
-          direction: 'rtl',
-          edit: false,
-          index: -1,
           keywords: '',
-          titleName: '编辑',
-          isShow: true,
           pages: {
             pageNum: 1,
             pageSize: 10,
@@ -131,6 +126,7 @@
             salary: '',
             salaryMonth: '',
             mail: '',
+            card: '',
           },
           routes: [],
           rolesList: [
@@ -326,7 +322,7 @@
               item.id,
               item.name,
               item.sex,
-              item.phone,
+              item.card,
               item.salaryMonth,
               item.achievement,
               item.basicSalary,
@@ -368,7 +364,7 @@
                 item.id,
                 item.name,
                 item.sex,
-                item.phone,
+                item.card,
                 item.salaryMonth,
                 item.basicSalary,
                 item.achievement,

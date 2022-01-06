@@ -91,20 +91,13 @@
  </template>
  
 <script>
-  import SearchBar from '../SearchBar.vue'
-  import Vue from 'vue'
   const defaultRole = {
     job: '人事管理',
     sex: '男',
   }
 
-  var listen = new Vue()
-
   import Cookies from 'js-cookie';
   export default{
-      components: {
-        SearchBar
-      },
       computed:{
         username(){
           return Cookies.get('id');

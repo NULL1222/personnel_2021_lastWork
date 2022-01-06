@@ -191,11 +191,6 @@
       },
       data() {
         return {
-          //calendar
-          id: '',
-          calendarData: [ ],
-          today: new Date(),
-
           click: 'all',
           myCommand: '',
           currentPage: 1,
@@ -222,11 +217,13 @@
             card: '',
             address: '',
             attendance: '',
-            birthday: ''
+            birthday: '',
+            calendarData: [],
+            today: new Date(),
           },
           list: {
-          radio: '1'
-        },
+            radio: '1'
+          },
           rules: {
             name: [{ required: true, message: '请输入姓名', trigger: 'blur' },
               { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }],
@@ -535,8 +532,8 @@
                   if (resp2.data && resp2.data.code === 200) {
                     for( var i = 0; i < _count; i++) {
                       _this.calendarData.push({day: [], status: '✔️'});
-                      _this.calendarData[i].day[0]= resp2.data.data[i].date;            
-                    }                   
+                      _this.calendarData[i].day[0]= resp2.data.data[i].date;
+                    }
                   }
                   
                 })
@@ -665,10 +662,6 @@
   }
 .el-calendar__header {
   padding: 12px 10px 12px 30px;;
-}
-  /deep/  .el-calendar-table .el-calendar-day{
-    /* width: 60px;
-    height: 40px; */
 }
   .el-calendar-table:not(.is-range) td.next {
     pointer-events: none;
