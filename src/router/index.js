@@ -80,7 +80,22 @@ export default new Router({
           path: '/PersonalCenter',
           name: 'PersonalCenter',
           component: ()=>import('../views/PersonalCenter.vue')
-        }
+        },
+        {
+          path: '/container/notice-u',
+          name: 'Notice-u',
+          component: ()=>import('../views/Notice/notice-u.vue')
+        },
+        {
+          path: '/container/notice-u',
+          name: 'Notice-u',
+          component: ()=>import('../views/Notice/notice-u.vue')
+        },
+        {
+          path: '/container/normalStaff',
+          name: 'normalStaff',
+          component: ()=>import('../views/Finance/normalStaff.vue')
+        },
         // {
         //   path: '/container/staff',
         //   name: 'staff',
