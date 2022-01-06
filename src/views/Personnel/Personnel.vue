@@ -191,11 +191,6 @@
       },
       data() {
         return {
-          //calendar
-          id: '',
-          calendarData: [ ],
-          today: new Date(),
-
           click: 'all',
           myCommend: '',
           currentPage: 1,
@@ -222,11 +217,13 @@
             card: '',
             address: '',
             attendance: '',
-            birthday: ''
+            birthday: '',
+            calendarData: [],
+            today: new Date(),
           },
           list: {
-          radio: '1'
-        },
+            radio: '1'
+          },
           rules: {
             name: [{ required: true, message: '请输入姓名', trigger: 'blur' },
               { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }],
@@ -512,11 +509,13 @@
                 this.$axios.spread((resp1, resp2) => {
                   if (resp1.data && resp1.data.code === 200) {
                     _count = resp1.data.data;
+                    console.log("_count1="+_count)
                   }
+                  console.log("_count2="+_count)
                   if (resp2.data && resp2.data.code === 200) {
                     for( var i = 0; i < _count; i++) {
                       _this.calendarData.push({day: [], status: '✔️'});
-                      _this.calendarData[i].day[0]= resp2.data.data[i].date;            
+                      _this.calendarData[i].day[0]= resp2.data.data[i].date;
                     }
                   }
                 })
