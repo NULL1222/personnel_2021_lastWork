@@ -46,8 +46,11 @@
       uploadFileHandler(res){
         console.log(res.words_result[8].words)
         const nowTime = new Date()
-        this.time = nowTime.getFullYear() + '-' + (nowTime.getMonth() + 1) + '-' + nowTime.getDate() + ' ' + nowTime.getHours() + ':' + nowTime.getMinutes() + ':' + nowTime.getSeconds()
-        this.postTime = nowTime.getFullYear() + '-' + (nowTime.getMonth() + 1) + '-' + nowTime.getDate()
+        let dd = String(nowTime.getDate()).padStart(2, '0');
+        let mm = String(nowTime.getMonth() + 1).padStart(2, '0');
+
+        this.time = nowTime.getFullYear() + '-' + mm + '-' + dd + ' ' + nowTime.getHours() + ':' + nowTime.getMinutes() + ':' + nowTime.getSeconds()
+        this.postTime = nowTime.getFullYear() + '-' + mm + '-' + dd
         console.log(this.time)
         if(res.words_result[8].words === this.loadId){
           this.$axios.post('/checking/attendance?id=' + res.words_result[8].words +'&date=' + this.postTime, {}).then(resp=>{

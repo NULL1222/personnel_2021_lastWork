@@ -89,18 +89,6 @@
       </el-tabs>
     </el-col>
 
-      <!-- <br><br>
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size= pages.pageSize
-        layout="total, sizes, prev, pager, next, jumper"
-        :total= totalPages>
-      </el-pagination>
-    </div> -->
   </div>
 </template>
 
@@ -210,44 +198,6 @@ export default{
       },
 
 
-//        generateRoutes(routes, basePath = '/') {
-//        const res = []
-//        for (let route of routes) {
-//          // skip some route
-//          if (route.hidden) { continue }
-//
-//          const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
-//          if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-//            route = onlyOneShowingChild
-//          }
-//          const data = {
-//            path: path.resolve(basePath, route.path),
-//            title: route.meta && route.meta.title
-
-//          }
-
-//          // recursive child routes
-//            if (route.children) {
-//              data.children = this.generateRoutes(route.children, data.path)
-//            }
-//            res.push(data)
-//          }
-//          return res
-//        },
-//      generateArr(routes) {
-//        let data = []
-//        routes.forEach(route => {
-//          data.push(route)
-//          if (route.children) {
-//            const temp = this.generateArr(route.children)
-//            if (temp.length > 0) {
-//              data = [...data, ...temp]
-//            }
-//          }
-//        })
-//        return data
-//      },
-    
     refreshing() {
       location.reload()
     },

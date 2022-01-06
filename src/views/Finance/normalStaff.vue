@@ -3,12 +3,12 @@
     <br><br>
       <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
       <el-button type="primary" style="margin-left:10px;" @click="output">导出</el-button>
-
-      <el-table :data="rolesList" height=430px style="width: 1100px;margin-top:30px;float:center;margin-left:70px;" @filter-change="filterChange" 
+      <div class="staffTable">
+      <el-table class="ele-table" :data="rolesList" height=500px @filter-change="filterChange" 
         :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelectionChange" :row-key="getRowKeys">
-        <el-table-column width="50%" type="selection" align="center">
+        <el-table-column width="100%" type="selection" align="center">
         </el-table-column>
-        <el-table-column label="工号" width="100%" align="center">
+        <el-table-column label="工号" width="150%" align="center">
           <template slot-scope="scope">
             {{ scope.row.id }}
           </template>
@@ -23,7 +23,7 @@
             {{ scope.row.sex }}
           </template>
         </el-table-column>
-        <el-table-column label="银行卡号" width="120%" align="center">
+        <el-table-column label="银行卡号" width="200%" align="center">
           <template slot-scope="scope">
             {{ scope.row.card }}
           </template>
@@ -43,7 +43,7 @@
             {{ scope.row.salary }}
           </template>
         </el-table-column>
-        <el-table-column label="工资月份" width="130%" 
+        <el-table-column label="工资月份" width="150%" 
           :filters="getfilterNameItem()"
           column-key="salaryMonth"
           align="center">
@@ -52,6 +52,7 @@
           </template>
         </el-table-column>
       </el-table>
+      </div>
       <br><br>
     <div class="block">
       <el-pagination
@@ -82,9 +83,6 @@ var listen = new Vue()
 
 import Cookies from 'js-cookie';
 export default{
-    components: {
-      SearchBar
-    },
     computed:{
       username(){
         return Cookies.get('id');
@@ -124,7 +122,7 @@ export default{
           id: '1111101',
           name: '小王',
           sex: '女',
-          phone: '13355436754',
+          card: '1335543675411111122',
           achievement: '2000元',
           basicSalary: '1000元',
           salary: '3000元',
@@ -160,7 +158,7 @@ export default{
 
         let apiArr = []
           for(var n = 0;n < _this.monthSize;n++){
-            apiArr.push({text:_this.salaryMonth[n],value:_this.salaryMonth[n]})
+            apiArr.push({text:_this.salaryMonth[n].substring(0,this.postSalary.length-3),value:_this.salaryMonth[n].substring(0,this.postSalary.length-3)})
           }
           console.log(apiArr)
 
@@ -188,7 +186,9 @@ export default{
       
       initSalary() {
         var _this = this
-        this.$axios.post('/salary/clearMonth?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize).then(resp => {
+        var id = sessionStorage.getItem('userId2');
+        this.$axios.post("/salary/updateSalary")
+        this.$axios.post('/salary/clearMonth?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize).then(resp => {
           if (resp && resp.data.code === 200) {
             _this.rolesList = resp.data.data.list
             _this.totalPages = resp.data.data.total
@@ -196,6 +196,7 @@ export default{
         })
       },
       filterChange(filterObj) {
+        var id = sessionStorage.getItem('userId2');
         this.postSalary = ''
         this.click = 'searchDate'
         var _this = this
@@ -207,19 +208,19 @@ export default{
             for(i = 0;i < filterObj.salaryMonth.length;i++){
               this.postSalary+="'"
               this.postSalary+=filterObj.salaryMonth[i]
-              this.postSalary+="',"
+              this.postSalary+="-11',"
             }
           this.postSalary = this.postSalary.substring(0,this.postSalary.length-1)
           this.postSalary+=")"
           console.log(this.postSalary)
-          this.$axios.post('/salary/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&salaryMonth=" + this.postSalary, {}).then(resp => {
+          this.$axios.post('/salary/search?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&salaryMonth=" + this.postSalary, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
             }
           })
         }else{
-          this.$axios.post('/salary/clearMonth?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+          this.$axios.post('/salary/clearMonth?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
@@ -233,12 +234,12 @@ export default{
           for(i = 0;i < filterObj.salaryMonth.length;i++){
             this.postSalary+="'"
             this.postSalary+=filterObj.salaryMonth[i]
-            this.postSalary+="',"
+            this.postSalary+="-11',"
           }
           this.postSalary = this.postSalary.substring(0,this.postSalary.length-1)
           this.postSalary+=")"
           console.log(this.postSalary)
-          this.$axios.post('/salary/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&salaryMonth=" + this.postSalary, {}).then(resp => {
+          this.$axios.post('/salary/search?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&salaryMonth=" + this.postSalary, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
@@ -246,7 +247,7 @@ export default{
           })
         }else{
           console.log("看看这个：",filterObj.salaryMonth)
-          this.$axios.post('/salary/clearMonth?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+          this.$axios.post('/salary/clearMonth?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
@@ -291,43 +292,6 @@ export default{
         });
         downloadXlsx(datalist, "员工工资单.xlsx");
       },
-//        generateRoutes(routes, basePath = '/') {
-//        const res = []
-//        for (let route of routes) {
-//          // skip some route
-//          if (route.hidden) { continue }
-//
-//          const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
-//          if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-//            route = onlyOneShowingChild
-//          }
-//          const data = {
-//            path: path.resolve(basePath, route.path),
-//            title: route.meta && route.meta.title
-
-//          }
-
-//          // recursive child routes
-//            if (route.children) {
-//              data.children = this.generateRoutes(route.children, data.path)
-//            }
-//            res.push(data)
-//          }
-//          return res
-//        },
-//      generateArr(routes) {
-//        let data = []
-//        routes.forEach(route => {
-//          data.push(route)
-//          if (route.children) {
-//            const temp = this.generateArr(route.children)
-//            if (temp.length > 0) {
-//              data = [...data, ...temp]
-//            }
-//          }
-//        })
-//        return data
-//      },
     
     refreshing() {
       location.reload()
@@ -338,4 +302,12 @@ export default{
 </script>
 <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
 <style scoped>
+  .staffTable {
+    min-width: 1020px;
+  } 
+
+  .ele-table {
+    margin-left: calc((100vw - 1495px) / 2);
+  }
+
 </style>

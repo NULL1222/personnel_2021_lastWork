@@ -8,9 +8,9 @@
         <div class="staffTable">
          <el-table class="ele-table" :data="rolesList" height=430px @filter-change="filterChange" 
           :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelectionChange" :row-key="getRowKeys">
-          <el-table-column width="50%" type="selection" align="center">
+          <el-table-column width="100%" type="selection" align="center">
           </el-table-column>
-          <el-table-column label="工号" width="100%" align="center">
+          <el-table-column label="工号" width="150%" align="center">
             <template slot-scope="scope">
               {{ scope.row.id }}
             </template>
@@ -25,7 +25,7 @@
               {{ scope.row.sex }}
             </template>
           </el-table-column>
-          <el-table-column label="银行卡号" width="120%" align="center">
+          <el-table-column label="银行卡号" width="200%" align="center">
             <template slot-scope="scope">
               {{ scope.row.card }}
             </template>
@@ -45,7 +45,7 @@
               {{ scope.row.salary }}
             </template>
           </el-table-column>
-          <el-table-column label="工资月份" width="130%" 
+          <el-table-column label="工资月份" width="150%" 
             :filters="getfilterNameItem()"
             column-key="salaryMonth"
             align="center">
@@ -329,7 +329,13 @@
         send(){
           var _this = this
           const nowTime = new Date()
-          var time = nowTime.getFullYear() + '-' + (nowTime.getMonth()+1) + '-11'
+          let mm = String(nowTime.getMonth()).padStart(2, '0');
+          if(nowTime.getDate() < 11)
+            mm = String(nowTime.getMonth()).padStart(2, '0');
+          else mm = String(nowTime.getMonth() + 1).padStart(2, '0');
+
+
+          var time = nowTime.getFullYear() + '-' + mm + '-11'
           let salaryList = []
 
           this.$axios.post('/salary/countMonth?salaryMonth=' + time , {}).then(resp => {
@@ -381,43 +387,6 @@
 
 
         },
-//        generateRoutes(routes, basePath = '/') {
-//        const res = []
-//        for (let route of routes) {
-//          // skip some route
-//          if (route.hidden) { continue }
-//
-//          const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
-//          if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-//            route = onlyOneShowingChild
-//          }
-//          const data = {
-//            path: path.resolve(basePath, route.path),
-//            title: route.meta && route.meta.title
-
-//          }
-
-//          // recursive child routes
-//            if (route.children) {
-//              data.children = this.generateRoutes(route.children, data.path)
-//            }
-//            res.push(data)
-//          }
-//          return res
-//        },
-//      generateArr(routes) {
-//        let data = []
-//        routes.forEach(route => {
-//          data.push(route)
-//          if (route.children) {
-//            const temp = this.generateArr(route.children)
-//            if (temp.length > 0) {
-//              data = [...data, ...temp]
-//            }
-//          }
-//        })
-//        return data
-//      },
       
       refreshing() {
         location.reload()
@@ -434,7 +403,7 @@
 } 
 
 .ele-table {
-  margin-left: calc((100vw - 1290px) / 2);
+  margin-left: calc((100vw - 1495px) / 2);
 }
 
 

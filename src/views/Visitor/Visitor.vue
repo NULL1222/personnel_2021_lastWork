@@ -205,43 +205,6 @@
               }
             })
         },
-//        generateRoutes(routes, basePath = '/') {
-//        const res = []
-//        for (let route of routes) {
-//          // skip some route
-//          if (route.hidden) { continue }
-//
-//          const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
-//          if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-//            route = onlyOneShowingChild
-//          }
-//          const data = {
-//            path: path.resolve(basePath, route.path),
-//            title: route.meta && route.meta.title
-
-//          }
-
-//          // recursive child routes
-//            if (route.children) {
-//              data.children = this.generateRoutes(route.children, data.path)
-//            }
-//            res.push(data)
-//          }
-//          return res
-//        },
-//      generateArr(routes) {
-//        let data = []
-//        routes.forEach(route => {
-//          data.push(route)
-//          if (route.children) {
-//            const temp = this.generateArr(route.children)
-//            if (temp.length > 0) {
-//              data = [...data, ...temp]
-//            }
-//          }
-//        })
-//        return data
-//      },
         refreshing() {
           location.reload()
         },

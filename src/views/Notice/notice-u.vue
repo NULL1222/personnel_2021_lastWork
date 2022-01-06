@@ -5,7 +5,7 @@
     
     <p style="text-align: center; font-weight:bold; color: #726f6f;font-size: 2rem;">公 告 栏</p>
     <br>
-    <el-collapse v-model="activeNames" class="notice" v-for="(item, index) in rolesList" :key="index" :accordion="accordion" accordion:true>
+    <el-collapse v-model="activeNames" class="notice" v-for="(item, index) in rolesList" :key="index" :accordion="accordion" accordion:true style="width: 1350px;">
       <el-collapse-item :key="index" :name="index" :disabled="disable">
         <template slot="title">
           <el-col :span="12">
@@ -93,5 +93,8 @@
   .notice >>> .el-collapse-item__content{
     margin-left: 25px;
     font-size: 10px;
+  }
+  .notice {
+    margin-left: calc((100vw - 1590px) / 2);
   }
   </style>
