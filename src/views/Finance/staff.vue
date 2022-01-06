@@ -133,7 +133,19 @@
             mail: '',
           },
           routes: [],
-          rolesList: [],
+          rolesList: [
+            {
+            id: '1111101',
+            name: '小王',
+            sex: '女',
+            phone: '13355436754',
+            achievement: '2000元',
+            basicSalary: '1000元',
+            salary: '3000元',
+            salaryMonth: '2021-01',
+            mail: '2244543343@qq.com',
+            },
+          ],
           salaryList: [],
           salaryNum: 0,
         }
