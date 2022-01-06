@@ -10,7 +10,7 @@
       <h3 v-show="isCollapse">导航</h3>
     </div>
     
-    <div v-if="'userRole_1' === 'admin'">
+    <div v-if="userRole_1 === 'admin'">
       <el-menu-item :index="item.path" v-for="item in noChildren" 
       :key="item.path" @click="clickMenu(item)">
         <i :class="'el-icon-' + item.icon"></i>

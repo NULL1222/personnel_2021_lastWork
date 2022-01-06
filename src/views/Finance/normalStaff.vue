@@ -4,7 +4,7 @@
       <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
       <el-button type="primary" style="margin-left:10px;" @click="output">导出</el-button>
       <div class="staffTable">
-      <el-table class="ele-table" :data="rolesList" height=500px @filter-change="filterChange" 
+      <el-table class="ele-table" :data="rolesList" height=480px @filter-change="filterChange" 
         :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelectionChange" :row-key="getRowKeys">
         <el-table-column width="100%" type="selection" align="center">
         </el-table-column>
