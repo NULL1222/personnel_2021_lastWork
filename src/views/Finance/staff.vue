@@ -169,18 +169,11 @@
           })
           console.log(_this.salaryMonth)
 
-          let apiArr = [{text: '2021-01', value: '2021-01'}, {text: '2021-02', value: '2021-02'}, {text: '2021-03', value: '2021-03'}, {text: '2021-04', value: '2021-04'},
-            {text: '2021-05', value: '2021-05'}, {text: '2021-06', value: '2021-06'}, {text: '2021-07', value: '2021-07'}, {text: '2021-08', value: '2021-08'},
-            {text: '2021-09', value: '2021-09'}, {text: '2021-10', value: '2021-10'}, {text: '2021-11', value: '2021-11'}, {text: '2021-12', value: '2021-12'}];
-//          apiArr = _this.salaryMonth
-          console.log(apiArr[3].text)
-
-          // for(var n = 0;n < _this.monthSize;n++){
-          //   apiArr[n].text = _this.salaryMonth[n]
-          //   console.log(apiArr[n].text)
-          //   apiArr[n].value = _this.salaryMonth[n]
-          //   console.log(apiArr[n].value)
-          // }
+          let apiArr = []
+          for(var n = 0;n < _this.monthSize;n++){
+            apiArr.push({text:_this.salaryMonth[n],value:_this.salaryMonth[n]})
+          }
+          console.log(apiArr)
           return apiArr;
         },
         handleSizeChange(val) {
@@ -205,6 +198,7 @@
         
         initSalary() {
           var _this = this
+          this.$axios.post("/salary/updateSalary")
           this.$axios.post("/salary/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data.list
@@ -248,7 +242,7 @@
               for(i = 0;i < filterObj.salaryMonth.length;i++){
                 this.postSalary+="'"
                 this.postSalary+=filterObj.salaryMonth[i]
-                this.postSalary+="-11',"
+                this.postSalary+="',"
               }
             this.postSalary = this.postSalary.substring(0,this.postSalary.length-1)
             this.postSalary+=")"
@@ -274,7 +268,7 @@
             for(i = 0;i < filterObj.salaryMonth.length;i++){
               this.postSalary+="'"
               this.postSalary+=filterObj.salaryMonth[i]
-              this.postSalary+="-11',"
+              this.postSalary+="',"
             }
             this.postSalary = this.postSalary.substring(0,this.postSalary.length-1)
             this.postSalary+=")"
