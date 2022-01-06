@@ -5,8 +5,8 @@
         <el-button type="primary" style="margin-left:10px;" @click="output">导出</el-button>
         <el-button type="primary" style="margin-left:10px;" @click="send">发送工资单</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
-
-        <el-table :data="rolesList" height=430px style="width: 1100px;margin-top:30px;float:center;margin-left:70px;" @filter-change="filterChange" 
+        <div class="staffTable">
+         <el-table class="ele-table" :data="rolesList" height=430px @filter-change="filterChange" 
           :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelectionChange" :row-key="getRowKeys">
           <el-table-column width="50%" type="selection" align="center">
           </el-table-column>
@@ -54,6 +54,7 @@
             </template>
           </el-table-column>
         </el-table>
+      </div>
         <br><br>
       <div class="block">
         <el-pagination
@@ -433,4 +434,16 @@
 </script>
  <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
  <style scoped>
+
+.staffTable {
+  min-width: 1020px;
+} 
+
+.ele-table {
+  margin-left: calc((100vw - 1290px) / 2);
+}
+
+
+
+
  </style>
