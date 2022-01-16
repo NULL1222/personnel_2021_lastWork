@@ -87,7 +87,7 @@
                   <el-descriptions-item label="联系地址">{{ role.address}}</el-descriptions-item>
                 </el-descriptions>
 
-                <el-calendar>
+                <el-calendar :key="calendar">
                   <template slot="dateCell" slot-scope="{ data }">
                     <p>{{ data.day.split("-").slice(1).join("-") }}<br/>
                     <br></p>
@@ -191,6 +191,7 @@
       },
       data() {
         return {
+          calendar:0,
           click: 'all',
           myCommand: '',
           currentPage: 1,
@@ -465,6 +466,7 @@
       },
 
       openDrawer(id) {
+        this.calendar= 1
         this.drawer = true
       //drawer.visible=true
         var _this = this
@@ -497,7 +499,7 @@
                       _this.calendarData[i].day[0]= resp2.data.data[i].date;
                     }
                   }
-                  
+                  this.calendar= 2
                 })
               ).catch(err => console.log("Error: ", err))
             }

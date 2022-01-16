@@ -142,27 +142,26 @@ export default{
     methods: {
       getfilterNameItem() {
         var _this = this
-        this.$axios.post("/salary/amount").then(resp=>{
-          if(resp && resp.data.code === 200){
-            _this.monthSize = resp.data.data
-          }
-        })
-        this.$axios.post("/salary/view").then(resp => {
-          if (resp && resp.data.code === 200) {
-            var i = 0
-            for(i;i<_this.monthSize;i++)
-              _this.salaryMonth[i] = resp.data.data[i].salaryMonth
-          }
-        })
-        console.log(_this.salaryMonth)
+          this.$axios.post("/salary/amount").then(resp=>{
+            if(resp && resp.data.code === 200){
+              _this.monthSize = resp.data.data
+            }
+          })
+          this.$axios.post("/salary/view").then(resp => {
+            if (resp && resp.data.code === 200) {
+              var i = 0
+              for(i;i<_this.monthSize;i++)
+                _this.salaryMonth[i] = resp.data.data[i].salaryMonth
+            }
+          })
+          console.log(_this.salaryMonth)
 
-        let apiArr = []
+          let apiArr = []
           for(var n = 0;n < _this.monthSize;n++){
-            apiArr.push({text:_this.salaryMonth[n].substring(0,this.postSalary.length-3),value:_this.salaryMonth[n].substring(0,this.postSalary.length-3)})
+            apiArr.push({text:_this.salaryMonth[n],value:_this.salaryMonth[n]})
           }
           console.log(apiArr)
-
-        return apiArr;
+          return apiArr;
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
@@ -198,62 +197,62 @@ export default{
       filterChange(filterObj) {
         var id = sessionStorage.getItem('userId2');
         this.postSalary = ''
-        this.click = 'searchDate'
-        var _this = this
-        listen.$on("searchDate",()=>{
-          console.log("长度：",filterObj.salaryMonth.length)
+          this.click = 'searchDate'
+          var _this = this
+          listen.$on("searchDate",()=>{
+            console.log("长度：",filterObj.salaryMonth.length)
+            if(filterObj.salaryMonth.length > 0){
+            var i = 0
+            this.postSalary = "("
+              for(i = 0;i < filterObj.salaryMonth.length;i++){
+                this.postSalary+="'"
+                this.postSalary+=filterObj.salaryMonth[i]
+                this.postSalary+="',"
+              }
+            this.postSalary = this.postSalary.substring(0,this.postSalary.length-1)
+            this.postSalary+=")"
+            console.log(this.postSalary)
+            this.$axios.post('/salary/search?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&salaryMonth=" + this.postSalary, {}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.rolesList = resp.data.data.list
+                _this.totalPages = resp.data.data.total
+              }
+            })
+          }else{
+            this.$axios.post('/salary/clearMonth?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.rolesList = resp.data.data.list
+                _this.totalPages = resp.data.data.total
+              }
+            })
+          }
+        })
           if(filterObj.salaryMonth.length > 0){
-          var i = 0
-          this.postSalary = "("
+            var i = 0
+            this.postSalary = "("
             for(i = 0;i < filterObj.salaryMonth.length;i++){
               this.postSalary+="'"
               this.postSalary+=filterObj.salaryMonth[i]
-              this.postSalary+="-11',"
+              this.postSalary+="',"
             }
-          this.postSalary = this.postSalary.substring(0,this.postSalary.length-1)
-          this.postSalary+=")"
-          console.log(this.postSalary)
-          this.$axios.post('/salary/search?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&salaryMonth=" + this.postSalary, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.rolesList = resp.data.data.list
-              _this.totalPages = resp.data.data.total
-            }
-          })
-        }else{
-          this.$axios.post('/salary/clearMonth?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.rolesList = resp.data.data.list
-              _this.totalPages = resp.data.data.total
-            }
-          })
-        }
-      })
-        if(filterObj.salaryMonth.length > 0){
-          var i = 0
-          this.postSalary = "("
-          for(i = 0;i < filterObj.salaryMonth.length;i++){
-            this.postSalary+="'"
-            this.postSalary+=filterObj.salaryMonth[i]
-            this.postSalary+="-11',"
+            this.postSalary = this.postSalary.substring(0,this.postSalary.length-1)
+            this.postSalary+=")"
+            console.log(this.postSalary)
+            this.$axios.post('/salary/search?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&salaryMonth=" + this.postSalary, {}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.rolesList = resp.data.data.list
+                _this.totalPages = resp.data.data.total
+              }
+            })
+          }else{
+            console.log("看看这个：",filterObj.salaryMonth)
+            this.$axios.post('/salary/clearMonth?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
+              if (resp && resp.data.code === 200) {
+                _this.rolesList = resp.data.data.list
+                _this.totalPages = resp.data.data.total
+              }
+            })
           }
-          this.postSalary = this.postSalary.substring(0,this.postSalary.length-1)
-          this.postSalary+=")"
-          console.log(this.postSalary)
-          this.$axios.post('/salary/search?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&salaryMonth=" + this.postSalary, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.rolesList = resp.data.data.list
-              _this.totalPages = resp.data.data.total
-            }
-          })
-        }else{
-          console.log("看看这个：",filterObj.salaryMonth)
-          this.$axios.post('/salary/clearMonth?keywords=' + id + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.rolesList = resp.data.data.list
-              _this.totalPages = resp.data.data.total
-            }
-          })
-        }
       },
       handleSelectionChange(rows) {
           this.multipleSelection = [];

@@ -38,7 +38,7 @@
               type="textarea"
               placeholder="请输入公告内容"
               style="height: 280px;width: 600px;"
-              :autosize="{ minRows: 12, maxRows: 18}"
+              :autosize="{ minRows: 10, maxRows: 12}"
               v-model="role.notice">
               </el-input>
             </div>

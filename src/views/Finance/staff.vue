@@ -306,7 +306,7 @@
             "工号",
             "姓名",
             "性别",
-            "手机号",
+            "银行卡号",
             "时间",
             "基础工资",
             "绩效工资",
@@ -329,13 +329,19 @@
         send(){
           var _this = this
           const nowTime = new Date()
-          let mm = String(nowTime.getMonth()).padStart(2, '0');
-          if(nowTime.getDate() < 11)
-            mm = String(nowTime.getMonth()).padStart(2, '0');
+          let mm = nowTime.getMonth() + 1
+          let yyyy = nowTime.getFullYear()
+          if(nowTime.getDate() < 11){
+            if(mm === 1){
+              mm = 12
+              yyyy -= 1
+            }else
+              mm = String(nowTime.getMonth()).padStart(2, '0');
+          }
           else mm = String(nowTime.getMonth() + 1).padStart(2, '0');
 
 
-          var time = nowTime.getFullYear() + '-' + mm + '-11'
+          var time = yyyy + '-' + mm + '-11'
           let salaryList = []
 
           this.$axios.post('/salary/countMonth?salaryMonth=' + time , {}).then(resp => {
@@ -355,7 +361,7 @@
               "工号",
               "姓名",
               "性别",
-              "手机号",
+              "银行卡号",
               "时间",
               "基础工资",
               "绩效工资",
@@ -403,7 +409,7 @@
 } 
 
 .ele-table {
-  margin-left: calc((100vw - 1495px) / 2);
+  margin-left: calc((100vw - 1531px) / 2);
 }
 
 
