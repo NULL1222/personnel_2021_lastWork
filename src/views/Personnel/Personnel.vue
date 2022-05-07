@@ -4,8 +4,7 @@
       <el-button type="primary" @click="handleAddRole" style="margin-left:10px;">添加</el-button>
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
-
-        <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center;text-align:center" :header-cell-style="{textAlign: 'center'}">
+         <el-table :data="rolesList" height=450px style="width: 100%;margin-top:30px;float:center;text-align:center" :header-cell-style="{textAlign: 'center'}">
           <el-table-column label="工号" width="100%" align="center">
             <template slot-scope="scope">
               {{ scope.row.id }}
@@ -53,8 +52,7 @@
                   </el-dropdown-menu>
                 </el-dropdown>
               </template>
-
-            <template slot-scope="scope">
+             <template slot-scope="scope">
               {{ scope.row.job }}
             </template>
           </el-table-column>
@@ -63,8 +61,7 @@
               <el-button type="primary" size="small" @click="openDrawer(scope.row.id)">详情</el-button>
               <el-button type="primary" plain size="small" @click="handleEdit(scope.row.id)">编辑</el-button>
               <el-button type="danger" plain size="small" @click="handleDelete(scope.row.id)">删除</el-button>
-    
-              <el-drawer
+               <el-drawer
                 title="详细信息"
                 :visible.sync="drawer"
                 :direction="direction"
@@ -86,8 +83,7 @@
                   <el-descriptions-item label="银行卡号">{{ role.card }}</el-descriptions-item>
                   <el-descriptions-item label="联系地址">{{ role.address}}</el-descriptions-item>
                 </el-descriptions>
-
-                <el-calendar :key="calendar">
+                 <el-calendar :key="calendar">
                   <template slot="dateCell" slot-scope="{ data }">
                     <p>{{ data.day.split("-").slice(1).join("-") }}<br/>
                     <br></p>
@@ -99,13 +95,11 @@
                     </div>
                   </template>
                 </el-calendar>
-
-              </el-drawer>
+               </el-drawer>
             </template>
           </el-table-column>
         </el-table>
-
-        <el-dialog :title="titleName" :visible.sync="dialogVisible" width="700px" destroy-on-close>
+         <el-dialog :title="titleName" :visible.sync="dialogVisible" width="700px" destroy-on-close>
           <el-form ref="ruleForm" :inline="true" :model="role" :rules="rules" label-width="80px" label-position="right">
             <el-span v-model="role.id" style="color:#FFF;font-size:1px">{{role.id}}</el-span>
             <el-form-item label="姓名" prop="name">
@@ -168,18 +162,15 @@
       </div>
     </div>
  </template>
- 
-<script>
+ <script>
   import SearchBar from '../SearchBar.vue'
   import Vue from 'vue'
   const defaultRole = {
     job: '人事管理',
     sex: '男',
   }
-
-  var listen = new Vue()
-
-  import Cookies from 'js-cookie';
+   var listen = new Vue()
+   import Cookies from 'js-cookie';
   export default{
       components: {
         SearchBar
@@ -282,89 +273,17 @@
             attendance: '1',
             birthday: '1'
           }
-          
-          ],
+           ],
           dialogVisible: false,
           dialogType: 'edit',
           checkStrictly: false,
         }
     },
-
-  //   created() {
-  //   var _this = this;
-  //   // const myData = sessionStorage.getItem('userId2');
-  //   this.id = this.role.id;
-  //   console.log("this.id = " + this.id);
-
-  //   this.$nextTick(() => {
-  //     let preBtn = document.querySelector('tbody');
-  //     preBtn.addEventListener('click', () => {
-  //       let currDate = document.querySelector('.is-today');
-  //       let currSelected = document.querySelector('.is-selected');
-  //       if (currDate && currSelected && currDate.isSameNode(currSelected)) {
-  //         this.today = new Date();
-  //         let dd = String(this.today.getDate()).padStart(2, '0');
-  //         let mm = String(this.today.getMonth() + 1).padStart(2, '0');
-  //         let yyyy = this.today.getFullYear();
-  //         console.log("yyyymmdd=" + yyyy + mm + dd);
-  //         let todayString = `${yyyy}-${mm}-${dd}`//here
-  //         if (!currDate.textContent.includes( `✔️`)) {
-  //           this.$axios.post("/checking/attendance?id=" + _this.id +"&date=" + todayString, {}).then(resp => {
-  //             if (resp && resp.data.code === 200) {
-  //               this.today = todayString;
-  //               const h = this.$createElement;
-  //               this.$notify({
-  //               title: 'Success',
-  //               message: h('i', { style: 'color: teal'}, '今日打卡成功！'),
-  //               type: 'success'
-  //               });
-  //             } 
-  //           }).catch(err => console.log("Error: ", err))
-  //         } else {
-  //           // 已经打过卡了
-  //           // this.today = `${yyyy}-${mm}-${dd}`;
-  //           this.today = todayString;
-  //           const h = this.$createElement;
-  //           this.$notify({
-  //             title: 'Warning',
-  //             message: h('i', { style: 'color: black'}, '今日已打卡, 请勿重复打卡!'),
-  //             type: 'warning'
-  //           });
-  //         }
-  //       }
-  //     })
-  //   })
-  // },
-    
-      mounted: function() {
+       mounted: function() {
         this.initStaff()
-        // this.initCalendar();
       },
-
-      methods: {
-        // initCalendar() {   
-        //   var _this = this;
-        //   _this.id = 
-        //   var _count = null;
-        //   this.$axios.all([
-        //     this.$axios.post("/checking/count?id=" + _this.id, {}),
-        //     this.$axios.post("/checking/all?id="+ _this.id, {})
-        //   ]).then(
-        //     this.$axios.spread((resp1, resp2) => {
-        //       if (resp1.data && resp1.data.code === 200) {
-        //         _count = resp1.data.data;
-        //       }
-        //       if (resp2.data && resp2.data.code === 200) {
-        //         for( var i = 0; i < _count; i++) {
-        //           _this.calendarData.push({day: [], status: '✔️'});
-        //           _this.calendarData[i].day[0]= resp2.data.data[i].date;            
-        //         }
-        //       }
-        //     })
-        //   ).catch(err => console.log("Error: ", err))
-        // },
-
-        handleSizeChange(val) {
+       methods: {
+         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
           this.pages.pageSize = val
           if(this.click === 'search')
@@ -383,8 +302,7 @@
             listen.$emit("searchJob")
           else this.initStaff();
         }, 
-        
-        initStaff() {
+         initStaff() {
           var _this = this
           this.$axios.post("/staff/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
             if (resp && resp.data.code === 200) {
@@ -393,8 +311,7 @@
             }
           })
         },
-
-        handleCommand(command){
+         handleCommand(command){
           this.myCommand = command
           console.log(this.$refs.searchBar.keywords)
           if(command === "全部")
@@ -421,8 +338,7 @@
             }
           })
         },
-
-        searchResult() {
+         searchResult() {
           this.click = 'search'
           listen.$on("searchAll",()=>{
             var _this = this
@@ -456,16 +372,13 @@
         this.titleName = '添加用户'
         this.dialogVisible = true
       },
-
-      refreshing() {
+       refreshing() {
         location.reload()
       },
-
-      resetForm(formName) {
+       resetForm(formName) {
         this.$refs[formName].resetFields()
       },
-
-      openDrawer(id) {
+       openDrawer(id) {
         this.calendar= 1
         this.drawer = true
       //drawer.visible=true
@@ -508,8 +421,7 @@
           _this.calendarData = [ ],
           _this.today = new Date()
       },
-
-      handleEdit(id) {
+       handleEdit(id) {
         var _this = this
         this.$axios
           //向后端发送数据
@@ -523,8 +435,7 @@
         this.dialogVisible = true
         this.dialogType = 'edit'
       },
-
-      handleDelete(id){
+       handleDelete(id){
         this.$confirm('确定删除此条信息吗?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -550,8 +461,7 @@
         })
           .catch(err => { console.error(err) })
           },
-          
-      submit(formName){
+       submit(formName){
         if(this.dialogType === 'new'){
           this.$refs[formName].validate((valid) => {
             if (valid) {
@@ -636,7 +546,4 @@
   .el-calendar-table td:not(.is-today) {
     pointer-events: none;
   }
-
-
-
- </style>
+  </style>

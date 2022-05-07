@@ -2,8 +2,7 @@
   <div >
     <br><br>
     <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="80px">
-			
-		</el-form>
+ 		</el-form>
       <el-upload
         class="upload-demo"
         drag
@@ -20,12 +19,10 @@
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip">只能上传jpg文件，且不超过500kb</div>
       </el-upload>
-
-  </div>
+   </div>
 </template>
 <script>
-  
-  export default {
+   export default {
     data() {
       return {
         loadId: '',
@@ -48,8 +45,7 @@
         const nowTime = new Date()
         let dd = String(nowTime.getDate()).padStart(2, '0');
         let mm = String(nowTime.getMonth() + 1).padStart(2, '0');
-
-        this.time = nowTime.getFullYear() + '-' + mm + '-' + dd + ' ' + nowTime.getHours() + ':' + nowTime.getMinutes() + ':' + nowTime.getSeconds()
+         this.time = nowTime.getFullYear() + '-' + mm + '-' + dd + ' ' + nowTime.getHours() + ':' + nowTime.getMinutes() + ':' + nowTime.getSeconds()
         this.postTime = nowTime.getFullYear() + '-' + mm + '-' + dd
         console.log(this.time)
         if(res.words_result[8].words === this.loadId){
@@ -80,18 +76,12 @@
             type: 'error'
           })
         }
-        // this.imageUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
-        console.log("看看这个",this.fileList)
-        // var _this = this;
-        // debugger;
-        // var files=file.target.files[0];
         debugger;
         const isJPG = file.type === "image/jpeg";
         const isLt2M = file.size / 1024 / 1024 < 2;
-  
-        if (!isJPG) {
+         if (!isJPG) {
           this.$message.error("上传头像图片只能是 JPG 格式!");
         }
         if (!isLt2M) {

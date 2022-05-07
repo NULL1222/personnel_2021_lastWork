@@ -68,8 +68,7 @@
     </div>
   </div>
 </template>
-
-<script>
+ <script>
 import Vue from 'vue'
 import { downloadXlsx } from '../../../utils/xlsx.js';
 import { Loading } from 'element-ui';
@@ -78,10 +77,8 @@ const defaultRole = {
   job: '人事管理',
   sex: '男',
 }
-
-var listen = new Vue()
-
-import Cookies from 'js-cookie';
+ var listen = new Vue()
+ import Cookies from 'js-cookie';
 export default{
     computed:{
       username(){
@@ -134,12 +131,10 @@ export default{
         salaryNum: 0,
       }
   },
-  
-    mounted: function() {
+     mounted: function() {
       this.initSalary()
     },
-
-    methods: {
+     methods: {
       getfilterNameItem() {
         var _this = this
           this.$axios.post("/salary/amount").then(resp=>{
@@ -155,8 +150,7 @@ export default{
             }
           })
           console.log(_this.salaryMonth)
-
-          let apiArr = []
+           let apiArr = []
           for(var n = 0;n < _this.monthSize;n++){
             apiArr.push({text:_this.salaryMonth[n],value:_this.salaryMonth[n]})
           }
@@ -182,8 +176,7 @@ export default{
           listen.$emit("searchDate")
         else this.initSalary();
       }, 
-      
-      initSalary() {
+       initSalary() {
         var _this = this
         var id = sessionStorage.getItem('userId2');
         this.$axios.post("/salary/updateSalary")
@@ -291,12 +284,10 @@ export default{
         });
         downloadXlsx(datalist, "员工工资单.xlsx");
       },
-    
-    refreshing() {
+     refreshing() {
       location.reload()
     },
-
-  }
+   }
 }
 </script>
 <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
@@ -304,9 +295,7 @@ export default{
   .staffTable {
     min-width: 1020px;
   } 
-
-  .ele-table {
+   .ele-table {
     margin-left: calc((100vw - 1495px) / 2);
   }
-
-</style>
+ </style>

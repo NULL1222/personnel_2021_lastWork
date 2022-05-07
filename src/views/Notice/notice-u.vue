@@ -2,8 +2,7 @@
   <div  style="text-align:left">
     <br><br>
     <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
-    
-    <p style="text-align: center; font-weight:bold; color: #726f6f;font-size: 2rem;">公 告 栏</p>
+     <p style="text-align: center; font-weight:bold; color: #726f6f;font-size: 2rem;">公 告 栏</p>
     <br>
     <el-collapse v-model="activeNames" class="notice" v-for="(item, index) in rolesList" :key="index" :accordion="accordion" accordion:true style="width: 1200px;">
       <el-collapse-item :key="index" :name="index" :disabled="disable">
@@ -21,17 +20,14 @@
         <div style="margin-top:10px;">{{ item.notice }}</div>
       </el-collapse-item>
     </el-collapse>
-
-  </div>
+   </div>
 </template>
-
-<script>
+ <script>
   const defaultRole = {
     job: '人事管理',
     sex: '男',
   }
-
-  import Cookies from 'js-cookie';
+   import Cookies from 'js-cookie';
   export default{
       computed:{
         username(){
@@ -64,12 +60,10 @@
           }],
         }
     },
-    
-    mounted: function() {
+     mounted: function() {
       this.initNotice()
     },
-
-    methods: {        
+     methods: {        
       initNotice() {
         var _this = this
         this.$axios.post("/notice/all").then(resp => {
@@ -81,8 +75,7 @@
       refreshing() {
         location.reload()
       },       
-
-    }
+     }
   }
 </script>
 <style scoped>

@@ -40,10 +40,8 @@
               style="margin-top: -30px;">
             </el-pagination>
           </div>
-      
-        </el-tab-pane>
-
-        <el-tab-pane label="支出" name="second">
+         </el-tab-pane>
+         <el-tab-pane label="支出" name="second">
           <el-table :data="OutList" height=400px style="margin-left:170px;width:100%;margin-top:20px;float:center" :header-cell-style="{textAlign: 'center'}">
             <el-table-column label="日期" width="180" align="center">
               <template slot-scope="scope">
@@ -83,28 +81,21 @@
             :total= totalPages2>
           </el-pagination>
         </div>
-    
-      </el-tab-pane>
-
-      </el-tabs>
+       </el-tab-pane>
+       </el-tabs>
     </el-col>
-
-  </div>
+   </div>
 </template>
-
-<script>
+ <script>
 import groupcard from './groupcard/index'
 import SearchBar from '../SearchBar.vue'
 import Vue from 'vue'
-
-const defaultRole = {
+ const defaultRole = {
   job: '人事管理',
   sex: '男',
 }
-
-var listen = new Vue()
-
-import Cookies from 'js-cookie';
+ var listen = new Vue()
+ import Cookies from 'js-cookie';
 export default{
     components: {
       SearchBar,
@@ -148,12 +139,10 @@ export default{
         OutList:[],
       }
   },
-  
-    mounted: function() {
+     mounted: function() {
       this.initFinance1() 
     },
-
-    methods: {
+     methods: {
       handleSizeChange1(val) {
         console.log(`每页 ${val} 条`);
         this.pages1.pageSize = val
@@ -176,9 +165,7 @@ export default{
         this.pages2.pageNum = val
         this.initFinance2();
       }, 
-
-      
-      initFinance1() {
+       initFinance1() {
         var _this = this
         this.$axios.post("/economic/page1?page="+this.pages1.pageNum+"&size="+this.pages1.pageSize).then(resp => {
           if (resp && resp.data.code === 200) {
@@ -196,9 +183,7 @@ export default{
           }
         })
       },
-
-
-    refreshing() {
+     refreshing() {
       location.reload()
     },
     handleClick(tab) {
@@ -211,6 +196,5 @@ export default{
   }
 }
 </script>
-<!-- 添加“scoped”属性以将CSS仅限于此组件 -->
 <style scoped>
 </style>

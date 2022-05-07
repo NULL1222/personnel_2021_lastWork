@@ -32,15 +32,12 @@
           </el-form-item>
         </el-form> 
       </div>
-     
-  </div>
+   </div>
   </template>
-  
-  <script>
+   <script>
     import Cookies from 'js-cookie';
     import bus from '../bus.js'
-
-    export default {
+     export default {
       name: 'Login',
       data() {
         return {
@@ -72,8 +69,7 @@
           },
         };
       },
-
-      mounted() {
+       mounted() {
         this.$refs.getFocus.focus()
       },
       created() {  
@@ -101,8 +97,7 @@
           fd.append("id",this.LoginForm.id);
           fd.append("password", this.LoginForm.password);
           fd.append("job",this.LoginForm.job);
-
-          let config = {
+           let config = {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
@@ -132,8 +127,7 @@
       }
     }
   </script>
-
-<style scoped>
+ <style scoped>
   .container {
     width: 100vw;
     height: 100vh;
@@ -148,8 +142,7 @@
     position: absolute;
     background-color: rgba(132, 151, 167, 0.5);
     box-shadow: 2px 2px 2px rgb(91, 105, 119);
-    
-    border-radius: 10px;
+     border-radius: 10px;
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -188,12 +181,4 @@
     color: #ffffff;
     font-weight: bold;
   }
-  /* .el-radio__input.is-checked + .el-radio__label {
-  color: #28d4c1;
-}
- 选中后小圆点的颜色 
-.el-radio__input.is-checked .el-radio__inner {
-  background: #28d4c1 ;
-  border-color: #28d4c1 ;
-} */
 </style>

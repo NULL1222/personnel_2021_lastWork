@@ -5,40 +5,14 @@ import Login from '../views/Login.vue'
 import Success from '../views/Success.vue'
 import ChangePwd from '../views/ChangePwd.vue'
 import container from '../views/container.vue'
-
-Vue.use(Router)
-
-//router 3.0以上版本 会出现重复点击菜单导航出现报错 以下解决
+ Vue.use(Router)
+ //router 3.0以上版本 会出现重复点击菜单导航出现报错 以下解决
 const originalPush = Router.prototype.push
 Router.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
 }
-
-// export const fixedRouter = [{
-//   path: '',
-//   component: reload,
-//   hidden: true
-// },
-// {
-//   path: '',
-//   component: layout, //整体页面的布局(包含左侧菜单跟主内容区域)
-//   children: [{
-//     path: 'main',
-//     component: main,
-//     meta: {
-//       title: '首页', //菜单名称
-//       roles: ['user', 'admin'], //当前菜单哪些角色可以看到
-//       icon: 'el-icon-info' //菜单左侧的icon图标
-//     }
-//   }]
-// },
-// ]
-
-
-
-
-export default new Router({
-  mode: 'hash',
+ export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/container',
@@ -96,21 +70,11 @@ export default new Router({
           name: 'normalStaff',
           component: ()=>import('../views/Finance/normalStaff.vue')
         },
-        // {
-        //   path: '/container/staff',
-        //   name: 'staff',
-        //   component: ()=>import('../views/Finance/staff.vue')
-        // },
-        // {
-        //   path: '/container/railway',
-        //   name: 'Railway',
-        //   component: ()=>import('../views/Railway/Railway.vue')
-        // },
-        // {
-        //   path: '/container/visitor',
-        //   name: 'Visitor',
-        //   component: ()=>import('../views/Visitor/Visitor.vue')
-        // },
+        {
+          path: '/container/request',
+          name: 'request',
+          component: ()=>import('../views/absence/request.vue')
+        },
       ]
     },
     {

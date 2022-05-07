@@ -17,8 +17,7 @@
     </div>
   </header>
 </template>
-
-<script>
+ <script>
 export default {
   data() {
     return {
@@ -42,7 +41,6 @@ export default {
       this.$emit('emitCollapse');
     },
     personalCenter() {
-      // eventBus.$emit('eventBusName', "hellokugou");
       this.$router.push({
         path: '/personalCenter'
       })
@@ -70,10 +68,8 @@ export default {
     }
   }
 };
-
-</script>
-
-<style scoped>
+ </script>
+ <style scoped>
 header {
   display: flex;
   height: 100%;
@@ -96,8 +92,7 @@ header {
   align-items: baseline;
   justify-content: center;
 }
-
-.r-content-user {
+ .r-content-user {
   border-radius: 50% ;
   width: 40px;
   height: 40px;
