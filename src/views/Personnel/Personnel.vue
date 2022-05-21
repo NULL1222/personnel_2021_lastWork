@@ -272,8 +272,7 @@
             address: '1',
             attendance: '1',
             birthday: '1'
-          }
-           ],
+          }],
           dialogVisible: false,
           dialogType: 'edit',
           checkStrictly: false,

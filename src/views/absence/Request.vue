@@ -2,102 +2,187 @@
   <div style="text-align:left">
     <br><br>
       <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" style="margin-top:30px">
-        <el-row>
-          <el-col :span="5">
-              <el-form-item label="工号" prop="id" >                   
-                  <el-input v-model="ruleForm.id" disabled="true"></el-input>
-              </el-form-item>
-          </el-col>
-          <el-col :span="5">
-              <el-form-item label="姓名" prop="name" >                   
-                  <el-input v-model="ruleForm.name" disabled="true"></el-input>
-              </el-form-item>
-          </el-col>
-          <el-col :span="5">
-              <el-form-item label="所属部门" prop="department">
-                  <el-input v-model="ruleForm.department" disabled="true"></el-input>
-              </el-form-item>  
-          </el-col>
-          <el-col :span="5">
-              <el-form-item label="填写日期" prop="date">
-                  <el-date-picker
-                  v-model="present"
-                  type="date"
-                  placeholder="选择日期"
-                  disabled="true">
-                  </el-date-picker>
-              </el-form-item>  
-          </el-col>     
-        </el-row>
-          <el-form-item label="请假类型" prop="type">
-            <el-radio-group v-model="ruleForm.type">
-              <el-radio v-model="role.type" class="type" label="事假"></el-radio>
-              <el-radio v-model="role.type" class="type" label="病假"></el-radio>
-              <el-radio v-model="role.type" class="type" label="婚假"></el-radio>
-              <el-radio v-model="role.type" class="type" label="丧假"></el-radio>
-              <el-radio v-model="role.type" class="type" label="换班"></el-radio>
-              <el-radio v-model="role.type" class="type" label="休班"></el-radio>
-              <el-radio v-model="role.type" class="type" label="其他"></el-radio>
-            </el-radio-group>
-          </el-form-item>
+      <el-button type="primary" @click="handleAddRole" style="margin-left:10px;">请假申请</el-button>
+
+      <!-- 请假记录表 -->
+      <el-table :data="rolesList" height=450px style="margin-left:90px;margin-top:30px;float:center;text-align:center" :header-cell-style="{textAlign: 'center'}">
+        <el-table-column label="工号" width="130%" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.id }}
+          </template>
+        </el-table-column>
+        <el-table-column label="姓名" width="130%" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.name }}
+          </template>
+        </el-table-column>
+        <el-table-column label="申请时间" width="200%" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.time }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="请假时间段" width="300%" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.date }}
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" width="80%" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.type }}
+          </template>
+        </el-table-column>
+        <el-table-column label="审批人" width="120%" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.approver }}
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="130" align="center">
+          <!-- slot-scope="scope" -->
+          <template slot="header">
+              <el-dropdown trigger="click" @command="handleCommand">
+                <span class="el-dropdown-link" style="color:#909399">
+                  状态<i class="el-icon-arrow-down el-icon--right el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="全部">全部</el-dropdown-item>
+                  <el-dropdown-item command="审核中">审核中</el-dropdown-item>
+                  <el-dropdown-item command="已通过">已通过</el-dropdown-item>
+                  <el-dropdown-item command="进行中">进行中</el-dropdown-item>
+                  <el-dropdown-item command="已销假">已销假</el-dropdown-item>
+                  <el-dropdown-item command="未通过">未通过</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </template>
+           <template slot-scope="scope">
+            {{ scope.row.status }}
+          </template>
+        </el-table-column>
+      </el-table>
+
+
+      <!-- 请假申请表单 -->
+      <el-dialog :title="titleName" :visible.sync="dialogVisible" width="1000px" destroy-on-close>
+        <el-form :model="ruleForm" :rules="rules" label-position="left" ref="ruleForm" label-width="80px" class="demo-ruleForm">
+          <el-row :gutter="10">
+            <el-col :span="6">
+              <div>
+                <el-form-item label="工号" prop="id">                   
+                    <el-input v-model="ruleForm.id" disabled="true"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="姓名" prop="name" >                   
+                    <el-input v-model="ruleForm.name" disabled="true" style="margin-left: -15px;"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="所属部门" prop="department">
+                    <el-input v-model="ruleForm.department" disabled="true"></el-input>
+                </el-form-item>  
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="填写日期" prop="date">
+                    <el-date-picker
+                    v-model="present"
+                    type="date"
+                    placeholder="选择日期"
+                    readonly="true"
+                    style="width:140px;">
+                    </el-date-picker>
+                </el-form-item>  
+              </div>
+            </el-col>     
+          </el-row>
+
           <el-row>
-            <el-col :span="20">
-              <el-form-item label="请假事由" prop="reason" >
-                <el-input type="textarea" v-model="ruleForm.reason" :rows="15"></el-input>
-                <el-upload
-                  class="upload-pic"
-                  action="/test/upload"
-                  multiple
-                  :auto-upload = "true"
-                  :file-list="fileList"
-                  :on-success="uploadFileHandler"
-                  :on-error="uploadFileErrorHandler"
-                  :before-upload="beforeAvatarUpload"
-                  :before-remove="beforeRemove">
-                  <el-button size="small" type="primary" style="margin-top: 10;">上传图片</el-button>
-                  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
+            <el-col :span="10">
+              <el-form-item label="请假类型" prop="type">
+                <el-select v-model="type" placeholder="请选择">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
               </el-form-item>
+            </el-col>
+
+            <el-col :span="14">
+             <el-form-item label="请假时间" required>
+                <el-date-picker
+                  v-model="absenceDate"
+                  type="datetimerange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  >
+                </el-date-picker>
+            </el-form-item>
             </el-col>
           </el-row>
 
-          <el-form-item label="请假时间" required>
-            <el-col :span="3">
-              <el-date-picker
-                v-model="value1"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
-              </el-date-picker>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="即时配送" prop="delivery">
-            <el-switch v-model="ruleForm.delivery"></el-switch>
-          </el-form-item>
-          <el-form-item label="特殊资源" prop="resource">
-            <el-radio-group v-model="ruleForm.resource">
-              <el-radio label="线上品牌商赞助"></el-radio>
-              <el-radio label="线下场地免费"></el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-          </el-form-item>
-        </el-form>    
+            <el-row>
+              <el-col :span="20">
+                <el-form-item label="请假事由" prop="reason" >
+                  <el-input type="textarea" v-model="ruleForm.reason" :rows="15" style="width:850px ;"></el-input>
+                </el-form-item>
+
+                <el-form-item label="证明材料" prop="proof" >
+                  <el-upload
+                    class="upload-pic"
+                    action="/test/upload"
+                    multiple
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :auto-upload = "true"
+                    :file-list="fileList"
+                    :on-success="uploadFileHandler"
+                    :on-error="uploadFileErrorHandler"
+                    :before-upload="beforeAvatarUpload"
+                    :before-remove="beforeRemove">
+                    <el-button size="small" type="primary" style="margin-top: 10;">上传图片</el-button>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                  </el-upload>
+                  <el-dialog v-model="dialogVisible" style="line-height: 0;">
+                    <img style="width: 100%;height: 100%"  :src="dialogImageUrl" alt="" />
+                  </el-dialog>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+        <!-- 需后端动态显示审批人 -->
+            <el-form-item label="选择审批人" prop="approver" label-width="100px">
+              <el-select v-model="approver" placeholder="请选择">
+                <el-option
+                  v-for="item in approverList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <div style="text-align:center;">
+            <el-button type="primary" @click="submit('ruleForm')">提交</el-button>
+            <el-button type="primary" plain @click="resetForm('ruleForm')">重置</el-button>
+            <el-button type="danger" @click="closeDialog('ruleForm')">取消</el-button>
+          </div>
+      </el-dialog>    
       </div>
  </template>
  <script>
   import SearchBar from '../SearchBar.vue'
   import Vue from 'vue'
-  const defaultRole = {
-    job: '人事管理',
-    sex: '男',
-  }
-   var listen = new Vue()
-   import Cookies from 'js-cookie';
+  var listen = new Vue()
+  import Cookies from 'js-cookie';
   export default{
       components: {
         SearchBar
@@ -109,58 +194,95 @@
       },
       data() {
         return {
-            present:new Date(),
-            ruleForm: {
-                id: '',
-                name: '',
-                date: '',
-                department: '',
-                date1: '',
-                date2: '',
-                delivery: false,
-                type: [],
-                resource: '',
-                desc: ''
-            },
-            rules: {
-                id: [
-                    { required: true, trigger: 'blur' }
-                ],
-                name: [
-                    { required: true, trigger: 'blur' }
-                ],
-                date: [
-                    { required: true, trigger: 'blur' }
-                ],
-                department: [
-                    { required: true, trigger: 'blur' }
-                ],
-                date1: [
-                    { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-                ],
-                date2: [
-                    { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-                ],
-                type: [
-                    { type: 'array', required: true, message: '请至少选择一个请假类别', trigger: 'change' }
-                ],
-                reason: [
-                    { required: true, message: '请填写活动形式', trigger: 'blur' }
-                ]
-            },
-            role:{
-              type:''
-            },
-            routes: [],
-            dialogVisible: false,
-            dialogType: 'edit',
-            checkStrictly: false,
+          dialogImageUrl: '',
+          dialogVisible: false,
+          options: [{
+            value: '1',
+            label: '事假'
+          }, {
+            value: '2',
+            label: '病假'
+          }, {
+            value: '3',
+            label: '婚假'
+          }, {
+            value: '4',
+            label: '丧假'
+          }, {
+            value: '5',
+            label: '产假'
+          }, {
+            value: '6',
+            label: '年假'
+          }, {
+            value: '7',
+            label: '其他'
+          }],
+          approverList:[{}],
+          type:'',
+          absenceDate: '',
+          present:new Date(),
+          ruleForm: {
+              id: '',
+              name: '',
+              date: '',
+              department: '',
+              date1: '',
+              date2: '',
+              type: '',
+              reason:'',
+              proof:''
+          },
+          rules: {
+              id: [
+                  { required: true, trigger: 'blur' }
+              ],
+              name: [
+                  { required: true, trigger: 'blur' }
+              ],
+              date: [
+                  { required: true, trigger: 'blur' }
+              ],
+              department: [
+                  { required: true, trigger: 'blur' }
+              ],
+              date1: [
+                  { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+              ],
+              date2: [
+                  { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+              ],
+              type: [
+                  { required: true, trigger: 'blur' }
+              ],
+              reason: [
+                  { required: true, message: '请填写请假事由详情', trigger: 'blur' }
+              ],
+              approver: [
+                  { required: true, message: '请选择审批人', trigger: 'change' }
+              ],
+              proof: [
+                  { required: true, message: '请上传证明材料', trigger: 'change' }
+              ],
+          },
+          dialogVisible: false,
+          rolesList: [{
+            description : '出门吃饭去',
+            id: '1111111',
+            name: '李小李',
+            time: '1111-11-11 11:11:11',
+            date: '1111-11-11 11:11:11 至 1111-11-11 11:11:11',
+            type: '事假',
+            approver: '小李',
+            status: '已销假'
+          }],
         }
     },
        mounted: function() {
         this.initStaff()
       },
        methods: {
+         //上传图片并回显
         beforeAvatarUpload(file) {
           debugger;
           const isJPG = file.type === "image/jpeg";
@@ -179,6 +301,7 @@
         beforeRemove(file, fileList) {
           this.$confirm(`确定移除 ${ file.name }？`);
         },
+        //页码
          handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
           this.pages.pageSize = val
@@ -198,6 +321,7 @@
             listen.$emit("searchJob")
           else this.initStaff();
         }, 
+        //页面初始化渲染
          initStaff() {
           var _this = this
           this.$axios.post("/staff/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
@@ -207,7 +331,13 @@
             }
           })
         },
-         handleCommand(command){
+         //预览图片功能
+         handlePreview(file) {
+          console.log(file.url);
+          this.dialogVisible = true
+          this.dialogImageUrl = file.url
+        },
+        handleCommand(command){
           this.myCommand = command
           console.log(this.$refs.searchBar.keywords)
           if(command === "全部")
@@ -258,105 +388,41 @@
               }
             })
         },
+
+        // 打开请假申请填写表单
       handleAddRole() {
-        this.role = Object.assign({}, defaultRole)
+        // this.role = Object.assign({}, defaultRole)
         if (this.$refs.tree) {
           this.$refs.tree.setCheckedNodes([])
         }
-        this.isShow = false
-        this.dialogType = 'new'
-        this.titleName = '添加用户'
+        this.titleName = '提出请假申请'
         this.dialogVisible = true
       },
-       refreshing() {
+
+      // 刷新页面
+      refreshing() {
         location.reload()
       },
-       resetForm(formName) {
+
+      //重置表单
+      resetForm(formName) {
         this.$refs[formName].resetFields()
       },
-       openDrawer(id) {
-        this.calendar= 1
-        this.drawer = true
-      //drawer.visible=true
-        var _this = this
-        var _count = null;
-        this.$axios
-          //向后端发送数据
-          .post('/staff/view?id=' + id, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.role = resp.data.data,
-              // var _this = this;
-              // _this.id = _this.role.id,
-              console.log("_this.id="+ _this.id);
-              console.log(id);
-              _this.id = id;
-              console.log(this.id);
-              // var _count = null;
-              this.$axios.all([
-                this.$axios.post("/checking/count?id=" + this.id, {}),
-                this.$axios.post("/checking/all?id="+ this.id, {})
-              ]).then(
-                this.$axios.spread((resp1, resp2) => {
-                  if (resp1.data && resp1.data.code === 200) {
-                    _count = resp1.data.data;
-                    console.log("_count1="+_count)
-                  }
-                  console.log("_count2="+_count)
-                  if (resp2.data && resp2.data.code === 200) {
-                    for( var i = 0; i < _count; i++) {
-                      _this.calendarData.push({day: [], status: '✔️'});
-                      _this.calendarData[i].day[0]= resp2.data.data[i].date;
-                    }
-                  }
-                  this.calendar= 2
-                })
-              ).catch(err => console.log("Error: ", err))
-            }
-          })
-          _this.id = '',
-          _this.calendarData = [ ],
-          _this.today = new Date()
-      },
-       handleEdit(id) {
-        var _this = this
-        this.$axios
-          //向后端发送数据
-          .post('/staff/detail?id=' + id, {}).then(resp => {
-            if (resp && resp.data.code === 200) {
-              _this.role = resp.data.data
-            }
-          })
-        this.isShow = true
-        this.titleName = '编辑信息'
-        this.dialogVisible = true
-        this.dialogType = 'edit'
-      },
-       handleDelete(id){
+
+      // 关闭表单确认
+      closeDialog(formName){
         this.$confirm('确定删除此条信息吗?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
         .then(async() => {
-          var _this = this
-          this.$axios
-          //向后端发送数据
-          .post('/staff/delete?id=' + id, {}).then(resp => {
-            if (resp.data.code === 200) {
-              if(this.click === 'search')
-                listen.$emit("searchAll")
-              else if(this.click === 'command')
-                listen.$emit("searchJob")
-              else this.initStaff()
-              this.$message({
-              type: 'success',
-              message: '删除成功!'
-              })
-            }
-          }) 
+          dialogVisible=false
         })
           .catch(err => { console.error(err) })
-          },
+      },
+
+      // 提交表单 ！！！后端接口需重写！！！
        submit(formName){
         if(this.dialogType === 'new'){
           this.$refs[formName].validate((valid) => {
@@ -422,17 +488,23 @@
   }
 </script>
  <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
- <style scoped>
-.el-calendar {
-  width: 700px;
-  margin-left: 30px;
-}
-.is-selected {
-    color: #1989FA;
+<style scoped>
+  .table-expand >>> .el-form-item__label {
+    width: 90px;
+    color: #99a9bf;
+    writing-mode:vertical-lr;
+    letter-spacing:5px;
   }
-.el-calendar__header {
-  padding: 12px 10px 12px 30px;;
-}
+  .el-calendar {
+    width: 700px;
+    margin-left: 30px;
+  }
+  .is-selected {
+      color: #1989FA;
+    }
+  .el-calendar__header {
+    padding: 12px 10px 12px 30px;;
+  }
   .el-calendar-table:not(.is-range) td.next {
     pointer-events: none;
   }
@@ -442,4 +514,4 @@
   .el-calendar-table td:not(.is-today) {
     pointer-events: none;
   }
-  </style>
+</style>

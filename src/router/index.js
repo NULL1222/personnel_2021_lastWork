@@ -75,6 +75,11 @@ Router.prototype.push = function push (location) {
           name: 'request',
           component: ()=>import('../views/absence/request.vue')
         },
+        {
+          path: '/container/check',
+          name: 'check',
+          component: ()=>import('../views/absence/CheckRequest.vue')
+        },
       ]
     },
     {
