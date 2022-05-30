@@ -96,6 +96,13 @@
               url: "Interview/interview", 
             },
             {
+              path: "/check",
+              name: "check",
+              label: "请假审核",
+              icon: "folder-checked",
+              url: "Interview/interview", 
+            },
+            {
               path: "/scan",
               label: "考勤签到",
               icon: "date",
@@ -137,7 +144,7 @@
               name: "request",
               label: "请假",
               icon: "s-order",
-              url: "absence/request", 
+              url: "absence/CheckRequest", 
             },
            ]
         };

@@ -153,13 +153,13 @@
             <el-row>
               <el-col :span="20">
                 <el-form-item label="请假事由" prop="reason" >
-                  <el-input type="textarea" v-model="role.reason" :rows="15" style="width:850px ;"></el-input>
+                  <el-input type="textarea" v-model="role.reason" :rows="10" style="width:850px ;"></el-input>
                 </el-form-item>
 
                 <el-form-item label="证明材料" prop="proof" >
                   <el-upload
                     class="upload-pic"
-                    action="/test/upload"
+                    action="/test/up"
                     v-model="role.proof"
                     multiple
                     :on-preview="handlePreview"
@@ -228,6 +228,7 @@
       },
       data() {
         return {
+          prove: '',
           time: '',
           datePickerOptions:{
             disabledDate:(time)=>{
@@ -344,6 +345,14 @@
       },
 
        methods: {
+
+        // 接收上传文件后的返回地址
+        uploadFileHandler(res){
+        console.log(res)
+        this.prove = res        
+      },
+
+
          //上传图片并回显
         beforeAvatarUpload(file) {
           debugger;
@@ -361,7 +370,11 @@
           this.$message.error("上传失败,请检查网络连接")
         },
         beforeRemove(file, fileList) {
-          this.$confirm(`确定移除 ${ file.name }？`);
+          this.$confirm(`确定移除 ${ file.name }？`)
+          .then(async() => {
+            this.prove = ''
+          })
+            .catch(err => { console.error(err) });
         },
         //页码
          handleSizeChange(val) {
@@ -428,31 +441,6 @@
 
         },
         
-         searchResult() {
-          this.click = 'search'
-          listen.$on("searchAll",()=>{
-            var _this = this
-            this.$axios
-              //向后端发送数据
-              .get('/staff/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommand, {}).then(resp => {
-                if (resp && resp.data.code === 200) {
-                  _this.rolesList = resp.data.data.list
-                  _this.totalPages = resp.data.data.total
-                }
-              })
-          })
-          this.pages.pageNum = 1
-          var _this = this
-          this.$axios
-            //向后端发送数据
-            .get('/staff/search?keywords=' + this.$refs.searchBar.keywords + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&job=" + this.myCommand, {}).then(resp => {
-              if (resp && resp.data.code === 200) {
-                _this.rolesList = resp.data.data.list
-                _this.totalPages = resp.data.data.total
-              }
-            })
-        },
-
         // 打开请假申请填写表单
       handleAddRole() {
         let dd = String(this.role.time.getDate()).padStart(2, '0');
@@ -516,7 +504,7 @@
           .catch(err => { console.error(err) })
       },
 
-      // 提交表单 ！！！后端接口需重写！！！
+      // 提交表单
        submit(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -525,10 +513,10 @@
               //向后端发送数据
               .post('/absence/add?id=' + this.loadId +'&name='+this.staff.name+'&time='+
               this.rolesList.time+'&startdate='+this.role.absenceDate[0]+'&enddate='+this.role.absenceDate[1]+'&description='+this.role.reason+'&approver='+
-              this.role.approver+'&type='+this.role.type+'&3prove='+this.role.proof, {}).then(resp => {
+              this.role.approver+'&type='+this.role.type+'&prove='+this.prove, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data
-                  _this.initRequest()
+                  this.initRequest()
                 }
                 this.dialogVisible = false
               })
