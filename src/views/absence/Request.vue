@@ -6,6 +6,16 @@
 
       <!-- 请假记录表 -->
       <el-table :data="rolesList" height=450px style="margin-left:90px;margin-top:30px;float:center;text-align:center" :header-cell-style="{textAlign: 'center'}">
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <el-form label-position="left" inline class="table-expand" style="margin-bottom: -20px;margin-top: 10px;">
+              <el-form-item label="请假详情">
+                <span>{{ scope.row.description }}</span>
+              </el-form-item>
+              
+            </el-form>
+          </template>
+        </el-table-column>
         <el-table-column label="工号" width="130%" align="center">
           <template slot-scope="scope">
             {{ scope.row.id }}
@@ -16,15 +26,20 @@
             {{ scope.row.name }}
           </template>
         </el-table-column>
-        <el-table-column label="申请时间" width="200%" align="center">
+        <el-table-column label="申请时间" width="100%" align="center">
           <template slot-scope="scope">
-            {{ scope.row.time }}
+            {{ scope.row.time}}
           </template>
         </el-table-column>
 
-        <el-table-column label="请假时间段" width="300%" align="center">
+        <el-table-column label="请假起始时间" width="200%" align="center">
           <template slot-scope="scope">
-            {{ scope.row.date }}
+            {{ scope.row.startdate }}
+          </template>
+        </el-table-column>
+        <el-table-column label="请假结束时间" width="200%" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.enddate }}
           </template>
         </el-table-column>
         <el-table-column label="类型" width="80%" align="center">
@@ -46,7 +61,7 @@
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="全部">全部</el-dropdown-item>
-                  <el-dropdown-item command="审核中">审核中</el-dropdown-item>
+                  <el-dropdown-item command="未审核">未审核</el-dropdown-item>
                   <el-dropdown-item command="已通过">已通过</el-dropdown-item>
                   <el-dropdown-item command="进行中">进行中</el-dropdown-item>
                   <el-dropdown-item command="已销假">已销假</el-dropdown-item>
@@ -63,48 +78,51 @@
 
       <!-- 请假申请表单 -->
       <el-dialog :title="titleName" :visible.sync="dialogVisible" width="1000px" destroy-on-close>
-        <el-form :model="ruleForm" :rules="rules" label-position="left" ref="ruleForm" label-width="80px" class="demo-ruleForm">
+        <el-form :model="role" :rules="rules" label-position="left" ref="ruleForm" label-width="80px" class="demo-ruleForm">
           <el-row :gutter="10">
             <el-col :span="6">
               <div>
                 <el-form-item label="工号" prop="id">                   
-                    <el-input v-model="ruleForm.id" disabled="true"></el-input>
+                    <el-input v-model="staff.id" disabled></el-input>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div>
                 <el-form-item label="姓名" prop="name" >                   
-                    <el-input v-model="ruleForm.name" disabled="true" style="margin-left: -15px;"></el-input>
+                    <el-input v-model="staff.name" disabled style="margin-left: -15px;"></el-input>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div>
                 <el-form-item label="所属部门" prop="department">
-                    <el-input v-model="ruleForm.department" disabled="true"></el-input>
+                    <el-input v-model="staff.job" disabled></el-input>
                 </el-form-item>  
               </div>
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="填写日期" prop="date">
+                <el-form-item label="申请日期" prop="time">
                     <el-date-picker
-                    v-model="present"
+                    v-model="role.time"
                     type="date"
                     placeholder="选择日期"
-                    readonly="true"
-                    style="width:140px;">
+                    readonly
+                    style="width:140px;"
+                    format="yyyy 年 MM 月 dd 日"
+                    value-format="yyyy-MM-dd"
+                    >
                     </el-date-picker>
                 </el-form-item>  
               </div>
             </el-col>     
           </el-row>
 
-          <el-row>
+          <el-row  :gutter="20">
             <el-col :span="10">
               <el-form-item label="请假类型" prop="type">
-                <el-select v-model="type" placeholder="请选择">
+                <el-select v-model="role.type" placeholder="请选择">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -116,13 +134,16 @@
             </el-col>
 
             <el-col :span="14">
-             <el-form-item label="请假时间" required>
+             <el-form-item label="请假时间" prop="absenceDate">
                 <el-date-picker
-                  v-model="absenceDate"
-                  type="datetimerange"
-                  range-separator="至"
+                  v-model="role.absenceDate"
+                  type="daterange"
+                  range-separator="-"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
+                  :picker-options="datePickerOptions"
+                  format="yyyy 年 MM 月 dd 日"
+                  value-format="yyyy-MM-dd"
                   >
                 </el-date-picker>
             </el-form-item>
@@ -132,13 +153,14 @@
             <el-row>
               <el-col :span="20">
                 <el-form-item label="请假事由" prop="reason" >
-                  <el-input type="textarea" v-model="ruleForm.reason" :rows="15" style="width:850px ;"></el-input>
+                  <el-input type="textarea" v-model="role.reason" :rows="15" style="width:850px ;"></el-input>
                 </el-form-item>
 
                 <el-form-item label="证明材料" prop="proof" >
                   <el-upload
                     class="upload-pic"
                     action="/test/upload"
+                    v-model="role.proof"
                     multiple
                     :on-preview="handlePreview"
                     :on-remove="handleRemove"
@@ -151,7 +173,7 @@
                     <el-button size="small" type="primary" style="margin-top: 10;">上传图片</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                   </el-upload>
-                  <el-dialog v-model="dialogVisible" style="line-height: 0;">
+                  <el-dialog v-model="dialogVisible1" style="line-height: 0;">
                     <img style="width: 100%;height: 100%"  :src="dialogImageUrl" alt="" />
                   </el-dialog>
                 </el-form-item>
@@ -160,12 +182,12 @@
 
         <!-- 需后端动态显示审批人 -->
             <el-form-item label="选择审批人" prop="approver" label-width="100px">
-              <el-select v-model="approver" placeholder="请选择">
+              <el-select v-model="role.approver" placeholder="请选择">
                 <el-option
-                  v-for="item in approverList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+                  v-for="item in staff_approver"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -176,8 +198,20 @@
             <el-button type="danger" @click="closeDialog('ruleForm')">取消</el-button>
           </div>
       </el-dialog>    
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size= pages.pageSize
+          layout="total, sizes, prev, pager, next, jumper"
+          :total= totalPages>
+        </el-pagination>
       </div>
+    </div>
  </template>
+
  <script>
   import SearchBar from '../SearchBar.vue'
   import Vue from 'vue'
@@ -194,63 +228,76 @@
       },
       data() {
         return {
+          time: '',
+          datePickerOptions:{
+            disabledDate:(time)=>{
+              const nowDate = new Date();
+              let oneDay = 1000 * 60 * 60 * 24;
+              let oneYearLater = new Date(nowDate.getTime() + (oneDay * 365));
+              return time.getTime() < nowDate || time.getTime() > oneYearLater;
+            }
+          },
+          pages: {
+            pageNum: 1,
+            pageSize: 10,
+          },
+          totalPages: 0,
+          loadId: '',
           dialogImageUrl: '',
           dialogVisible: false,
           options: [{
-            value: '1',
+            value: '事假',
             label: '事假'
           }, {
-            value: '2',
+            value: '病假',
             label: '病假'
           }, {
-            value: '3',
+            value: '婚假',
             label: '婚假'
           }, {
-            value: '4',
+            value: '丧假',
             label: '丧假'
           }, {
-            value: '5',
+            value: '产假',
             label: '产假'
           }, {
-            value: '6',
+            value: '年假',
             label: '年假'
           }, {
-            value: '7',
+            value: '其他',
             label: '其他'
           }],
-          approverList:[{}],
-          type:'',
-          absenceDate: '',
-          present:new Date(),
-          ruleForm: {
-              id: '',
-              name: '',
-              date: '',
-              department: '',
-              date1: '',
-              date2: '',
+          // present:new Date(),
+          role: {
+              time: new Date(),
+              absenceDate: '',
               type: '',
               reason:'',
-              proof:''
+              proof:'',
+              approver:''
           },
           rules: {
               id: [
-                  { required: true, trigger: 'blur' }
+                  { required: false }
               ],
               name: [
-                  { required: true, trigger: 'blur' }
+                  { required: false  }
               ],
-              date: [
-                  { required: true, trigger: 'blur' }
+              time: [
+                  { required: true }
               ],
               department: [
-                  { required: true, trigger: 'blur' }
+                  { required: false }
               ],
-              date1: [
-                  { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-              ],
-              date2: [
-                  { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+              absenceDate: [
+                { type: 'array',
+                  required: true,
+                  message: '请选择日期',
+                  fields: {
+                      0: {type: 'string',required: true, message: '请选择日期1'},
+                      1: {type: 'string',required: true, message: '请选择日期2'}
+                    }
+                },
               ],
               type: [
                   { required: true, trigger: 'blur' }
@@ -262,7 +309,7 @@
                   { required: true, message: '请选择审批人', trigger: 'change' }
               ],
               proof: [
-                  { required: true, message: '请上传证明材料', trigger: 'change' }
+                  { required: false, message: '请上传证明材料', trigger: 'change' }
               ],
           },
           dialogVisible: false,
@@ -270,17 +317,32 @@
             description : '出门吃饭去',
             id: '1111111',
             name: '李小李',
-            time: '1111-11-11 11:11:11',
-            date: '1111-11-11 11:11:11 至 1111-11-11 11:11:11',
+            time: '1111-11-11',
+            startdate: '1111-11-11',
+            enddate: '1111-11-11',
             type: '事假',
             approver: '小李',
             status: '已销假'
           }],
+          staff: [{
+            job: '',
+            id: '',
+            name: '',
+          }],
+          staff_approver: [{
+            name: '',
+            id: ''
+          }]
         }
-    },
-       mounted: function() {
-        this.initStaff()
       },
+       mounted: function() {
+        this.initRequest()
+      },
+      created() {
+        const Id = sessionStorage.getItem('userId2');
+        this.loadId = Id;
+      },
+
        methods: {
          //上传图片并回显
         beforeAvatarUpload(file) {
@@ -305,29 +367,28 @@
          handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
           this.pages.pageSize = val
-          if(this.click === 'search')
-            listen.$emit("searchAll")
-          else if(this.click == 'command')
-            listen.$emit("searchJob")
-          else this.initStaff();
+          if(this.click === 'command')
+            listen.$emit("iscommand")
+          else
+            this.initRequest();
         },
         handleCurrentChange(val) {
           this.currentPage = val
           console.log(`当前页: ${val}`);
           this.pages.pageNum = val
-          if(this.click === 'search')
-            listen.$emit("searchAll")
-          else if(this.click == 'command')
-            listen.$emit("searchJob")
-          else this.initStaff();
+          if(this.click === 'command')
+            listen.$emit("iscommand")
+          else
+            this.initRequest();
         }, 
         //页面初始化渲染
-         initStaff() {
+         initRequest() {
           var _this = this
-          this.$axios.post("/staff/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
+          this.$axios.post("/absence/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize+"&id="+this.loadId,{}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
+              console.log(_this.rolesList.time)
             }
           })
         },
@@ -339,31 +400,34 @@
         },
         handleCommand(command){
           this.myCommand = command
-          console.log(this.$refs.searchBar.keywords)
-          if(command === "全部")
+          if(command === "全部"){
             this.click = 'all'
+            this.pages.pageNum = 1
+          }
           else this.click = 'command'
-          listen.$on("searchJob",()=>{
-            console.log("in command")
+            listen.$on("iscommand",()=>{
+              console.log("in command")
+              var _this = this
+              console.log(command)
+              this.$axios.post('/absence/status?status=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.loadId,{}).then(resp => {
+                if(resp && resp.data.code === 200){
+                  _this.rolesList = resp.data.data.list
+                  _this.totalPages = resp.data.data.total
+                }
+              })
+            })
+            this.pages.pageNum = 1
             var _this = this
-            console.log(command)
-            this.$axios.post('/staff/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
+            console.log("out command")
+            this.$axios.post('/absence/status?status=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.loadId,{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
               }
             })
-          })
-          this.pages.pageNum = 1
-          var _this = this
-          console.log("out command")
-          this.$axios.post('/staff/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
-            if(resp && resp.data.code === 200){
-              _this.rolesList = resp.data.data.list
-              _this.totalPages = resp.data.data.total
-            }
-          })
+
         },
+        
          searchResult() {
           this.click = 'search'
           listen.$on("searchAll",()=>{
@@ -391,6 +455,32 @@
 
         // 打开请假申请填写表单
       handleAddRole() {
+        let dd = String(this.role.time.getDate()).padStart(2, '0');
+        let mm = String(this.role.time.getMonth() + 1).padStart(2, '0');
+        this.rolesList.time = this.role.time.getFullYear() + '-' + mm + '-' + dd
+        console.log(this.rolesList.time)
+
+        var _this = this
+        this.$axios
+          //向后端发送数据
+          .get('/staff/detail?id=' + this.loadId , {}).then(resp => {
+            if (resp && resp.data.code === 200) {
+              _this.staff = resp.data.data
+            }
+          })
+          _this.role.id = this.staff.id
+          this.role.name = this.staff.name
+          this.role.department = this.staff.job
+
+        // 获取审批人
+        this.$axios
+          //向后端发送数据
+          .get('/staff/approve').then(resp => {
+            if (resp && resp.data.code === 200) {
+              _this.staff_approver = resp.data.data
+            }
+          })
+          
         // this.role = Object.assign({}, defaultRole)
         if (this.$refs.tree) {
           this.$refs.tree.setCheckedNodes([])
@@ -406,83 +496,48 @@
 
       //重置表单
       resetForm(formName) {
-        this.$refs[formName].resetFields()
+        console.log(this.role.absenceDate)
+        if (this.$refs[formName]) {
+          this.$refs[formName].resetFields();
+  }
       },
 
       // 关闭表单确认
       closeDialog(formName){
-        this.$confirm('确定删除此条信息吗?', '警告', {
+        this.$confirm('确定退出此界面?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
         .then(async() => {
-          dialogVisible=false
+          this.resetForm(formName)
+          this.dialogVisible=false
         })
           .catch(err => { console.error(err) })
       },
 
       // 提交表单 ！！！后端接口需重写！！！
        submit(formName){
-        if(this.dialogType === 'new'){
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              var _this = this
-              this.$axios
-                //向后端发送数据
-                .post('/staff/add?name=' + this.role.name +'&sex='+this.role.sex+'&idCard='+
-                this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
-                              this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
-                  if (resp && resp.data.code === 200) {
-                    _this.rolesList = resp.data.data
-                    _this.initStaff()
-                  }
-                  var i = 0
-                  for (i;i<(_this.rolesList.length);i++){ 
-                    if(_this.rolesList[i].idCard == this.role.idCard){
-                      break;
-                    }
-                  }
-                  console.log("i: ",i)
-                  console.log("rolesList[i]: ",_this.rolesList[i])
-                  this.$alert('此用户工号为：' + _this.rolesList[i].id + '</br>默认密码为：88888888', '信息', {
-                    confirmButtonText: '确定',
-                    dangerouslyUseHTMLString: true,
-                    center: true,
-                    callback: action => {
-                      this.$message({
-                        type: 'success',
-                        message: `添加成功`
-                      });
-                    }
-                  })
-                  this.dialogVisible = false
-                })
-              }else{
-                console.log('error submit!!');
-                return false;
-              }
-          });
-        }else{
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              var _this = this
-              this.$axios
-                //向后端发送数据
-                .post('/staff/edit?id='+this.role.id+'&name=' + this.role.name+'&sex='+this.role.sex+'&idCard='+
-                this.role.idCard+'&job='+this.role.job+'&phone='+this.role.phone+'&mail='+
-                              this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
-                  if (resp && resp.data.code === 200) {
-                    _this.rolesList = resp.data.data
-                  }
-                })
-              this.dialogVisible = false
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            var _this = this
+            this.$axios
+              //向后端发送数据
+              .post('/absence/add?id=' + this.loadId +'&name='+this.staff.name+'&time='+
+              this.rolesList.time+'&startdate='+this.role.absenceDate[0]+'&enddate='+this.role.absenceDate[1]+'&description='+this.role.reason+'&approver='+
+              this.role.approver+'&type='+this.role.type+'&3prove='+this.role.proof, {}).then(resp => {
+                if (resp && resp.data.code === 200) {
+                  _this.rolesList = resp.data.data
+                  _this.initRequest()
+                }
+                this.dialogVisible = false
+              })
             }else{
               console.log('error submit!!');
               return false;
             }
-          });
-        }
+        });
+
       }
     }
   }

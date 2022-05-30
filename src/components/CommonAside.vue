@@ -132,6 +132,13 @@
               icon: "s-order",
               url: "Finance/normalStaff", 
             },
+            {
+              path: "/request",
+              name: "request",
+              label: "请假",
+              icon: "s-order",
+              url: "absence/request", 
+            },
            ]
         };
       },
