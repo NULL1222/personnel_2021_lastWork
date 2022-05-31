@@ -169,7 +169,8 @@
               id: '1111111',
               name: '李李',
               time: '1111年11月11日',
-              date: '1111年11月11日 至 1111年11月11日',
+              startdate: '1111年11月11日',
+              enddate: '1111年11月11日',
               type: '事假',
               operate: '小李',
               status: '未审核'
@@ -189,20 +190,16 @@
            handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
             this.pages.pageSize = val
-            if(this.click === 'search')
-              listen.$emit("searchAll")
-            else if(this.click == 'command')
-              listen.$emit("searchJob")
+            if(this.click == 'command')
+              listen.$emit("status")
             else this.initCheck();
           },
           handleCurrentChange(val) {
             this.currentPage = val
             console.log(`当前页: ${val}`);
             this.pages.pageNum = val
-            if(this.click === 'search')
-              listen.$emit("searchAll")
-            else if(this.click == 'command')
-              listen.$emit("searchJob")
+            if(this.click == 'command')
+              listen.$emit("status")
             else this.initCheck();
           }, 
           //页面初始化渲染
@@ -231,7 +228,7 @@
               console.log("in command")
               var _this = this
               console.log(command)
-              this.$axios.post('/staff/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
+              this.$axios.post('/absence/search?status=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.loadId,{}).then(resp => {
                 if(resp && resp.data.code === 200){
                   _this.rolesList = resp.data.data.list
                   _this.totalPages = resp.data.data.total
@@ -241,7 +238,7 @@
             this.pages.pageNum = 1
             var _this = this
             console.log("out command")
-            this.$axios.post('/staff/search?job=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.$refs.searchBar.keywords,{}).then(resp => {
+            this.$axios.post('/absence/search?status=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.loadId,{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
@@ -254,28 +251,46 @@
           location.reload()
         },
   
-        //重置表单
-        resetForm(formName) {
-          this.$refs[formName].resetFields()
-        },
-  
-        // 关闭表单确认
-        closeDialog(formName){
-          this.$confirm('确定删除此条信息吗?', '警告', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
+        //修改状态
+        pass(id){
+          this.$confirm('确定通过此申请吗?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
           })
           .then(async() => {
-            dialogVisible=false
+            var _this = this
+            this.$axios.post('/absence/search?id='+this.rolesList.id+'&keywords='+this.loadId,{}).then(resp => {
+              if(resp && resp.data.code === 200){
+                _this.rolesList.status = resp.data.status
+                this.$message({
+                type: 'success',
+                message: '申请状态修改成功!'
+                })
+              }
+            }) 
           })
-            .catch(err => { console.error(err) })
-        },
-        pass(id){
-
+            .catch(err => { console.error("状态修改失败，请重试！") })
         },
         back(id){
-
+          this.$confirm('确定驳回此申请吗?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+          })
+          .then(async() => {
+            var _this = this
+            this.$axios.post('/absence/search?id='+this.rolesList.id+'&keywords='+this.loadId,{}).then(resp => {
+              if(resp && resp.data.code === 200){
+                _this.rolesList.status = resp.data.status
+                this.$message({
+                type: 'success',
+                message: '申请状态修改成功!'
+                })
+              }
+            }) 
+          })
+            .catch(err => { console.error("状态修改失败，请重试！") })
         }
   
       }
