@@ -68,7 +68,7 @@
                   <el-dropdown-item command="全部">全部</el-dropdown-item>
                   <el-dropdown-item command="未审核">未审核</el-dropdown-item>
                   <el-dropdown-item command="已通过">已通过</el-dropdown-item>
-                  <el-dropdown-item command="未通过">已驳回</el-dropdown-item>
+                  <el-dropdown-item command="已驳回">已驳回</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
@@ -346,7 +346,7 @@
             type: '事假',
             approver: '小李',
             status: '已销假',
-            prove:''
+            prove:'http://localhost:8887/1.jpg'
           }],
           staff: [{
             job: '',
@@ -453,7 +453,7 @@
             })
             this.pages.pageNum = 1
             var _this = this
-            console.log("out command")
+            console.log(command)
             this.$axios.post('/absence/status?status=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.loadId,{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
