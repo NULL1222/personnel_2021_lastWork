@@ -11,6 +11,10 @@
               <el-form label-position="left" inline class="table-expand">
                 <el-form-item label="请假详情" style="margin-bottom:-5px ;">
                   <span>{{ scope.row.description }}</span>
+                  <el-image
+                  style="width: 100px; height: 100px"
+                  :src="scope.row.prove"
+                  :fit="fit"></el-image>  
                 </el-form-item>
               </el-form>
             </template>
@@ -59,7 +63,7 @@
                     <el-dropdown-item command="全部">全部</el-dropdown-item>
                     <el-dropdown-item command="未审核">未审核</el-dropdown-item>
                     <el-dropdown-item command="已通过">已通过</el-dropdown-item>
-                    <el-dropdown-item command="已驳回">已驳回</el-dropdown-item>
+                    <el-dropdown-item command="未通过">已驳回</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </template>
@@ -70,8 +74,8 @@
           <el-table-column label="操作" width="200%" align="center">
             <template slot-scope="scope">
               <div v-if="scope.row.status == '未审核'">
-                <el-button  type="success" plain style="margin-left:10px;" @click="pass(scope.row.id)">通过</el-button>
-                <el-button  type="warning" plain style="margin-left:10px;" @click="back(scope.row.id)">驳回</el-button>
+                <el-button  type="success" plain style="margin-left:10px;" @click="pass(scope.row)">通过</el-button>
+                <el-button  type="warning" plain style="margin-left:10px;" @click="back(scope.row)">驳回</el-button>
               </div>
               <div v-else>
                 <el-button type="success" plain disabled style="margin-left:10px;" @click="refreshing" >通过</el-button>
@@ -114,44 +118,44 @@
             pageSize: 10,
           },
           totalPages: 0,
-            loadId: '',
-            dialogImageUrl: '',
-            dialogVisible: false,
-            options: [{
-              value: '1',
-              label: '事假'
-            }, {
-              value: '2',
-              label: '病假'
-            }, {
-              value: '3',
-              label: '婚假'
-            }, {
-              value: '4',
-              label: '丧假'
-            }, {
-              value: '5',
-              label: '产假'
-            }, {
-              value: '6',
-              label: '年假'
-            }, {
-              value: '7',
-              label: '其他'
-            }],
-            approverList:[{}],
-            type:'',
-            absenceDate: '',
-            present:new Date(),
-            ruleForm: {
-                id: '',
-                name: '',
-                date: '',
-                department: '',
-                date1: '',
-                date2: '',
-                type: '',
-                reason:''
+          loadId: '',
+          dialogImageUrl: '',
+          dialogVisible: false,
+          options: [{
+            value: '1',
+            label: '事假'
+          }, {
+            value: '2',
+            label: '病假'
+          }, {
+            value: '3',
+            label: '婚假'
+          }, {
+            value: '4',
+            label: '丧假'
+          }, {
+            value: '5',
+            label: '产假'
+          }, {
+            value: '6',
+            label: '年假'
+          }, {
+            value: '7',
+            label: '其他'
+          }],
+          approverList:[{}],
+          type:'',
+          absenceDate: '',
+          present:new Date(),
+          ruleForm: {
+              id: '',
+              name: '',
+              date: '',
+              department: '',
+              date1: '',
+              date2: '',
+              type: '',
+              reason:''
             },
             dialogVisible: false,
             rolesList: [{
@@ -163,7 +167,8 @@
               enddate: '1111年11月11日',
               type: '事假',
               operate: '小李',
-              status: '已销假'
+              status: '已销假',
+              prove:'',
             },{
               description : 'lalalal',
               id: '1111111',
@@ -173,7 +178,8 @@
               enddate: '1111年11月11日',
               type: '事假',
               operate: '小李',
-              status: '未审核'
+              status: '未审核',
+              prove:'',
             }],
           }
       },
@@ -220,7 +226,6 @@
           },
           handleCommand(command){
             this.myCommand = command
-            console.log(this.$refs.searchBar.keywords)
             if(command === "全部")
               this.click = 'all'
             else this.click = 'command'
@@ -228,7 +233,7 @@
               console.log("in command")
               var _this = this
               console.log(command)
-              this.$axios.post('/absence/search?status=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.loadId,{}).then(resp => {
+              this.$axios.post('/absence/search?status=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&id=" + this.loadId,{}).then(resp => {
                 if(resp && resp.data.code === 200){
                   _this.rolesList = resp.data.data.list
                   _this.totalPages = resp.data.data.total
@@ -238,7 +243,7 @@
             this.pages.pageNum = 1
             var _this = this
             console.log("out command")
-            this.$axios.post('/absence/search?status=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&keywords=" + this.loadId,{}).then(resp => {
+            this.$axios.post('/absence/search?status=' + command + "&page=" + this.pages.pageNum + "&size=" + this.pages.pageSize + "&id=" + this.loadId,{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
                 _this.totalPages = resp.data.data.total
@@ -252,7 +257,7 @@
         },
   
         //修改状态
-        pass(id){
+        pass(row){
           this.$confirm('确定通过此申请吗?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -260,9 +265,11 @@
           })
           .then(async() => {
             var _this = this
-            this.$axios.post('/absence/search?id='+this.rolesList.id+'&keywords='+this.loadId,{}).then(resp => {
+            this.$axios.post('/absence/change?id='+row.id+'&keywords='+this.loadId+'&time='+row.time+'&status='+'已通过',{}).then(resp => {
               if(resp && resp.data.code === 200){
-                _this.rolesList.status = resp.data.status
+                _this.rolesList = resp.data.data.list
+                _this.initCheck()
+
                 this.$message({
                 type: 'success',
                 message: '申请状态修改成功!'
@@ -272,7 +279,7 @@
           })
             .catch(err => { console.error("状态修改失败，请重试！") })
         },
-        back(id){
+        back(row){
           this.$confirm('确定驳回此申请吗?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -280,9 +287,11 @@
           })
           .then(async() => {
             var _this = this
-            this.$axios.post('/absence/search?id='+this.rolesList.id+'&keywords='+this.loadId,{}).then(resp => {
+            this.$axios.post('/absence/change?id='+row.id+'&keywords='+this.loadId+'&time='+row.time+'&status='+'未通过',{}).then(resp => {
               if(resp && resp.data.code === 200){
-                _this.rolesList.status = resp.data.status
+                _this.rolesList = resp.data.data.list
+                _this.initCheck()
+
                 this.$message({
                 type: 'success',
                 message: '申请状态修改成功!'

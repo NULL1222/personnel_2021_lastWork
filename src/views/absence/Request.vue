@@ -11,6 +11,11 @@
             <el-form label-position="left" inline class="table-expand" style="margin-bottom: -20px;margin-top: 10px;">
               <el-form-item label="请假详情">
                 <span>{{ scope.row.description }}</span>
+                <!-- <span>{{ scope.row.prove }}</span> -->
+                <el-image
+                style="width: 100px; height: 100px"
+                :src="scope.row.prove"
+                :fit="fit"></el-image>
               </el-form-item>
               
             </el-form>
@@ -63,9 +68,7 @@
                   <el-dropdown-item command="全部">全部</el-dropdown-item>
                   <el-dropdown-item command="未审核">未审核</el-dropdown-item>
                   <el-dropdown-item command="已通过">已通过</el-dropdown-item>
-                  <el-dropdown-item command="进行中">进行中</el-dropdown-item>
-                  <el-dropdown-item command="已销假">已销假</el-dropdown-item>
-                  <el-dropdown-item command="未通过">未通过</el-dropdown-item>
+                  <el-dropdown-item command="未通过">已驳回</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
@@ -157,7 +160,7 @@
                 </el-form-item>
 
                 <el-form-item label="证明材料" prop="proof" >
-                  <el-upload
+                  <!-- <el-upload
                     class="upload-pic"
                     action="/test/up"
                     v-model="role.proof"
@@ -172,10 +175,29 @@
                     :before-remove="beforeRemove">
                     <el-button size="small" type="primary" style="margin-top: 10;">上传图片</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                  </el-upload> -->
+
+                  <el-upload
+                    action="/test/up"
+                    list-type="picture-card"
+                    :auto-upload="true"
+                    :on-success="uploadFileHandler"
+                    :on-error="uploadFileErrorHandler"
+                    :before-upload="beforeAvatarUpload"
+                    :before-remove="beforeRemove">
+                    <i slot="default" class="el-icon-plus"></i>
+                    <div slot="file" slot-scope="{file}">
+                      <img
+                        class="el-upload-list__item-thumbnail"
+                        :src="prove" alt=""
+                      >
+                      </span>
+                    </div>                  
                   </el-upload>
-                  <el-dialog v-model="dialogVisible1" style="line-height: 0;">
+                  
+                  <!-- <el-dialog v-model="dialogVisible1" style="line-height: 0;">
                     <img style="width: 100%;height: 100%"  :src="dialogImageUrl" alt="" />
-                  </el-dialog>
+                  </el-dialog> -->
                 </el-form-item>
               </el-col>
             </el-row>
@@ -275,7 +297,7 @@
               type: '',
               reason:'',
               proof:'',
-              approver:''
+              approver:'',
           },
           rules: {
               id: [
@@ -323,7 +345,8 @@
             enddate: '1111-11-11',
             type: '事假',
             approver: '小李',
-            status: '已销假'
+            status: '已销假',
+            prove:''
           }],
           staff: [{
             job: '',
@@ -349,7 +372,7 @@
         // 接收上传文件后的返回地址
         uploadFileHandler(res){
         console.log(res)
-        this.prove = res        
+        this.prove = "http://192.168.198.1:8887/"+res
       },
 
 
@@ -401,7 +424,6 @@
             if (resp && resp.data.code === 200) {
               _this.rolesList = resp.data.data.list
               _this.totalPages = resp.data.data.total
-              console.log(_this.rolesList.time)
             }
           })
         },
@@ -516,7 +538,7 @@
               this.role.approver+'&type='+this.role.type+'&prove='+this.prove, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data
-                  this.initRequest()
+                  _this.initRequest()
                 }
                 this.dialogVisible = false
               })
