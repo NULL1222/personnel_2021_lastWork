@@ -5,10 +5,8 @@ import Login from '../views/Login.vue'
 import Success from '../views/Success.vue'
 import ChangePwd from '../views/ChangePwd.vue'
 import container from '../views/container.vue'
-
-Vue.use(Router)
-
-//router 3.0以上版本 会出现重复点击菜单导航出现报错 以下解决
+ Vue.use(Router)
+ //router 3.0以上版本 会出现重复点击菜单导航出现报错 以下解决
 const originalPush = Router.prototype.push
 Router.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
@@ -103,21 +101,16 @@ export default new Router({
           name: 'normalStaff',
           component: ()=>import('../views/Finance/normalStaff.vue')
         },
-        // {
-        //   path: '/container/staff',
-        //   name: 'staff',
-        //   component: ()=>import('../views/Finance/staff.vue')
-        // },
-        // {
-        //   path: '/container/railway',
-        //   name: 'Railway',
-        //   component: ()=>import('../views/Railway/Railway.vue')
-        // },
-        // {
-        //   path: '/container/visitor',
-        //   name: 'Visitor',
-        //   component: ()=>import('../views/Visitor/Visitor.vue')
-        // },
+        {
+          path: '/container/request',
+          name: 'request',
+          component: ()=>import('../views/absence/request.vue')
+        },
+        {
+          path: '/container/check',
+          name: 'check',
+          component: ()=>import('../views/absence/CheckRequest.vue')
+        },
       ]
     },
     {

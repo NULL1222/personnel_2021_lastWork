@@ -4,9 +4,8 @@
     @open="handleOpen" 
     @close="handleClose" 
     :collapse="isCollapse">
-    <div class="menu-title">
-    <fragment>
-      <h3 v-show="!isCollapse">铁路人事管理系统</h3>
+     <div class="menu-title">
+      <h3 v-show="!isCollapse">铁路后台管理系统</h3>
       <h3 v-show="isCollapse">导航</h3>
     </fragment>
     </div>
@@ -38,8 +37,7 @@
       <i :class="'el-icon-' + item.icon"></i>
       <span slot="title">{{ item.label }}</span>
       </el-menu-item>
-
-      <el-submenu :index="item.label" v-for="item in hasChildren" 
+       <el-submenu :index="item.label" v-for="item in hasChildren" 
       :key="item.path">
         <template slot="title">
           <i :class="'el-icon-' + item.icon"></i>
@@ -56,10 +54,8 @@
       </el-submenu>
     </fragment>
       </el-menu>  
-      
-</template>
-
-<script>
+ </template>
+ <script>
     export default {
       props: ["isCollapse"],
       data() {
@@ -103,6 +99,13 @@
               url: "Interview/interview", 
             },
             {
+              path: "/check",
+              name: "check",
+              label: "请假审核",
+              icon: "folder-checked",
+              url: "Interview/interview", 
+            },
+            {
               path: "/scan",
               label: "考勤签到",
               icon: "date",
@@ -123,39 +126,7 @@
                 }
               ]
             }
-              // children: [
-                // {
-                //   path: "/finance",
-                //   name: "finance",
-                //   label: "公司收支",
-                //   icon: "coin",
-                //   url: "Finance/finance",
-                // },
-                // {
-                //   path: "/staff",
-                //   name: "staff",
-                //   label: "员工工资",
-                //   icon: "setting",
-                //   url: "Finance/staff",
-                // }
-              // ]
-            // },
-            // {
-            //   path: "/railway",
-            //   name: "Railway",
-            //   label: "铁路管理",
-            //   icon: "location",
-            //   url: "Railway/Railway", 
-            // },
-            // {
-            //   path: "/visitor",
-            //   name: "Visitor",
-            //   label: "旅客管理",
-            //   icon: "s-custom",
-            //   url: "Visitor/Visitor", 
-            // },
-            
-          ],
+           ],
           userMenu: [
             {
               path: "/",
@@ -171,8 +142,14 @@
               icon: "s-order",
               url: "Finance/normalStaff", 
             },
-            
-          ]
+            {
+              path: "/request",
+              name: "request",
+              label: "请假",
+              icon: "s-order",
+              url: "absence/CheckRequest", 
+            },
+           ]
         };
       },
       methods: {
@@ -193,15 +170,10 @@
         hasChildren() {
           return this.menu.filter((item) => item.children)
         },
-        //  isCollapse() {
-        //    return this.$store.state.tab.isCollapse;
-        //  }
       }
-
-    }
+     }
 </script>
-
-<style scoped>
+ <style scoped>
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;

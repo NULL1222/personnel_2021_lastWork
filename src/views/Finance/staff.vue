@@ -70,8 +70,7 @@
       </div>
     </div>
  </template>
- 
-<script>
+ <script>
   import SearchBar from '../SearchBar.vue'
   import Vue from 'vue'
   import { downloadXlsx } from '../../../utils/xlsx.js';
@@ -88,10 +87,8 @@
       background: 'rgba(0, 0, 0, 0.7)'
     });
   };
-
-  var listen = new Vue()
-
-  import Cookies from 'js-cookie';
+   var listen = new Vue()
+   import Cookies from 'js-cookie';
   export default{
       components: {
         SearchBar
@@ -147,12 +144,10 @@
           salaryNum: 0,
         }
     },
-    
-      mounted: function() {
+       mounted: function() {
         this.initSalary()
       },
-
-      methods: {
+       methods: {
         getfilterNameItem() {
           var _this = this
           this.$axios.post("/salary/amount").then(resp=>{
@@ -168,8 +163,7 @@
             }
           })
           console.log(_this.salaryMonth)
-
-          let apiArr = []
+           let apiArr = []
           for(var n = 0;n < _this.monthSize;n++){
             apiArr.push({text:_this.salaryMonth[n],value:_this.salaryMonth[n]})
           }
@@ -195,8 +189,8 @@
             listen.$emit("searchDate")
           else this.initSalary();
         }, 
-        
-        initSalary() {
+         initSalary() {
+          this.getfilterNameItem()
           var _this = this
           this.$axios.post("/salary/updateSalary")
           this.$axios.post("/salary/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
@@ -339,19 +333,15 @@
               mm = String(nowTime.getMonth()).padStart(2, '0');
           }
           else mm = String(nowTime.getMonth() + 1).padStart(2, '0');
-
-
-          var time = yyyy + '-' + mm + '-11'
+           var time = yyyy + '-' + mm + '-11'
           let salaryList = []
-
-          this.$axios.post('/salary/countMonth?salaryMonth=' + time , {}).then(resp => {
+           this.$axios.post('/salary/countMonth?salaryMonth=' + time , {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.salaryNum = resp.data.data
             }
           })
           var count = 0
-
-          this.$axios.post('/salary/sameMonth?salaryMonth=' + time , {}).then(resp => {
+           this.$axios.post('/salary/sameMonth?salaryMonth=' + time , {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.salaryList = resp.data.data
             }
@@ -388,31 +378,18 @@
               })
             });
           })
-          
-
-
-
-        },
-      
-      refreshing() {
+         },
+       refreshing() {
         location.reload()
       },
-
-    }
+     }
   }
 </script>
- <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
  <style scoped>
-
-.staffTable {
+ .staffTable {
   min-width: 1020px;
 } 
-
-.ele-table {
+ .ele-table {
   margin-left: calc((100vw - 1531px) / 2);
 }
-
-
-
-
- </style>
+  </style>

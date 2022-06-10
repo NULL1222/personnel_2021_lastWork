@@ -11,8 +11,7 @@
       <el-button size="primary" type="primary" @click="searchClick">查询</el-button>
     </div>
   </template>
-  
-  <script>
+   <script>
       export default {
         name: 'SearchBar',
         data () {
@@ -30,7 +29,5 @@
         }
       }
   </script>
-  
-  <style scoped>
-  
-  </style>
+   <style scoped>
+   </style>

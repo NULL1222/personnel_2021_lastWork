@@ -14,8 +14,7 @@
     </el-calendar>
   </div>
 </template>
-
-<script>
+ <script>
 export default {
   data() {
     return {
@@ -28,8 +27,7 @@ export default {
     var _this = this;
     const myData = sessionStorage.getItem('userId2');
     this.id = myData;
-
-    this.$nextTick(() => {
+     this.$nextTick(() => {
       let preBtn = document.querySelector('tbody');
       preBtn.addEventListener('click', () => {
         let currDate = document.querySelector('.is-today');
@@ -54,8 +52,6 @@ export default {
               } 
             }).catch(err => console.log("Error: ", err))
           } else {
-            // 已经打过卡了
-            // this.today = `${yyyy}-${mm}-${dd}`;
             this.today = todayString;
             const h = this.$createElement;
             this.$notify({
@@ -99,8 +95,7 @@ export default {
   .is-selected {
     color: #1989FA;
   }
-
-  .el-calendar-table:not(.is-range) td.next {
+   .el-calendar-table:not(.is-range) td.next {
     pointer-events: none;
   }
   .el-calendar-table:not(.is-range) td.prev {

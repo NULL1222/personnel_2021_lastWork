@@ -3,8 +3,7 @@
       <br><br>
         <el-button type="primary" style="margin-left:10px;" @click="refreshing">刷新</el-button>
         <search-bar @onSearch="searchResult" ref="searchBar" style="width:300px;margin-left:10px;float:right"></search-bar>
-
-        <el-table :data="rolesList" height=450px style="width: 1000px;margin-top:30px;float:center;margin-left:75px;" @sort-change="sortChange" :header-cell-style="{textAlign: 'center'}">
+         <el-table :data="rolesList" height=450px style="width: 1000px;margin-top:30px;float:center;margin-left:75px;" @sort-change="sortChange" :header-cell-style="{textAlign: 'center'}">
           <el-table-column label="账号（手机号）" width="150%" align="center">
             <template slot-scope="scope">
               {{ scope.row.phone }}
@@ -53,8 +52,7 @@
               <el-button type="primary" size="small" @click="openDrawer(scope.row.phone)">详情</el-button>
               <el-button v-if="scope.row.state == '已禁用'" type="success" size="small" @click="handleDisable(scope.row.phone,scope.row.state)">启用</el-button>
               <el-button v-if="scope.row.state == '已启用'" type="danger" size="small" @click="handleDisable(scope.row.phone,scope.row.state)">禁用</el-button>
-    
-              <el-drawer
+               <el-drawer
                 title="详细信息"
                 :visible.sync="drawer"
                 :direction="direction"
@@ -93,14 +91,11 @@
       </div>
     </div>
  </template>
- 
-<script>
+ <script>
   import SearchBar from '../SearchBar.vue'
   import Vue from 'vue'
-
-  var listen = new Vue()
-
-  import Cookies from 'js-cookie';
+   var listen = new Vue()
+   import Cookies from 'js-cookie';
   export default{
       components: {
         SearchBar
@@ -140,13 +135,11 @@
           order: ''
         }
     },
-    
-      mounted: function() {
+       mounted: function() {
         this.initUser()
         this.$refs.searchBar.text = "请输入手机号或证件号"
       },
-
-      methods: {
+       methods: {
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
           this.pages.pageSize = val
@@ -171,8 +164,7 @@
           }
           else this.initUser();
         }, 
-        
-        initUser() {
+         initUser() {
           var _this = this
           this.$axios.post("/user/page?page="+this.pages.pageNum+"&size="+this.pages.pageSize).then(resp => {
             if (resp && resp.data.code === 200) {
@@ -308,8 +300,7 @@
                 }
               })
           })
-
-          var _this = this
+           var _this = this
           if(column.order === "descending")
             this.order = "order by integral DESC"
             else if(column.order === "ascending") 

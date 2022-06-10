@@ -9,12 +9,10 @@
       </el-container>
    </div>
 </template>
-
-<script>
+ <script>
 import CommonAside from '../components/CommonAside'
 import CommonHeader from '../components/CommonHeader'
-
-export default { 
+ export default { 
   name: "Main",
   data() {
     return {
@@ -30,8 +28,7 @@ export default {
   }
 }
 </script>
-
-<style>
+ <style>
 .el-header {
   background-color: rgb(121, 157, 204);
 }
@@ -40,16 +37,8 @@ export default {
 }
 .el-main {
   padding-top: 0;
-  /* overflow-y: hidden; */
-    /* text-align: center; */
-    /* line-height: 160px; */
-    /* height: 95vh; */
-    /* overflow-y: scroll;
-    position: absolute; */
 }
 .el-aside {
   height: 100vh;
-  /* background-color: rgb(121, 157, 204); */
 }
-
-</style>
+ </style>

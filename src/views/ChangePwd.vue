@@ -15,8 +15,7 @@
       <button @click="ChangePwd()">确定修改</button>
     </div>
   </template>
-  
-  <script>
+   <script>
     import Cookies from 'js-cookie';
     export default {
       name: 'ChangePwd',
@@ -28,8 +27,7 @@
         }
       },
       created() {
-  
-      },
+       },
       computed: {
         LoginuserName() {
           return Cookies.get('userName');
@@ -41,14 +39,12 @@
           fd.append("username", this.LoginuserName);
           fd.append("oldpassword", this.oldpassword);
           fd.append("newpassword", this.newpassword);
-  
-          let config = {
+           let config = {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           }
-  
-          if (this.oldpassword.length === 0 || this.newpassword.length === 0 || this.newpassword2.length === 0) {
+           if (this.oldpassword.length === 0 || this.newpassword.length === 0 || this.newpassword2.length === 0) {
             alert("密码不能为空");
             return;
           } else if (this.newpassword === this.newpassword2) {
@@ -72,7 +68,5 @@
   </script>
   <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
   <style scoped>
-  
-  </style>
-  
-  
+   </style>
+   

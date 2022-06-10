@@ -85,18 +85,15 @@
                     </el-table-column>        
                 </el-table>
             </el-col>
-
-        </el-row>
+         </el-row>
     </div>
  </template>
- 
-<script>
+ <script>
   const defaultRole = {
     job: '人事管理',
     sex: '男',
   }
-
-  import Cookies from 'js-cookie';
+   import Cookies from 'js-cookie';
   export default{
       computed:{
         username(){
@@ -135,12 +132,10 @@
           }],
         }
     },
-    
-      mounted: function() {
+       mounted: function() {
         this.initStaff()
       },
-
-      methods: {        
+       methods: {        
         initStaff() {
           var _this = this
           this.$axios.post("/apply/transformation")
@@ -159,8 +154,7 @@
               _this.rolesListFail = resp.data.data
             }
           })
-
-        },
+         },
         handleSelection(rows){
           this.Selection = [];
             if (rows) {
@@ -225,8 +219,7 @@
                 message: '成功退回',
                 type: 'success'
             });
-
-        },
+         },
         pass(){
           var _this = this
           for(var i = 0;i < this.Selection.length;i++)
@@ -248,8 +241,7 @@
               message: '成功通过',
               type: 'success'
           });
-
-        },
+         },
         revocationFail(){
           var _this = this
           for(var i = 0;i < this.FailSelection.length;i++)
@@ -271,8 +263,7 @@
             message: '成功撤销退回',
             type: 'success'
           });
-
-        },
+         },
         revocationPass(){
           var _this = this
           for(var i = 0;i < this.PassSelection.length;i++)
@@ -294,15 +285,11 @@
             message: '成功撤销通过',
             type: 'success'
           });
-
-        },
-
-      
-      refreshing() {
+         },
+       refreshing() {
         location.reload()
       },
-
-    }
+     }
   }
 </script>
  <!-- 添加“scoped”属性以将CSS仅限于此组件 -->
