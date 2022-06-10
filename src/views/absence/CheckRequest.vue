@@ -171,7 +171,7 @@
               type: '事假',
               operate: '小李',
               status: '已销假',
-              prove:'',
+              prove:'http://localhost:8887/1.jpg',
             },{
               description : 'lalalal',
               id: '1111111',
@@ -182,7 +182,7 @@
               type: '事假',
               operate: '小李',
               status: '未审核',
-              prove:'',
+              prove:'http://localhost:8887/1.jpg',
             }],
           }
       },
