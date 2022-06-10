@@ -235,14 +235,10 @@
  </template>
 
  <script>
-  import SearchBar from '../SearchBar.vue'
   import Vue from 'vue'
   var listen = new Vue()
   import Cookies from 'js-cookie';
   export default{
-      components: {
-        SearchBar
-      },
       computed:{
         username(){
           return Cookies.get('id');
