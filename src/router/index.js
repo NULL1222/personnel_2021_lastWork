@@ -34,11 +34,8 @@ Router.prototype.push = function push (location) {
 // },
 // ]
 
-
-
-
 export default new Router({
-  mode: 'hash',
+  mode: 'history',
   routes: [
     {
       path: '/container',
@@ -67,6 +64,11 @@ export default new Router({
           component: ()=>import('../views/Interview/Interview.vue')
         },
         {
+          path: '/container/absence',
+          name: 'absence',
+          component: ()=>import('../views/Absence/Request.vue')
+        },
+        {
           path: '/container/scan',
           name: 'scan',
           component: ()=>import('../views/Data_Scanning/scan.vue')
@@ -80,6 +82,11 @@ export default new Router({
           path: '/PersonalCenter',
           name: 'PersonalCenter',
           component: ()=>import('../views/PersonalCenter.vue')
+        },
+        {
+          path: '/Message',
+          name: 'Message',
+          component: ()=>import('../views/Message.vue')
         },
         {
           path: '/container/notice-u',

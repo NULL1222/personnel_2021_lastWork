@@ -637,6 +637,4 @@
     pointer-events: none;
   }
 
-
-
  </style>
