@@ -34,7 +34,7 @@
               </el-row>
             </el-col>
             <el-col :span="6">
-              <p style="text-align: center; font-weight:bold; color: #726f6f;margin-left: -140px;">未审核简历</p>
+              <p style="text-align: center; font-weight:bold; color: #726f6f;margin-left: -140px;">培训中简历</p>
                 <el-table :data="rolesListAll" height=500px style="width: 100%;margin-top:10px;margin-left:-70px;float:center;text-align:center" :header-cell-style="{textAlign: 'center'}" @selection-change="handleSelection">
                     <el-table-column type="selection" width="40%">
                     </el-table-column>

@@ -94,7 +94,7 @@
             {
               path: "/interview",
               name: "interview",
-              label: "应聘",
+              label: "新员工培训",
               icon: "folder-checked",
               url: "Interview/interview", 
             },
