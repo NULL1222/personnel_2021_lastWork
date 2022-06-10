@@ -3,7 +3,7 @@
       <el-image class="image" :src="url" :fit="'fill'"></el-image>
       <div class="front">
         <br><br>
-        <h2>欢迎登录铁路公司管理系统</h2>
+        <h2>欢迎登录铁路公司人事管理系统</h2>
         <el-form :model="LoginForm" :rules="rules" ref="LoginForm" label-width="100px" class="demo-LoginForm">
           <el-form-item label="账号" prop="id" style="width: 380px; margin-top: 20px;">
             <el-input v-model="LoginForm.id"
@@ -55,7 +55,8 @@
             address: '',
             attendance: '',
             birthday: '',
-            job: '用户'
+            job: '用户',
+            // messageNumber:'2'
           },
           rules: {
             id: [
@@ -119,6 +120,7 @@
             alert(res.data.msg)
           })
           sessionStorage.setItem('userId2',this.LoginForm.id)
+          // sessionStorage.setItem('messageNumber', this.LoginForm.messageNumber)
         },
         resetForm(formName) {
         this.$refs[formName].resetFields();

@@ -6,6 +6,7 @@ import router from './router'
 import Login from './views/Login'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import Fragment from 'vue-fragment'
 // import axios from 'axios'
 // import VueAxios from 'vue-axios'
 // import Vuex from 'vuex'
@@ -16,6 +17,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 window.eventBus = new Vue();
 
 Vue.use(ElementUI);
+Vue.use(Fragment.Plugin);
 
 Vue.config.productionTip = false
 

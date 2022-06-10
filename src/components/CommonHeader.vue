@@ -5,15 +5,20 @@
       <h3 class="l-content-text"></h3>
     </div>
     <div class="r-content">
-      <el-dropdown trigger="click" size="mini">
+      <el-badge is-dot class="item" :hidden="isHidden">
+        <el-dropdown trigger="click" size="mini">
         <span class="el-dropdown-link">
           <img :src="userImg" class="r-content-user"/>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="personalCenter">个人中心</el-dropdown-item>
+          <el-dropdown-item @click.native="message">消息
+            <el-badge class="mark" :value="messagenum"/>
+          </el-dropdown-item>
           <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+      </el-badge>
     </div>
   </header>
 </template>
@@ -21,6 +26,8 @@
 export default {
   data() {
     return {
+      isHidden:false,
+      messagenum:12,
       userImg: require("../assets/Me.png"),
       role: {
         id: '',
@@ -45,6 +52,13 @@ export default {
         path: '/personalCenter'
       })
       console.log("clickpersonCenter")
+    },
+    message() {
+      console.log("点击了消息")
+      this.isHidden = true
+      this.$router.push({
+        path: '/message'
+      })
     },
     logout() {
       this.$confirm('此操作将注销登录, 是否继续?', '提示', {
@@ -99,4 +113,11 @@ header {
   margin-top: 7px;
   margin-right: 10px;
 }
+
+.r-content >>> .el-badge__content.is-fixed {
+  margin-right: 17px;
+  margin-top: 8px;
+}
+
+
 </style>

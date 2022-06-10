@@ -7,8 +7,9 @@
      <div class="menu-title">
       <h3 v-show="!isCollapse">铁路后台管理系统</h3>
       <h3 v-show="isCollapse">导航</h3>
+    </fragment>
     </div>
-     <div v-if="userRole_1 === 'admin'">
+    <fragment v-if="userRole_1 === 'admin'">
       <el-menu-item :index="item.path" v-for="item in noChildren" 
       :key="item.path" @click="clickMenu(item)">
         <i :class="'el-icon-' + item.icon"></i>
@@ -27,9 +28,10 @@
           <span slot="title">{{ subItem.label }}</span>
         </el-menu-item>
         </el-menu-item-group>
-       </el-submenu>
-    </div>
-    <div v-else>
+        
+      </el-submenu>
+    </fragment>
+    <fragment v-else>
       <el-menu-item :index="item.path" v-for="item in userMenu" 
       :key="item.path" @click="clickMenu(item)">
       <i :class="'el-icon-' + item.icon"></i>
@@ -48,8 +50,9 @@
           <span slot="title">{{ subItem.label }}</span>
         </el-menu-item>
         </el-menu-item-group>
-       </el-submenu>
-    </div>
+        
+      </el-submenu>
+    </fragment>
       </el-menu>  
  </template>
  <script>

@@ -11,7 +11,28 @@ const originalPush = Router.prototype.push
 Router.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
 }
- export default new Router({
+
+// export const fixedRouter = [{
+//   path: '',
+//   component: reload,
+//   hidden: true
+// },
+// {
+//   path: '',
+//   component: layout, //整体页面的布局(包含左侧菜单跟主内容区域)
+//   children: [{
+//     path: 'main',
+//     component: main,
+//     meta: {
+//       title: '首页', //菜单名称
+//       roles: ['user', 'admin'], //当前菜单哪些角色可以看到
+//       icon: 'el-icon-info' //菜单左侧的icon图标
+//     }
+//   }]
+// },
+// ]
+
+export default new Router({
   mode: 'history',
   routes: [
     {
@@ -41,6 +62,11 @@ Router.prototype.push = function push (location) {
           component: ()=>import('../views/Interview/Interview.vue')
         },
         {
+          path: '/container/absence',
+          name: 'absence',
+          component: ()=>import('../views/Absence/Request.vue')
+        },
+        {
           path: '/container/scan',
           name: 'scan',
           component: ()=>import('../views/Data_Scanning/scan.vue')
@@ -54,6 +80,11 @@ Router.prototype.push = function push (location) {
           path: '/PersonalCenter',
           name: 'PersonalCenter',
           component: ()=>import('../views/PersonalCenter.vue')
+        },
+        {
+          path: '/Message',
+          name: 'Message',
+          component: ()=>import('../views/Message.vue')
         },
         {
           path: '/container/notice-u',
