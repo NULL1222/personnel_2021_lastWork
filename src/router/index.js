@@ -64,7 +64,7 @@ export default new Router({
         {
           path: '/container/absence',
           name: 'absence',
-          component: ()=>import('../views/Absence/Request.vue')
+          component: ()=>import('../views/absence/Request.vue')
         },
         {
           path: '/container/scan',
@@ -104,7 +104,7 @@ export default new Router({
         {
           path: '/container/request',
           name: 'request',
-          component: ()=>import('../views/absence/request.vue')
+          component: ()=>import('../views/absence/Request.vue')
         },
         {
           path: '/container/check',
