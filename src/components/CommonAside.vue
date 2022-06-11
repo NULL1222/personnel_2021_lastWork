@@ -5,7 +5,7 @@
     @close="handleClose" 
     :collapse="isCollapse">
      <div class="menu-title">
-      <h3 v-show="!isCollapse">铁路后台管理系统</h3>
+      <h3 v-show="!isCollapse">铁路人事管理系统</h3>
       <h3 v-show="isCollapse">导航</h3>
     </fragment>
     </div>
