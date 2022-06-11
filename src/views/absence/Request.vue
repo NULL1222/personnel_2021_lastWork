@@ -342,7 +342,7 @@
             type: '事假',
             approver: '小李',
             status: '已销假',
-            prove:'http://localhost:8887/1.jpg'
+            prove:'http://127.0.0.1:8887/img/1.jpg'
           }],
           staff: [{
             job: '',
@@ -368,7 +368,7 @@
         // 接收上传文件后的返回地址
         uploadFileHandler(res){
         console.log(res)
-        this.prove = "http://192.168.198.1:8887/"+res
+        this.prove = "http://127.0.0.1:8887/img/"+res
       },
 
 
