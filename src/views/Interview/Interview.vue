@@ -138,7 +138,7 @@
        methods: {        
         initStaff() {
           var _this = this
-          this.$axios.post("/apply/transformation")
+          // this.$axios.post("/apply/transformation")
           this.$axios.post("/apply/all?isPass="+0).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.rolesListAll = resp.data.data

@@ -333,19 +333,21 @@
               mm = String(nowTime.getMonth()).padStart(2, '0');
           }
           else mm = String(nowTime.getMonth() + 1).padStart(2, '0');
-           var time = yyyy + '-' + mm + '-11'
+          var time = yyyy + '-' + mm + '-11'
           let salaryList = []
-           this.$axios.post('/salary/countMonth?salaryMonth=' + time , {}).then(resp => {
+          this.$axios.post('/salary/countMonth?salaryMonth=' + time , {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.salaryNum = resp.data.data
             }
           })
           var count = 0
-           this.$axios.post('/salary/sameMonth?salaryMonth=' + time , {}).then(resp => {
+          this.$axios.post('/salary/sameMonth?salaryMonth=' + time , {}).then(resp => {
             if (resp && resp.data.code === 200) {
               _this.salaryList = resp.data.data
             }
             console.log(_this.salaryList)
+            this.$axios.post('/test/createExcel')
+            console.log("创建excel")
             this.salaryList.forEach(item => {
               salaryList.push([
               "工号",
@@ -368,10 +370,10 @@
                 item.salary,
               ]);
               count += 1
-              downloadXlsx(salaryList, item.id+"员工工资单.xlsx");
+              // downloadXlsx(salaryList, item.id+"员工工资单.xlsx");
               salaryList = []
               startLoading();
-              this.$axios.post('/test/email?email=' + item.mail + "&file=" + item.id+"员工工资单.xlsx", {}).then(resp => {
+              this.$axios.post('/test/email?email=' + item.mail + "&file=" + item.id + "员工工资单.xlsx", {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   loading.close();
                 }

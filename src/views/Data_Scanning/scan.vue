@@ -41,17 +41,17 @@
     },
     methods: {
       uploadFileHandler(res){
-        console.log(res.words_result[8].words)
+        console.log(res.words_result[7].words)
         const nowTime = new Date()
         let dd = String(nowTime.getDate()).padStart(2, '0');
         let mm = String(nowTime.getMonth() + 1).padStart(2, '0');
          this.time = nowTime.getFullYear() + '-' + mm + '-' + dd + ' ' + nowTime.getHours() + ':' + nowTime.getMinutes() + ':' + nowTime.getSeconds()
         this.postTime = nowTime.getFullYear() + '-' + mm + '-' + dd
         console.log(this.time)
-        if(res.words_result[8].words === this.loadId){
-          this.$axios.post('/checking/attendance?id=' + res.words_result[8].words +'&date=' + this.postTime, {}).then(resp=>{
+        if(res.words_result[7].words === this.loadId){
+          this.$axios.post('/checking/attendance?id=' + res.words_result[7].words +'&date=' + this.postTime, {}).then(resp=>{
             if(resp && resp.data.code === 200){
-              this.$confirm('工号为'+res.words_result[8].words+'的'+res.words_result[4].words+'，您好！'+'</br>您已于'+this.time+'签到成功！'+'</br>好好工作，天天加薪！'
+              this.$confirm('工号为'+res.words_result[7].words+'的'+res.words_result[4].words+'，您好！'+'</br>您已于'+this.time+'签到成功！'+'</br>好好工作，天天加薪！'
               , '签到成功！', {
                 confirmButtonText: '确定',
                 dangerouslyUseHTMLString: true,
