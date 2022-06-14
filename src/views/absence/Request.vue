@@ -534,12 +534,13 @@
               this.role.approver+'&type='+this.role.type+'&prove='+this.prove, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data
-                  _this.initRequest()
-                  this.$message({
-                    type: 'success',
-                    message: '请假申请提交成功!'
+                  this.$axios.post('/absence/addMessage?name='+this.staff.name+'&time='+this.rolesList.time+'&description='+this.role.reason+'&approver='+this.role.approver, {}).then(resp => {
+                    _this.initRequest()
+                    this.$message({
+                      type: 'success',
+                      message: '请假申请提交成功!'
+                    })
                   })
-
                 }
                 this.dialogVisible = false
               })
