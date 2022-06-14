@@ -13,7 +13,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="personalCenter">个人中心</el-dropdown-item>
           <el-dropdown-item @click.native="message">消息
-            <el-badge class="mark" :value="messagenum"/>
+            <el-badge class="mark" :value="messagenum" :hidden="isHidden_1"/>
           </el-dropdown-item>
           <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
         </el-dropdown-menu>
@@ -28,6 +28,7 @@ export default {
     return {
       userID:'',
       isHidden:false,
+      isHidden_1:false,
       messagenum:'', 
       //消息旁边的数字 
       //应该是数据库中未读消息的总数传过来 点击一条未读消息然后再点击头像又重新刷新获取数据
@@ -55,6 +56,7 @@ export default {
               _this.messagenum = resp.data.data;
               if(_this.messagenum == 0) {
                 this.isHidden = true;
+                this.isHidden_1 = true;
               }
               console.log(_this.messagenum);
               console.log("userID=" + this.userID);

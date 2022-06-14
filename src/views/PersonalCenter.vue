@@ -4,7 +4,7 @@
       <!-- <h3>安全设置</h3> -->
       <img :src="userImg" class="photo-user"/>
       <div class="left-content-buttons">
-        <el-button type="text" @click="dialogFormVisible = true" class="change-pwd">修改密码</el-button>
+        <el-button type="text" @click="openPwd()" class="change-pwd">修改密码</el-button>
         <el-button @click="dialogVisible = true">编辑信息</el-button>  
       </div>
     </div>
@@ -260,6 +260,10 @@ export default {
           return false;
         }
       });
+    },
+    openPwd() {
+      this.dialogFormVisible = true;
+      this.initPwd();
     },
     changePwd() {
       console.log("changepwd")
