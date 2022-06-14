@@ -305,12 +305,14 @@ export default {
           // alert("密码修改失败,请重试！")
             this.$message.error({
             message: '修改失败，请重试！',
-            // duration: 1000
+            duration: 1000,
+            onClose:() => {
+              this.dialogFormVisible = true;
+              this.initPwd();
+              return false;
+            }
           })
-          console.log('密码修改失败');
-          this.dialogFormVisible = true;
-          this.initPwd();
-          return false;
+          console.log('密码修改失败'); 
         }
       })
     },
