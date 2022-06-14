@@ -282,10 +282,16 @@ export default {
       +"&oldPassword=" + this.form.password 
       + "&newPassword=" + this.form.newPassword, {}).then(resp => {
         if (resp && resp.data.code === 200) {
-          _this.$message('密码修改成功！3秒后重新登录')
+          // _this.$message('密码修改成功！3秒后重新登录')
+          this.$message({
+            message: '修改成功！',
+            type: 'success',
+            duration: 1000
+          });
           this.$router.push({
             path: '/'
-          }),
+          });
+          console.log('重新登录');
           history.pushState(null, null, document.URL);
           window.addEventListener("popstate", function (e) {
             history.pushState(null, null, document.URL);
@@ -296,7 +302,12 @@ export default {
         // }else {
           // alert(resp.data.msg);
         }else {
-          alert("密码修改失败,请重试！")
+          // alert("密码修改失败,请重试！")
+            this.$message.error({
+            message: '修改失败，请重试！',
+            // duration: 1000
+          })
+          console.log('密码修改失败');
           this.dialogFormVisible = true;
           this.initPwd();
           return false;
