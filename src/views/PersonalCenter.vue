@@ -255,8 +255,17 @@ export default {
               }
             })
           this.dialogVisible = false
+          this.$message({
+            message: '修改成功！',
+            type: 'success',
+            duration: 1000
+          })
         }else{
           console.log('修改失败！');
+          this.$message.error({
+            message: '修改失败，请重试！',
+            duration: 1000
+          })
           return false;
         }
       });
