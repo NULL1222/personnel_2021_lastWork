@@ -5,7 +5,7 @@
     @close="handleClose" 
     :collapse="isCollapse">
      <div class="menu-title">
-      <h3 v-show="!isCollapse">铁路人事管理系统</h3>
+      <h3 v-show="!isCollapse">公司人事管理系统</h3>
       <h3 v-show="isCollapse">导航</h3>
     </fragment>
     </div>
@@ -95,7 +95,7 @@
               path: "/interview",
               name: "interview",
               label: "新员工培训",
-              icon: "folder-checked",
+              icon: "notebook-1",
               url: "Interview/interview", 
             },
             {
@@ -139,14 +139,14 @@
               path: "/normalStaff",
               name: "normalStaff",
               label: "工资",
-              icon: "s-order",
+              icon: "coin",
               url: "Finance/normalStaff", 
             },
             {
               path: "/request",
               name: "request",
               label: "请假",
-              icon: "s-order",
+              icon: "receiving",
               url: "absence/CheckRequest", 
             },
            ]

@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-        <el-button @click="open(scope.row)" >查看</el-button>
+        <el-button @click.stop="open(scope.row)" >查看</el-button>
         <el-button @click.stop="markRead(scope.row.id)">已读</el-button>
         <el-button @click.stop="handleDelete(scope.row.id)">删除</el-button>
       </template>
@@ -91,7 +91,6 @@
         role:{
           id:'',
           name:'',
-          addresser:'',
           time:'',
           approver:'',
           description:'',
@@ -123,7 +122,6 @@
       allRead() { // 一键已读
         this.$axios.post("/message/alreadyall?id=" + this.userID, {});
         location.reload();
-
       },
       open(row) { 
         // console.log('messageID=' + messageID+1);
@@ -176,12 +174,12 @@
         }).catch(err => { console.error(err) })
       },
       clickData(row) { // 点击一行查看
-        this.dialogVisible = true;
+        // this.dialogVisible = true;
         this.role = this.rolesList[row.id+1];
         row.status = '已读';
-        console.log("点击了这一行");
-        console.log(row.status);
-        console.log(this.role);
+        // console.log("点击了这一行");
+        // console.log(row.status);
+        // console.log(this.role);
         this.$axios.post("/message/already?id=" + row.id, {})
         this.initInfo();
       },

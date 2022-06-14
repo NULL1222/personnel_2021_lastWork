@@ -3,7 +3,7 @@
       <el-image class="image" :src="url" :fit="'fill'"></el-image>
       <div class="front">
         <br><br>
-        <h2>欢迎登录铁路公司人事管理系统</h2>
+        <h2>欢迎登录XX公司人事管理系统</h2>
         <el-form :model="LoginForm" :rules="rules" ref="LoginForm" label-width="100px" class="demo-LoginForm">
           <el-form-item label="账号" prop="id" style="width: 380px; margin-top: 20px;">
             <el-input v-model="LoginForm.id"
@@ -41,7 +41,7 @@
       name: 'Login',
       data() {
         return {
-          url: require('../assets/login_image/login_background.jpg'),
+          url: require('../assets/login_image/background_1.jpeg'),
           icon: "el-input__icon el-icon-view",
           passw: "password",
           LoginForm: {
@@ -104,26 +104,35 @@
             }
           }
           this.$axios.post("staff/login", fd, config).then(res => {
-            alert(res.data.msg)
+            // alert(res.data.msg)
+              
             if (res.data.code === 200) {
-              Cookies.set('id', fd.get('id'));
-              console.log("id1=" + this.LoginForm.id);
-              let getUserRole = fd.get('job') === '管理员' ? 'admin' : 'user';
-              console.log("getUserRole=" + getUserRole);
-              sessionStorage.setItem('userRole', getUserRole);
-              if(getUserRole === 'admin') {
-                this.$router.push({
-                path: '/container/notice'
-                })           
-              } else {
-                this.$router.push({
-                path: '/container/notice-u'
-                })     
-              }
+              this.$message({
+                message: '登录成功！',
+                type: 'success',
+                duration: 1000,
+                onClose:()=> {
+                  Cookies.set('id', fd.get('id'));
+                  console.log("id1=" + this.LoginForm.id);
+                  let getUserRole = fd.get('job') === '管理员' ? 'admin' : 'user';
+                  console.log("getUserRole=" + getUserRole);
+                  sessionStorage.setItem('userRole', getUserRole);
+                  if(getUserRole === 'admin') {
+                    this.$router.push({
+                    path: '/container/notice'
+                    })           
+                  } else {
+                    this.$router.push({
+                    path: '/container/notice-u'
+                    })     
+                  }
+                }
+              });
             } else {  
+              this.$message.error('登录失败，请重试。');
             }
           }).catch(res => {
-            alert(res.data.msg)
+            // alert(res.data.msg)
           })
           sessionStorage.setItem('userId2',this.LoginForm.id)
           // sessionStorage.setItem('messageNumber', this.LoginForm.messageNumber)
@@ -139,7 +148,7 @@
   .container {
     width: 100vw;
     height: 100vh;
-    background-color:  lightblue;
+    background-color:  #838a8d;
     overflow: hidden;
     margin: 0 auto;
     position: relative;
@@ -148,7 +157,7 @@
     width: 450px; 
     height: 300px;
     position: absolute;
-    background-color: rgba(132, 151, 167, 0.5);
+    background-color: rgba(228, 238, 246, 0.7);
     box-shadow: 2px 2px 2px rgb(91, 105, 119);
      border-radius: 10px;
     top: 45%;
