@@ -496,6 +496,10 @@
                   this.dialogVisible = false
                 })
               }else{
+                this.$message({
+                  message: '添加失败',
+                  type: 'error'
+                });
                 console.log('error submit!!');
                 return false;
               }
@@ -511,10 +515,18 @@
                               this.role.mail+'&card='+this.role.card+'&address='+this.role.address, {}).then(resp => {
                   if (resp && resp.data.code === 200) {
                     _this.rolesList = resp.data.data
+                    this.$message({
+                      type: 'success',
+                      message: '编辑成功!'
+                      })
                   }
                 })
               this.dialogVisible = false
             }else{
+              this.$message({
+                  message: '编辑失败',
+                  type: 'error'
+                });
               console.log('error submit!!');
               return false;
             }

@@ -535,11 +535,21 @@
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data
                   _this.initRequest()
+                  this.$message({
+                    type: 'success',
+                    message: '请假申请提交成功!'
+                  })
+
                 }
                 this.dialogVisible = false
               })
             }else{
               console.log('error submit!!');
+              this.$message({
+                type: 'error',
+                message: '请假申请提交失败!'
+              })
+
               return false;
             }
         });
