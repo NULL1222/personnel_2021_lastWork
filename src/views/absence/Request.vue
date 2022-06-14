@@ -526,6 +526,7 @@
        submit(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            let absenceTime = this.rolesList.time
             var _this = this
             this.$axios
               //向后端发送数据
@@ -534,7 +535,7 @@
               this.role.approver+'&type='+this.role.type+'&prove='+this.prove, {}).then(resp => {
                 if (resp && resp.data.code === 200) {
                   _this.rolesList = resp.data.data
-                  this.$axios.post('/absence/addMessage?name='+this.staff.name+'&time='+this.rolesList.time+'&description='+this.role.reason+'&approver='+this.role.approver, {}).then(resp => {
+                  this.$axios.post('/absence/addMessage?name='+this.staff.name+'&time='+absenceTime+'&description='+this.role.reason+'&approver='+this.role.approver, {}).then(resp => {
                     _this.initRequest()
                     this.$message({
                       type: 'success',
