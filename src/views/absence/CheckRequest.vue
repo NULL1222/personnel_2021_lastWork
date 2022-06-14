@@ -290,7 +290,7 @@
           })
           .then(async() => {
             var _this = this
-            this.$axios.post('/absence/change?id='+row.id+'&keywords='+this.loadId+'&time='+row.time+'&status='+'未通过',{}).then(resp => {
+            this.$axios.post('/absence/change?id='+row.id+'&keywords='+this.loadId+'&time='+row.time+'&status='+'已驳回',{}).then(resp => {
               if(resp && resp.data.code === 200){
                 _this.rolesList = resp.data.data.list
                 _this.initCheck()
