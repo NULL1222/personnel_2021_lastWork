@@ -33,13 +33,20 @@ Router.prototype.push = function push (location) {
 // ]
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [
     {
       path: '/container',
       name: 'container',
       component: container,
-      redirect: '/container/notice',
+      // redirect: '/container/notice',
+      // redirect:to => {
+      //   if () {
+      //     return '/container/notice'
+      //   } else {
+      //     return '/container/notice-u'
+      //   }
+      // },
       children: [
         {
           path: '/container/notice',

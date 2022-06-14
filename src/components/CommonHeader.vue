@@ -26,8 +26,11 @@
 export default {
   data() {
     return {
+      userID:'',
       isHidden:false,
-      messagenum:12,
+      messagenum:'', 
+      //消息旁边的数字 
+      //应该是数据库中未读消息的总数传过来 点击一条未读消息然后再点击头像又重新刷新获取数据
       userImg: require("../assets/Me.png"),
       role: {
         id: '',
@@ -43,6 +46,22 @@ export default {
       }
     };
   },
+  created() {
+      const Id = sessionStorage.getItem('userId2');
+      this.userID = Id;
+      var _this = this;
+      this.$axios.post("/message/amount?id=" + this.userID, {}).then(resp => {
+            if (resp && resp.data.code === 200) {
+              _this.messagenum = resp.data.data;
+              if(_this.messagenum == 0) {
+                this.isHidden = true;
+              }
+              console.log(_this.messagenum);
+              console.log("userID=" + this.userID);
+              console.log("data="+resp.data.data);
+            }
+          })
+    },
   methods: {
     emitCollapse() {
       this.$emit('emitCollapse');
@@ -55,7 +74,7 @@ export default {
     },
     message() {
       console.log("点击了消息")
-      this.isHidden = true
+      this.isHidden = true //小红点消失
       this.$router.push({
         path: '/message'
       })
