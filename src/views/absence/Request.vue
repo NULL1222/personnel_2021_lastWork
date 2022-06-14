@@ -342,7 +342,7 @@
             type: '事假',
             approver: '小李',
             status: '已销假',
-            prove:'http://127.0.0.1:8887/absence/1.jpg'
+            prove:'http://127.0.0.1:8887/absence/img1.jpg'
           }],
           staff: [{
             job: '',
