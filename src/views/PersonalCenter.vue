@@ -298,7 +298,7 @@ export default {
         }else {
           alert("密码修改失败,请重试！")
           this.dialogFormVisible = true;
-          initPwd();
+          this.initPwd();
           return false;
         }
       })
